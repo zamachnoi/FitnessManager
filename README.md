@@ -126,7 +126,7 @@ When modifying the schema:
 
 ### Route Example
 
-Example from: `/models/io/defaultIo.ts`, `/data/defaultData.ts`, `/controllers/defaultController.ts`, `routes/defaultRoute.ts`, `app.ts`
+Example `defaultRoute`:
 
 1. **Define Route Logic**
 

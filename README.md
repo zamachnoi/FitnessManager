@@ -92,11 +92,11 @@ npm run dev
 
 ### Development
 
-**What is `/src` and `/dist`?**
+**Understanding `/src` and `/dist`**
 
-`/src` is the TypeScript source code. All code changes go into this folder.
+-   `/src`: TypeScript source code. All code changes go into this folder.
 
-`/dist` is where TypeScript gets transpiled into JavaScript so that our node server can be run.
+-   `/dist`: where TypeScript gets transpiled into JavaScript so that our node server can be run.
 
 **Directory/File Usage**
 
@@ -112,6 +112,17 @@ npm run dev
 -   `/public`: Static files (e.g. images)
 -   `/routes`: HTTP Methods for a particular route
 -   `/util`: utility files/functions that can be used throughout the application
+
+**Modifying the Schema**
+
+When modifying the schema:
+
+1. Make changes in Postgres
+2. Update the SQL script in `/database`
+3. Install `kysely-codegen`
+4. Set `DATABASE_URL` in `.env`
+5. Run `npx kysely-codegen --out-file ./models/db/types.d.ts`
+6. Update conflicts in the data directory if there are any.
 
 **Route Example**
 

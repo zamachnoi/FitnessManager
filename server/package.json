@@ -1,8 +1,8 @@
 {
 	"scripts": {
 		"build": "npx tsc",
-		"start": "node dist/index.js",
-		"dev": "nodemon ./src/index.ts"
+		"dev": "cross-env NODE_ENV=development npx nodemon src/app.js",
+		"start": "cross-env NODE_ENV=production node src/app.js"
 	},
 	"dependencies": {
 		"dotenv": "^16.4.5",
@@ -15,6 +15,7 @@
 		"@types/cors": "^2.8.17",
 		"@types/express": "^4.17.21",
 		"@types/pg": "^8.11.4",
+		"cross-env": "^7.0.3",
 		"kysely-codegen": "^0.14.1",
 		"nodemon": "^3.1.0",
 		"ts-node": "^10.9.2",

@@ -90,15 +90,15 @@ Start the development server:
 npm run dev
 ```
 
-### Development
+## Development
 
-**Understanding `/src` and `/dist`**
+### Understanding `/src` and `/dist`
 
 -   `/src`: TypeScript source code. All code changes go into this folder.
 
 -   `/dist`: where TypeScript gets transpiled into JavaScript so that our node server can be run.
 
-**Directory/File Usage**
+### Directory/File Usage
 
 -   `app.ts`: Main server
 -   `/config`: Configuration files (e.g database config)
@@ -113,7 +113,7 @@ npm run dev
 -   `/routes`: HTTP Methods for a particular route
 -   `/util`: utility files/functions that can be used throughout the application
 
-**Modifying the Schema**
+### Modifying the Schema
 
 When modifying the schema:
 
@@ -124,9 +124,9 @@ When modifying the schema:
 5. Run `npx kysely-codegen --out-file ./models/db/types.d.ts`
 6. Update conflicts in the data directory if there are any.
 
-**Route Example**
+### Route Example
 
-Example from: `routes/defaultRoute.ts`, `app.ts`
+Example from: `/models/io/defaultIo.ts`, `/data/defaultData.ts`, `/controllers/defaultController.ts`, `routes/defaultRoute.ts`, `app.ts`
 
 1. **Define Route Logic**
 

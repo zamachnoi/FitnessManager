@@ -22,3 +22,22 @@ docker run \                                                                    
 ```bash
 psql -h localhost -p 5432 -U postgres -d postgres -f setup.sql
 ```
+
+## API
+
+```bash
+cd server
+```
+
+### Dev
+
+```bash
+npm run dev
+```
+
+### Build
+
+```bash
+npm run build
+npm run start
+```

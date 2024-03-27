@@ -172,20 +172,26 @@ Example from: `/models/io/defaultIo.ts`, `/data/defaultData.ts`, `/controllers/d
 
     - Create a new file in the `/controllers` directory for client-server communication `defaultController.ts`
 
-        - Import data and io function
-        - Create a function in format: generate{Route}{Method}Response to transform the db data into the API response
+        - Import data and io functions, ex:
 
-        ```js
-        export async function generateDefaultGetResponse(): Promise<DefaultGetApiResponse> {
-        	const user = await getDefaultDbData()
+            ```js
+            import { getDefaultDbData } from "../data/defaultData"
+            import { DefaultGetApiResponse } from "../models/io/defaultIo"
+            ```
 
-        	const res = {
-        		message: `Hello ${user.first_name} ${user.last_name}`,
-        	}
+        - Create a function in format: `generate{Route}{Method}Response` to transform the db data into the API response
 
-        	return res
-        }
-        ```
+            ```js
+            export async function generateDefaultGetResponse(): Promise<DefaultGetApiResponse> {
+            	const user = await getDefaultDbData()
+
+            	const res = {
+            		message: `Hello ${user.first_name} ${user.last_name}`,
+            	}
+
+            	return res
+            }
+            ```
 
 2. **Define Route Handlers**
 

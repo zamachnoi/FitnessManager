@@ -1,11 +1,11 @@
 import express, { Express, Request, Response, Application } from "express"
 import dotenv from "dotenv"
+
+dotenv.config()
+
 import { defaultRoute } from "./routes/defaultRoute"
 import { userRoute } from "./routes/userRoute"
 import { memberRoute } from "./routes/memberRoute"
-
-//For env File
-dotenv.config()
 
 export const app: Application = express()
 const port = process.env.PORT || 8000

@@ -1,6 +1,8 @@
+const port = process.env.DB_PORT || 5432
+
 const config: { [key: string]: { connectionString: string } } = {
 	development: {
-		connectionString: "postgres://postgres:test@localhost:5432/postgres",
+		connectionString: `postgres://postgres:test@localhost:${port}/postgres`,
 	},
 	production: {
 		connectionString: process.env.DATABASE_URL || "", // Assuming this is set in your production environment

@@ -121,7 +121,7 @@ When modifying the schema:
 2. Update the SQL script in `/database`
 3. Install `kysely-codegen`
 4. Set `DATABASE_URL` in `.env`
-5. Run `npx kysely-codegen --out-file ./models/db/types.d.ts`
+5. Run `npx kysely-codegen --out-file src/models/db/types.d.ts`
 6. Update conflicts in the data directory if there are any.
 
 ### Route Example

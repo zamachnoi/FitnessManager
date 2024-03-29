@@ -66,6 +66,11 @@ export interface MemberHealthStatistics {
 	stat_id: Generated<number>
 }
 
+export interface Members {
+	member_id: number
+	weight: number | null
+}
+
 export interface MemberTrainingReservation {
 	member_id: number | null
 	reservation_id: Generated<number>
@@ -136,6 +141,7 @@ export interface DB {
 	member_goals: MemberGoals
 	member_health_statistics: MemberHealthStatistics
 	member_training_reservation: MemberTrainingReservation
+	members: Members
 	payment_history: PaymentHistory
 	room: Room
 	room_bookings: RoomBookings

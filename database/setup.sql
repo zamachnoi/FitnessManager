@@ -15,6 +15,7 @@ DROP TABLE IF EXISTS trainer_availability CASCADE;
 DROP TABLE IF EXISTS trainers CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS room CASCADE;
+DROP TABLE IF EXISTS members CASCADE;
 
 DROP TYPE IF EXISTS USER_TYPE;
 
@@ -34,6 +35,11 @@ CREATE TABLE users (
 CREATE TABLE trainers (
     trainer_id INT PRIMARY KEY REFERENCES users(user_id),
     rate FLOAT
+);
+-- Creating Members table
+CREATE TABLE members (
+    member_id INT PRIMARY KEY REFERENCES users(user_id),
+    weight FLOAT
 );
 
 -- Creating Room table
@@ -72,7 +78,7 @@ CREATE TABLE equipment (
 -- Creating Payment History table
 CREATE TABLE payment_history (
     payment_id SERIAL PRIMARY KEY,
-    member_id INT REFERENCES users(user_id),
+    member_id INT REFERENCES members(member_id),
     date_paid DATE,
     amount_paid FLOAT,
     active_until DATE,
@@ -103,7 +109,7 @@ CREATE TABLE room_bookings (
 -- Creating Member Class Booking table
 CREATE TABLE member_class_booking (
     booking_id SERIAL PRIMARY KEY,
-    member_id INT REFERENCES users(user_id),
+    member_id INT REFERENCES members(member_id),
     class_id INT REFERENCES classes(class_id)
 );
 
@@ -130,7 +136,7 @@ CREATE TABLE routine_exercises (
 
 -- Creating Member exercise_routines table
 CREATE TABLE member_exercise_routines (
-    member_id INT REFERENCES users(user_id),
+    member_id INT REFERENCES members(member_id),
     routine_id INT REFERENCES exercise_routines(routine_id),
     PRIMARY KEY (member_id, routine_id)
 );
@@ -138,7 +144,7 @@ CREATE TABLE member_exercise_routines (
 -- Creating Member Goals table
 CREATE TABLE member_goals (
     goal_id SERIAL PRIMARY KEY,
-    member_id INT REFERENCES users(user_id),
+    member_id INT REFERENCES members(member_id),
     weight_goal FLOAT,
     goal_start DATE,
     achieved_date DATE
@@ -147,14 +153,14 @@ CREATE TABLE member_goals (
 -- Creating Member Health Statistics table
 CREATE TABLE member_health_statistics (
     stat_id SERIAL PRIMARY KEY,
-    member_id INT REFERENCES users(user_id),
+    member_id INT REFERENCES members(member_id),
     blood_pressure TEXT
 );
 
 -- Creating Member Training Reservation table
 CREATE TABLE member_training_reservation (
     reservation_id SERIAL PRIMARY KEY,
-    member_id INT REFERENCES users(user_id),
+    member_id INT REFERENCES members(member_id),
     trainer_id INT REFERENCES trainers(trainer_id),
     slot_availability_id INT REFERENCES trainer_availability(availability_id)
 );

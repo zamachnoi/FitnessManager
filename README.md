@@ -18,8 +18,16 @@ Ensure Docker and Node.js are installed on your system. Docker will be used to c
     Use Docker to run a PostgreSQL container:
 
     ```bash
-    docker run --name pgsql-dev -e POSTGRES_PASSWORD=test -p 5432:5432 postgres
+    docker run --name fitnessManager -e POSTGRES_PASSWORD=test -p 5432:5432 postgres
     ```
+
+    If it does not work, you probably have something on port 5432, you can change the port by modifying the command like so:
+
+    ```bash
+    docker run --name fitnessManager -e POSTGRES_PASSWORD=test -p <port>:5432 postgres
+    ```
+
+    Replace port with the port you want to use, 15432 is a good one. Then change DB_PORT in the .env file in `/server`
 
 2. **Set Database Password in Environment Variables**
 

@@ -1,12 +1,6 @@
 import { db } from "../lib/db"
 import { UserDbRow } from "../models/io/userIo"
-
-async function removePassword(
-	user: UserDbRow
-): Promise<Omit<UserDbRow, "password">> {
-	const { password, ...userWithoutPassword } = user
-	return userWithoutPassword
-}
+import * as util from "./dataUtil"
 
 export async function getUserById(
 	id: number
@@ -21,7 +15,7 @@ export async function getUserById(
 		throw new Error("No user found")
 	}
 
-	return removePassword(user)
+	return util.removePassword(user)
 }
 
 export async function getUserByUsername(
@@ -37,10 +31,10 @@ export async function getUserByUsername(
 		throw new Error("No user found")
 	}
 
-	return removePassword(user)
+	return util.removePassword(user)
 }
 
 export async function getAllUsers(): Promise<Omit<UserDbRow, "password">[]> {
 	const users = await db.selectFrom("users").selectAll().execute()
-	return await Promise.all(users.map(removePassword))
+	return await Promise.all(users.map(util.removePassword))
 }

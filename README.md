@@ -44,7 +44,7 @@ Ensure Docker and Node.js are installed on your system. Docker will be used to c
 3. **Run the DDL Script**
 
     Initialize the database schema:
-
+    
     Change the port if necessary.
 
     ```bash

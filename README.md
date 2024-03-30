@@ -123,16 +123,13 @@ npm run dev
 -   `/routes`: HTTP Methods for a particular route
 -   `/util`: utility files/functions that can be used throughout the application
 
-### Modifying the Schema
+### Modifying the Schema (DDL or DML)
 
 When modifying the schema:
 
-1. Make changes in Postgres
-2. Update the SQL script in `/database`
-3. Install `kysely-codegen`
-4. Set `DATABASE_URL` in `.env`
-5. Run `npx kysely-codegen --out-file src/models/db/types.d.ts`
-6. Update conflicts in the data directory if there are any.
+1. Make changes to the SQL scripts (setup.sql and dml.sql)
+2. Go into database directory `cd ../database`
+3. Run the bash script `bash database.sh`
 
 ### Route Example
 

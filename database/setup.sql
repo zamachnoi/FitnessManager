@@ -155,7 +155,10 @@ CREATE TABLE member_goals (
 CREATE TABLE member_health_statistics (
     stat_id SERIAL PRIMARY KEY,
     member_id INT REFERENCES members(member_id),
-    blood_pressure TEXT
+    systolic_bp FLOAT,
+    diastolic_bp FLOAT,
+    heart_rate FLOAT,    
+    recorded TIMESTAMPTZ
 );
 
 -- Creating Member Training Reservation table

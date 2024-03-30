@@ -7,6 +7,7 @@ import { defaultRoute } from "./routes/defaultRoute"
 import { userRoute } from "./routes/userRoute"
 import { memberRoute } from "./routes/memberRoute"
 import { memberGoalRoute } from "./routes/memberGoalsRoute"
+import { memberHealthStatsRoute } from "./routes/memberHealthStatsRoute"
 
 export const app: Application = express()
 const port = process.env.PORT || 8000
@@ -19,6 +20,7 @@ app.use("/", defaultRoute)
 app.use("/users", userRoute)
 app.use("/members", memberRoute)
 app.use("/members", memberGoalRoute)
+app.use("/members", memberHealthStatsRoute)
 
 app.listen(port, () => {
 	console.log(`server started at at http://localhost:${port}`)

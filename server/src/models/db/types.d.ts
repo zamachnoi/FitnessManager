@@ -36,6 +36,7 @@ export interface ExerciseRoutines {
 
 export interface Exercises {
   description: string | null;
+  equipment_id: number | null;
   exercise_id: Generated<number>;
   name: string | null;
   type: string | null;

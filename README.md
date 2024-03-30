@@ -14,7 +14,7 @@ Ensure Docker and Node.js are installed on your system. Docker will be used to c
 ## Database
 
 ### Setup
-test
+
 1. **Launch PostgreSQL Container**
 
     Use Docker to run a PostgreSQL container:

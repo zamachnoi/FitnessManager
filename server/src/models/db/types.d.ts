@@ -62,9 +62,12 @@ export interface MemberGoals {
 }
 
 export interface MemberHealthStatistics {
-  blood_pressure: string | null;
+  diastolic_bp: number | null;
+  heart_rate: number | null;
   member_id: number | null;
+  recorded: Timestamp | null;
   stat_id: Generated<number>;
+  systolic_bp: number | null;
 }
 
 export interface Members {

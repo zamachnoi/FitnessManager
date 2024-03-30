@@ -6,6 +6,7 @@ dotenv.config()
 import { defaultRoute } from "./routes/defaultRoute"
 import { userRoute } from "./routes/userRoute"
 import { memberRoute } from "./routes/memberRoute"
+import { memberGoalRoute } from "./routes/memberGoalsRoute"
 
 export const app: Application = express()
 const port = process.env.PORT || 8000
@@ -17,6 +18,7 @@ app.use(express.static("public"))
 app.use("/", defaultRoute)
 app.use("/users", userRoute)
 app.use("/members", memberRoute)
+app.use("/members", memberGoalRoute)
 
 app.listen(port, () => {
 	console.log(`server started at at http://localhost:${port}`)

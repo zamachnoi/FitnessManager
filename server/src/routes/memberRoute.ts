@@ -28,9 +28,18 @@ memberRoute.get("/username/:username", async (req, res) => {
 
 // POST
 memberRoute.post("/", async (req, res) => {
-	// make sure body is of type MemberDataInsert
-
 	const data = await memberController.generateMemberPostResponse(req.body)
+
+	res.status(data.status).json(data)
+})
+
+// PATCH
+memberRoute.patch("/:id", async (req, res) => {
+	const id = parseInt(req.params.id)
+	const data = await memberController.generateMemberPatchResponse(
+		id,
+		req.body
+	)
 
 	res.status(data.status).json(data)
 })

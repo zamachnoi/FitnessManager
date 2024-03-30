@@ -8,6 +8,7 @@ import {
 	getMemberByUsername,
 	getAllMembers,
 	createMember,
+	updateMember,
 } from "../data/memberData"
 
 export async function generateMemberByIdGetResponse(
@@ -70,5 +71,23 @@ export async function generateMemberPostResponse(
 	} catch (e) {
 		console.log(e)
 		return { message: "Could not create member", status: 404, data: null }
+	}
+}
+
+export async function generateMemberPatchResponse(
+	memberId: number,
+	member: MemberDataInsert
+) {
+	try {
+		const updatedMember = await updateMember(memberId, member)
+		let res: MemberApiResponse = {
+			message: `success`,
+			status: 200,
+			data: updatedMember,
+		}
+		return res
+	} catch (e) {
+		console.log(e)
+		return { message: "Could not update member", status: 404, data: null }
 	}
 }

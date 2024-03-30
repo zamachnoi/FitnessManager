@@ -147,7 +147,8 @@ CREATE TABLE member_goals (
     member_id INT REFERENCES members(member_id),
     weight_goal FLOAT,
     goal_start DATE,
-    achieved_date DATE
+    achieved_date DATE,
+    deleted BOOLEAN DEFAULT FALSE
 );
 
 -- Creating Member Health Statistics table

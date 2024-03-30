@@ -1,5 +1,4 @@
 import { db } from "../lib/db"
-import { UserDataInsert } from "../models/io/userIo"
 import { MemberDataResponse, MemberDataInsert } from "../models/io/memberIo"
 import * as util from "./dataUtil"
 
@@ -81,4 +80,38 @@ export async function createMember(
 	}
 
 	return util.removePassword(newMemberData)
+}
+
+// TODO: authorize
+export async function updateMember(
+	memberId: number,
+	newData: MemberDataInsert
+) {
+	const { weight, ...userData } = newData
+
+	// Update the user data
+	const user = await db
+		.updateTable("users")
+		.set(userData)
+		.where("user_id", "=", memberId)
+		.returningAll()
+		.executeTakeFirst()
+
+	if (!user) {
+		throw new Error("Failed to update user")
+	}
+
+	// Update the member data
+	const member = await db
+		.updateTable("members")
+		.set({ weight })
+		.where("member_id", "=", memberId)
+		.returningAll()
+		.executeTakeFirst()
+
+	if (!member) {
+		throw new Error("Failed to update member")
+	}
+
+	return util.removePassword({ ...user, ...member })
 }

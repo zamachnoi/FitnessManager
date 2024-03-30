@@ -11,7 +11,9 @@ This guide provides a step-by-step walkthrough for setting up the development en
 
 Ensure Docker and Node.js are installed on your system. Docker will be used to containerize the PostgreSQL database, and Node.js will be required for running the server and client parts of the application.
 
-## Database Setup
+## Database
+
+### Setup
 
 1. **Launch PostgreSQL Container**
 
@@ -49,56 +51,41 @@ Ensure Docker and Node.js are installed on your system. Docker will be used to c
     psql -h localhost -p 5432 -U postgres -d postgres -f setup.sql
     ```
 
-## Server Configuration
+## Server
 
-### Setup
+### Production
 
-Navigate to the server directory:
+1. **Navigate to the server directory**
 
-```bash
-cd server
-```
+    ```bash
+    cd server
+    ```
 
-### Installing packages
+2. **Install packages**
 
-To run the server, you must have the required npm packages installed.
+    To run the server, you must have the required npm packages installed.
 
-Run this command to install them:
+    Run this command to install them:
 
-```bash
-npm i
-```
+    ```bash
+    npm i
+    ```
 
-### Building the Server for Production
+3. **Build the server**
 
-Compile the server code for production deployment:
+    Compile the server code for production deployment:
 
-```bash
-npm run build
-```
+    ```bash
+    npm run build
+    ```
 
-### Starting the Server
+4. **Run the server**
 
-Launch the server application:
+    Launch the server application:
 
-```bash
-npm run start
-```
-
-## Client Application Development
-
-Navigate to the client directory and install dependencies:
-
-```bash
-cd fitness-manager
-npm install
-```
-
-Start the development server:
-
-```bash
-npm run dev
-```
+    ```bash
+    npm run start
+    ```
 
 ## Development
 
@@ -106,7 +93,7 @@ npm run dev
 
 -   `/src`: TypeScript source code. All code changes go into this folder.
 
--   `/dist`: where TypeScript gets transpiled into JavaScript so that our node server can be run.
+-   `/dist`: Transpiled TypeScript into JavaScript. Don't modify.
 
 ### Directory/File Usage
 
@@ -365,6 +352,21 @@ Example `memberHealthStats`:
         app.use("/members", memberHealthStatsRoute)
         ```
 
-## Conclusion
+### Conclusion
 
 Following these instructions, developers can set up the application's environment, create routes, and ensure smooth interaction between the client, server, and database. Remember to test your routes thoroughly and handle any potential errors to ensure a robust application.
+
+## Client
+
+Navigate to the client directory and install dependencies:
+
+```bash
+cd fitness-manager
+npm install
+```
+
+Start the development server:
+
+```bash
+npm run dev
+```

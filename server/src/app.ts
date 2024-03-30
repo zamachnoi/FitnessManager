@@ -16,6 +16,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static("public"))
 
+// ROUTES
 app.use("/", defaultRoute)
 app.use("/users", userRoute)
 app.use("/members", memberRoute)

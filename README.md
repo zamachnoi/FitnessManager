@@ -129,122 +129,241 @@ When modifying the schema:
 
 1. Make changes to the SQL scripts (setup.sql and dml.sql)
 2. Go into database directory `cd ../database`
-3. Run the bash script `bash database.sh`
+3. Run the script in the terminal
+   Windows: `database.bat`
+   Unix: `bash database.sh`
 
 ### Route Example
 
-Example `defaultRoute`:
+Example `memberHealthStats`:
 
-1. **Define Route Logic**
+1.  **Define Types**
 
-    - Create a new file in the `/models/io` directory to store the types the route will use (Database, API) format: `{route}Io.ts`, ex: `defaultIo.ts`
+    `/models/io/memberHealthStatsIo.ts`
 
-        - Define type for accessing database objects (May already exist)
-          Use the type from `types.d.ts` if possible, otherwise create a new one and omit the generated attribute, and add it back as its primitive type. Name does not have to relate to the route name.
+    -   Import generated database type
 
-            ```js
-            export type GetUserDbRow = Omit<Users, "user_id"> & {
-            	user_id: number,
-            }
-            ```
+        ```js
+        import { MemberHealthStatistics } from "../db/types"
+        ```
 
-        - Define a type for client-server communication, format: `export type {Route}{Method}ApiResponse = {}` ex:
-            ```js
-            export type DefaultGetApiResponse = {
-            	message: string,
-            }
-            ```
+    -   Define database access type:
 
-    - Create a new file in the `/data` directory for database communication, format `{route}Data.ts`, ex `defaultData.ts`
+        Remove any templates such as `<Generated>`, or `Timestamp` (Needs to be date) from the generated type with `Omit` and add the correct type back
 
-        - Import the db object:
-            ```js
-            import { db } from "../lib/db"
-            ```
-        - Import the database type:
-            ```js
-            import { UserDbRow } from "../models/io/defaultIo"
-            ```
-        - Create a function for database CRUD with database return type: `{method}{Route}DbData` ex:
-            ```js
-            export async function getDefaultDbData(): Promise<UserDbRow> {}
-            ```
-        - Use database to CRUD see [Kysely Docs](https://kysely.dev/docs/getting-started) for more info:
-            ```js
-            const user = await db
-            	.selectFrom("users")
-            	.selectAll()
-            	.executeTakeFirst()
-            ```
+        ```js
+        export type MemberHealthStatsData = Omit<
+        MemberHealthStatistics,
+        "stat_id" | "recorded"
+        > & {
+            stat_id: number
+            recorded: Date | null
+        }
+        ```
 
-    - Create a new file in the `/controllers` directory for client-server communication `defaultController.ts`
+    -   Define request type
 
-        - Import data and io functions, ex:
+        This is what the User/Client will send to the API
 
-            ```js
-            import { getDefaultDbData } from "../data/defaultData"
-            import { DefaultGetApiResponse } from "../models/io/defaultIo"
-            ```
+        ```js
+        export type MemberHealthStatsApiRequest = {
+            heart_rate: number
+            systolic_bp: number
+            diastolic_bp: number
+        }
+        ```
 
-        - Create a function in format: `generate{Route}{Method}Response` to transform the db data into the API response
+    -   Define single resource response type
 
-            ```js
-            export async function generateDefaultGetResponse(): Promise<DefaultGetApiResponse> {
-            	const user = await getDefaultDbData()
+        This is what the API will respond with for a single resource
 
-            	const res = {
-            		message: `Hello ${user.first_name} ${user.last_name}`,
-            	}
+        ```js
+        export type MemberHealthStatsApiResponse = {
+            message: string
+            status: number
+            data: MemberHealthStatsData | null
+        }
+        ```
 
-            	return res
-            }
-            ```
+    -   Define a many resource response type
 
-2. **Define Route Handlers**
+        This is what the API will respond with for many resources
 
-    - Create a new file within the `/routes` directory for your route: e.g. `defaultRoute.ts`.
+        ```js
+        export type MemberHealthStatsArrayApiResponse =
+            message: string
+            status: number
+            data: MemberHealthStatsData[] | null
+        ```
 
-    - Import the Router function from Express.
+2.  **Database Communication**
+
+    `/data/memberHealthStatsData.ts`
+
+    -   Import kysely db, data type, and request type
+
+        ```js
+        import { db } from "../lib/db"
+        import {
+        	MemberHealthStatsData,
+        	MemberHealthStatsApiRequest,
+        } from "../models/io/memberHealthStatsIo"
+        ```
+
+    -   Create your CRUD functions
+
+        **return a `Promise` of the data type**
+
+        For a single health resource:
+
+        ```js
+        export async function getMemberHealthStatsById(
+        	memberId: number,
+        	statId: number
+        ): Promise<MemberHealthStatsData> {
+        	const memberHealthStats = await db
+        		.selectFrom("member_health_statistics")
+        		.where("member_id", "=", memberId)
+        		.where("stat_id", "=", statId)
+        		.selectAll()
+        		.executeTakeFirst()
+
+        	if (!memberHealthStats) {
+        		throw new Error("No member health stats found")
+        	}
+
+        	return memberHealthStats
+        }
+        ```
+
+        For a Create/Update:
+
+        _Request type included in arguments_
+
+        ```js
+        export async function createMemberHealthStats(
+        	memberId: number,
+        	stats: MemberHealthStatsApiRequest
+        ): Promise<MemberHealthStatsData> {
+        	const { heart_rate, systolic_bp, diastolic_bp } = stats
+        	const recorded = new Date().toISOString()
+        	const memberHealthStats = await db
+        		.insertInto("member_health_statistics")
+        		.values({
+        			member_id: memberId,
+        			heart_rate,
+        			systolic_bp,
+        			diastolic_bp,
+        			recorded,
+        		})
+        		.returningAll()
+        		.executeTakeFirst()
+
+        	if (!memberHealthStats) {
+        		throw new Error("Failed to create member health stats")
+        	}
+
+        	return memberHealthStats
+        }
+        ```
+
+3.  **Transform Database to API**
+
+    `/controllers/memberHealthStatsController.ts`
+
+    -   Import request, responses, and database functions
+
+        ```js
+        import {
+        	MemberHealthStatsApiRequest,
+        	MemberHealthStatsApiResponse,
+        	MemberHealthStatsArrayApiResponse,
+        } from "../models/io/memberHealthStatsIo"
+        import * as memberHealthStatsData from "../data/memberHealthStatsData"
+        ```
+
+    -   Create functions to translate data to api response
+
+        This gets the array of stats, and returns a `Promise` of the Response Type
+
+        ```js
+        export async function generateMemberHealthStatsGetByIdResponse(
+        	member_id: number,
+        	stat_id: number
+        ): Promise<MemberHealthStatsApiResponse> {
+        	try {
+        		const memberHealthStats =
+        			await memberHealthStatsData.getMemberHealthStatsById(
+        				member_id,
+        				stat_id
+        			)
+        		let res: MemberHealthStatsApiResponse = {
+        			message: `success`,
+        			status: 200,
+        			data: memberHealthStats,
+        		}
+        		return res
+        	} catch (e) {
+        		return {
+        			message: "Could not find member health stats",
+        			status: 404,
+        			data: null,
+        		}
+        	}
+        }
+        ```
+
+4.  **Create Route for Client-Server Communication**
+
+    `routes/memberHealthStatsRoute.ts`
+
+    -   Import router and controller
+
         ```js
         import { Router } from "express"
+        import * as memberHealthStatsController from "../controllers/memberHealthStatsController"
         ```
-    - Import the controller from above.
-        ```js
-        import * as defaultController from "../controllers/defaultController"
-        ```
-    - Export the route and give it a name, in this case it will be defaultRoute.
-        ```js
-        export const defaultRoute = Router()
-        ```
-    - Define your route handler functions for each HTTP method in this file.
+
+    -   Export a new router
 
         ```js
-        // GET
-        defaultRoute.get("/", (req, res) => {
-        	const data = await defaultController.generateDefaultGetResponse()
-
-            res.json(data)
-        })
+        export const memberHealthStatsRoute = Router()
         ```
 
-3. **Register Routes**
+    -   Use that router to create endpoints
 
-    - In the main file: `app.ts`, import the route handlers you've just created.
         ```js
-        import { defaultRoute } from "./routes/defaultRoute"
+        memberHealthStatsRoute.get(
+        	"/:memberId/stats/:statId",
+        	async (req, res) => {
+        		const memberId = parseInt(req.params.memberId)
+        		const statId = parseInt(req.params.statId)
+        		const data =
+        			await memberHealthStatsController.generateMemberHealthStatsGetByIdResponse(
+        				memberId,
+        				statId
+        			)
+
+        		res.status(data.status).json(data)
+        	}
+        )
         ```
-    - Use the express app's `.use()` method to register your routes with the name of the route:
+
+5.  **Add Route to Application Code**
+
+    `app.ts`
+
+    -   Import the route
+
         ```js
-        app.use("/", defaultRoute)
+        import { memberHealthStatsRoute } from "./routes/memberHealthStatsRoute"
         ```
 
-4. **Error Handling**
+    -   Enable route
 
-    - Ensure to implement error handling within your routes. This can be done by catching exceptions and sending appropriate error messages and status codes to the client.
-
-### Testing Routes
-
--   Utilize tools such as Postman or write automated tests using frameworks like Jest to test your API endpoints. Ensure they behave as expected with various inputs.
+        ```js
+        app.use("/members", memberHealthStatsRoute)
+        ```
 
 ## Conclusion
 

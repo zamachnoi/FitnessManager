@@ -1,4 +1,4 @@
-import { MemberHealthStatistics, Timestamp } from "../db/types"
+import { MemberHealthStatistics } from "../db/types"
 
 export type MemberHealthStatsData = Omit<
 	MemberHealthStatistics,

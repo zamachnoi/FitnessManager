@@ -3,8 +3,7 @@ import { Users, Trainers } from "../db/types"
 export type TrainersData = Omit<Users, "user_id" | "password"> & Trainers
 
 export type TrainersApiRequest =    Omit<Users, "user_id" | "type"> &
-                                    Omit<Trainers, "trainer_id"> & 
-                                    { type: "Trainer" }
+                                    Trainers & { type: "Trainer" }
 
 export type TrainersApiResponse = {
 	message: string

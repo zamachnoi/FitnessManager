@@ -8,6 +8,7 @@ authRoute.post("/login", async (req, res) => {
 	const loginDetails = req.body
 	const data = await authController.generateAuthLoginPostResponse(
 		req,
+		res,
 		loginDetails
 	)
 
@@ -25,6 +26,7 @@ authRoute.post("/register", async (req, res) => {
 	const registerDetails = req.body
 	const data = await authController.generateAuthRegisterPostResponse(
 		req,
+		res,
 		registerDetails
 	)
 
@@ -32,7 +34,7 @@ authRoute.post("/register", async (req, res) => {
 })
 
 authRoute.post("/logout", async (req, res) => {
-	const data = await authController.generateAuthLogoutPostResponse(req)
+	const data = await authController.generateAuthLogoutPostResponse(req, res)
 
 	res.status(data.status).json(data)
 })

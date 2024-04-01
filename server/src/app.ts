@@ -2,7 +2,7 @@ import dotenv from "dotenv"
 
 dotenv.config()
 
-import express, { Application } from "express"
+import express, { Application, Request, Response, NextFunction } from "express"
 import cors from "cors"
 import session from "express-session"
 
@@ -13,14 +13,21 @@ import { memberGoalRoute } from "./routes/memberGoalsRoute"
 import { memberHealthStatsRoute } from "./routes/memberHealthStatsRoute"
 import { routineRoute } from "./routes/routineRoute"
 import { authRoute } from "./routes/authRoute"
+import {
+	applyMiddlewareToRoutesStartingWith,
+	ensureAuthenticated,
+	excludeGetRequests,
+} from "./middleware/auth"
 
 export const app: Application = express()
 
 declare module "express-session" {
 	export interface SessionData {
-		user_id: number
-		type: "Member" | "Trainer" | "Admin"
-		authenticated: boolean
+		user: {
+			user_id: number
+			type: "Member" | "Trainer" | "Admin"
+			authenticated: boolean
+		}
 	}
 }
 
@@ -29,7 +36,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.static("public"))
 app.use(
 	cors({
-		origin: "http://localhost:3001",
+		origin: "http://localhost:5173",
 		credentials: true,
 	})
 )
@@ -41,7 +48,7 @@ if (authEnabled) {
 		session({
 			secret: process.env.SESSION_SECRET || "secretkey123", // Secret used to sign the session ID cookie
 			resave: false, // Avoids resaving session if not modified
-			saveUninitialized: false, // Does not save uninitialized sessions
+			saveUninitialized: true,
 			cookie: {
 				secure: false, // TRUE in production (with HTTPS), FALSE in development
 				httpOnly: true, // Helps mitigate the risk of client side script accessing the protected cookie
@@ -49,6 +56,15 @@ if (authEnabled) {
 			},
 		})
 	)
+
+	const protectedNonGetMiddleware = applyMiddlewareToRoutesStartingWith(
+		["/members", "/admins", "/trainers", "/routines"],
+		excludeGetRequests(ensureAuthenticated)
+	)
+
+	app.use(protectedNonGetMiddleware)
+
+	app.use("/auth", authRoute)
 }
 
 // ROUTES
@@ -58,7 +74,6 @@ app.use("/members", memberRoute)
 app.use("/members", memberGoalRoute)
 app.use("/members", memberHealthStatsRoute)
 app.use("/routines", routineRoute)
-app.use("/auth", authRoute)
 
 const port = process.env.PORT || 8000
 

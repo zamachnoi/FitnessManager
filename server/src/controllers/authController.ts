@@ -6,12 +6,13 @@ import {
 	LogoutApiResponse,
 } from "../models/io/authIo"
 
-import { Request } from "express"
+import { Request, Response } from "express"
 
 import * as authData from "../data/authData"
 
 export async function generateAuthRegisterPostResponse(
 	req: Request,
+	res: Response,
 	registerDetails: RegisterApiRequest
 ) {
 	try {
@@ -22,10 +23,6 @@ export async function generateAuthRegisterPostResponse(
 			status: 200,
 			data: user,
 		}
-
-		req.session.user_id = user.user_id
-		req.session.type = user.type || undefined
-		req.session.authenticated = true
 
 		return res
 	} catch (e) {
@@ -39,6 +36,7 @@ export async function generateAuthRegisterPostResponse(
 
 export async function generateAuthLoginPostResponse(
 	req: Request,
+	res: Response,
 	loginDetails: LoginApiRequest
 ): Promise<LoginApiResponse> {
 	try {
@@ -50,9 +48,13 @@ export async function generateAuthLoginPostResponse(
 			data: user,
 		}
 
-		req.session.user_id = user.user_id
-		req.session.type = user.type || undefined
-		req.session.authenticated = true
+		const sessionData = {
+			user_id: user.user_id,
+			type: user.type,
+			authenticated: true,
+		}
+
+		req.session.user = sessionData
 
 		return res
 	} catch (e) {
@@ -65,7 +67,8 @@ export async function generateAuthLoginPostResponse(
 }
 
 export async function generateAuthLogoutPostResponse(
-	req: Request
+	req: Request,
+	res: Response
 ): Promise<LogoutApiResponse> {
 	req.session.destroy((err) => {
 		if (err) {

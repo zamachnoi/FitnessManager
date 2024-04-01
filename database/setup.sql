@@ -30,7 +30,7 @@ CREATE TABLE users (
     first_name TEXT,
     username TEXT UNIQUE,
     password TEXT,
-    type USER_TYPE CHECK (type IN ('Member', 'Trainer', 'Admin'))
+    type USER_TYPE CHECK (type IN ('Member', 'Trainer', 'Admin')) NOT NULL
 );
 
 -- Creating Trainers table

@@ -9,7 +9,11 @@ export type LoginApiRequest = {
 	password: string
 }
 
-export type getDetails = {}
+export type SessionData = {
+	user_id: number | undefined
+	type: "Member" | "Trainer" | "Admin" | undefined
+	authenticated: boolean | undefined
+}
 
 export type LoginApiResponse = {
 	status: number

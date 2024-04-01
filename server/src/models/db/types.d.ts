@@ -138,7 +138,7 @@ export interface Users {
   first_name: string | null;
   last_name: string | null;
   password: string | null;
-  type: UserType | null;
+  type: UserType;
   user_id: Generated<number>;
   username: string | null;
 }

@@ -124,7 +124,8 @@ CREATE TABLE exercises (
     exercise_id SERIAL PRIMARY KEY,
     name TEXT,
     type TEXT,
-    description TEXT
+    description TEXT,
+    equipment_id INT REFERENCES equipment_type(equipment_type_id)
 );
 
 -- Creating Routine Exercises table

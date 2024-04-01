@@ -1,10 +1,10 @@
 import { db } from "../lib/db"
-import { UserDbRow } from "../models/io/userIo"
+import { UserData } from "../models/io/userIo"
 import * as util from "./dataUtil"
 
 export async function getUserById(
 	id: number
-): Promise<Omit<UserDbRow, "password">> {
+): Promise<Omit<UserData, "password">> {
 	const user = await db
 		.selectFrom("users")
 		.where("user_id", "=", id)
@@ -20,7 +20,7 @@ export async function getUserById(
 
 export async function getUserByUsername(
 	username: string
-): Promise<Omit<UserDbRow, "password">> {
+): Promise<Omit<UserData, "password">> {
 	const user = await db
 		.selectFrom("users")
 		.where("username", "=", username)
@@ -34,7 +34,7 @@ export async function getUserByUsername(
 	return util.removePassword(user)
 }
 
-export async function getAllUsers(): Promise<Omit<UserDbRow, "password">[]> {
+export async function getAllUsers(): Promise<Omit<UserData, "password">[]> {
 	const users = await db.selectFrom("users").selectAll().execute()
 	return await Promise.all(users.map(util.removePassword))
 }

@@ -8,6 +8,10 @@ export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
 export type UserType = "Admin" | "Member" | "Trainer";
 
+export interface Admins {
+  admin_id: number;
+}
+
 export interface Classes {
   class_id: Generated<number>;
   name: string | null;
@@ -149,6 +153,7 @@ export interface Users {
 }
 
 export interface DB {
+  admins: Admins;
   classes: Classes;
   equipment: Equipment;
   equipment_type: EquipmentType;

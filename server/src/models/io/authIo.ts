@@ -9,6 +9,8 @@ export type LoginApiRequest = {
 	password: string
 }
 
+export type getDetails = {}
+
 export type LoginApiResponse = {
 	status: number
 	message: string

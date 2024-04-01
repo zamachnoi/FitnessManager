@@ -1,7 +1,11 @@
 import { db } from "../lib/db"
-import { RegisterApiRequest, AccountData } from "../models/io/authIo"
+import {
+	RegisterApiRequest,
+	AccountData,
+	LoginApiRequest,
+} from "../models/io/authIo"
 
-export default async function createAccount(
+export async function createAccount(
 	regDetails: RegisterApiRequest
 ): Promise<AccountData> {
 	const { username, password, first_name, last_name, type } = regDetails
@@ -24,16 +28,35 @@ export default async function createAccount(
 				member_id: user.user_id,
 			})
 			.execute()
-	}
-
-	if (type === "Trainer") {
+	} else if (type === "Trainer") {
 		await db
 			.insertInto("trainers")
 			.values({
 				trainer_id: user.user_id,
 			})
 			.execute()
+	} else if (type === "Admin") {
+		await db
+			.insertInto("admins")
+			.values({
+				admin_id: user.user_id,
+			})
+			.execute()
 	}
+
+	return user
+}
+
+export async function login(
+	loginDetails: LoginApiRequest
+): Promise<AccountData> {
+	const { username, password } = loginDetails
+	const user = await db
+		.selectFrom("users")
+		.where("username", "=", username)
+		.where("password", "=", password)
+		.selectAll()
+		.executeTakeFirstOrThrow()
 
 	return user
 }

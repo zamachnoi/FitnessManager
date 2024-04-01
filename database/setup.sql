@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS member_training_reservation CASCADE;
+DROP TABLE IF EXISTS member_training_booking CASCADE;
 DROP TABLE IF EXISTS member_class_booking CASCADE;
 DROP TABLE IF EXISTS room_bookings CASCADE;
 DROP TABLE IF EXISTS member_goals CASCADE;
@@ -9,13 +9,14 @@ DROP TABLE IF EXISTS exercises CASCADE;
 DROP TABLE IF EXISTS exercise_routines CASCADE;
 DROP TABLE IF EXISTS classes CASCADE;
 DROP TABLE IF EXISTS equipment CASCADE;
-DROP TABLE IF EXISTS payment_history CASCADE;
+DROP TABLE IF EXISTS payment CASCADE;
 DROP TABLE IF EXISTS equipment_type CASCADE;
-DROP TABLE IF EXISTS trainer_availability CASCADE;
+DROP TABLE IF EXISTS trainer_booking CASCADE;
 DROP TABLE IF EXISTS trainers CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS room CASCADE;
 DROP TABLE IF EXISTS members CASCADE;
+DROP TABLE IF EXISTS member_booking CASCADE;
 
 DROP TYPE IF EXISTS USER_TYPE;
 
@@ -34,6 +35,8 @@ CREATE TABLE users (
 -- Creating Trainers table
 CREATE TABLE trainers (
     trainer_id INT PRIMARY KEY REFERENCES users(user_id),
+    start_availability TIME,
+    end_availability TIME,
     rate FLOAT
 );
 -- Creating Members table
@@ -51,13 +54,11 @@ CREATE TABLE room (
 );
 
 -- Creating Trainer Availability table
-CREATE TABLE trainer_availability (
-    availability_id SERIAL PRIMARY KEY,
+-- NO END TIME, always for 1 hour.
+CREATE TABLE trainer_booking (
+    trainer_booking_id SERIAL PRIMARY KEY,
     trainer_id INT REFERENCES trainers(trainer_id),
-    available_date DATE,
-    start_time TIME,
-    end_time TIME,
-    is_booked BOOLEAN DEFAULT FALSE
+    booking_time TIMESTAMPTZ
 );
 
 -- Creating Equipment Type table
@@ -75,15 +76,7 @@ CREATE TABLE equipment (
     under_maintenance BOOLEAN
 );
 
--- Creating Payment History table
-CREATE TABLE payment_history (
-    payment_id SERIAL PRIMARY KEY,
-    member_id INT REFERENCES members(member_id),
-    date_paid DATE,
-    amount_paid FLOAT,
-    active_until DATE,
-    description TEXT
-);
+
 
 -- Creating Classes table
 CREATE TABLE classes (
@@ -95,7 +88,11 @@ CREATE TABLE classes (
     price FLOAT
 );
 
-
+-- Create Bookings Table
+CREATE TABLE member_booking (
+    booking_id SERIAL PRIMARY KEY,
+    member_id INT REFERENCES members(member_id)
+);
 
 -- Creating Room Bookings table
 CREATE TABLE room_bookings (
@@ -108,7 +105,7 @@ CREATE TABLE room_bookings (
 
 -- Creating Member Class Booking table
 CREATE TABLE member_class_booking (
-    booking_id SERIAL PRIMARY KEY,
+    member_class_booking_id INT REFERENCES member_booking(booking_id),
     member_id INT REFERENCES members(member_id),
     class_id INT REFERENCES classes(class_id)
 );
@@ -163,9 +160,20 @@ CREATE TABLE member_health_statistics (
 );
 
 -- Creating Member Training Reservation table
-CREATE TABLE member_training_reservation (
-    reservation_id SERIAL PRIMARY KEY,
+CREATE TABLE member_training_booking (
+    member_training_booking_id INT REFERENCES member_booking(booking_id),
     member_id INT REFERENCES members(member_id),
     trainer_id INT REFERENCES trainers(trainer_id),
     slot_availability_id INT REFERENCES trainer_availability(availability_id)
+);
+
+
+-- Creating Payment History table
+CREATE TABLE payment (
+    payment_id SERIAL PRIMARY KEY,
+    member_id INT REFERENCES members(member_id),
+    booking_id INT REFERENCES member_booking(booking_id),
+    date_paid DATE,
+    amount_paid FLOAT,
+    processed BOOLEAN DEFAULT FALSE
 );

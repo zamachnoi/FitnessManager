@@ -42,9 +42,14 @@ export interface Exercises {
   type: string | null;
 }
 
-export interface MemberClassBooking {
+export interface MemberBooking {
   booking_id: Generated<number>;
+  member_id: number | null;
+}
+
+export interface MemberClassBooking {
   class_id: number | null;
+  member_class_booking_id: number | null;
   member_id: number | null;
 }
 
@@ -76,20 +81,20 @@ export interface Members {
   weight: number | null;
 }
 
-export interface MemberTrainingReservation {
+export interface MemberTrainingBooking {
   member_id: number | null;
-  reservation_id: Generated<number>;
+  member_training_booking_id: number | null;
   slot_availability_id: number | null;
   trainer_id: number | null;
 }
 
-export interface PaymentHistory {
-  active_until: Timestamp | null;
+export interface Payment {
   amount_paid: number | null;
+  booking_id: number | null;
   date_paid: Timestamp | null;
-  description: string | null;
   member_id: number | null;
   payment_id: Generated<number>;
+  processed: Generated<boolean | null>;
 }
 
 export interface Room {
@@ -121,8 +126,16 @@ export interface TrainerAvailability {
   trainer_id: number | null;
 }
 
+export interface TrainerBooking {
+  booking_time: Timestamp | null;
+  trainer_booking_id: Generated<number>;
+  trainer_id: number | null;
+}
+
 export interface Trainers {
+  end_availability: string | null;
   rate: number | null;
+  start_availability: string | null;
   trainer_id: number;
 }
 
@@ -141,17 +154,19 @@ export interface DB {
   equipment_type: EquipmentType;
   exercise_routines: ExerciseRoutines;
   exercises: Exercises;
+  member_booking: MemberBooking;
   member_class_booking: MemberClassBooking;
   member_exercise_routines: MemberExerciseRoutines;
   member_goals: MemberGoals;
   member_health_statistics: MemberHealthStatistics;
-  member_training_reservation: MemberTrainingReservation;
+  member_training_booking: MemberTrainingBooking;
   members: Members;
-  payment_history: PaymentHistory;
+  payment: Payment;
   room: Room;
   room_bookings: RoomBookings;
   routine_exercises: RoutineExercises;
   trainer_availability: TrainerAvailability;
+  trainer_booking: TrainerBooking;
   trainers: Trainers;
   users: Users;
 }

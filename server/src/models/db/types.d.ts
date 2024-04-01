@@ -17,7 +17,7 @@ export interface Classes {
   name: string | null;
   price: number | null;
   room_id: number | null;
-  timeslot_availability_id: number | null;
+  trainer_booking_id: number | null;
   trainer_id: number | null;
 }
 
@@ -53,7 +53,7 @@ export interface MemberBooking {
 
 export interface MemberClassBooking {
   class_id: number | null;
-  member_class_booking_id: number | null;
+  member_class_booking_id: number;
   member_id: number | null;
 }
 
@@ -85,10 +85,10 @@ export interface Members {
   weight: number | null;
 }
 
-export interface MemberTrainingBooking {
+export interface MemberTrainerBooking {
   member_id: number | null;
-  member_training_booking_id: number | null;
-  slot_availability_id: number | null;
+  member_trainer_booking_id: number;
+  trainer_booking_id: number | null;
   trainer_id: number | null;
 }
 
@@ -119,15 +119,6 @@ export interface RoomBookings {
 export interface RoutineExercises {
   exercise_id: number;
   routine_id: number;
-}
-
-export interface TrainerAvailability {
-  availability_id: Generated<number>;
-  available_date: Timestamp | null;
-  end_time: string | null;
-  is_booked: Generated<boolean | null>;
-  start_time: string | null;
-  trainer_id: number | null;
 }
 
 export interface TrainerBooking {
@@ -164,13 +155,12 @@ export interface DB {
   member_exercise_routines: MemberExerciseRoutines;
   member_goals: MemberGoals;
   member_health_statistics: MemberHealthStatistics;
-  member_training_booking: MemberTrainingBooking;
+  member_trainer_booking: MemberTrainerBooking;
   members: Members;
   payment: Payment;
   room: Room;
   room_bookings: RoomBookings;
   routine_exercises: RoutineExercises;
-  trainer_availability: TrainerAvailability;
   trainer_booking: TrainerBooking;
   trainers: Trainers;
   users: Users;

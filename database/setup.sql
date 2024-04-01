@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS member_training_booking CASCADE;
+DROP TABLE IF EXISTS member_trainer_booking CASCADE;
 DROP TABLE IF EXISTS member_class_booking CASCADE;
 DROP TABLE IF EXISTS room_bookings CASCADE;
 DROP TABLE IF EXISTS member_goals CASCADE;
@@ -40,6 +40,7 @@ CREATE TABLE trainers (
     end_availability TIME,
     rate FLOAT
 );
+
 -- Creating Members table
 CREATE TABLE members (
     member_id INT PRIMARY KEY REFERENCES users(user_id),
@@ -90,7 +91,7 @@ CREATE TABLE classes (
     name TEXT,
     trainer_id INT REFERENCES trainers(trainer_id),
     room_id INT REFERENCES room(room_id),
-    timeslot_availability_id INT REFERENCES trainer_availability(availability_id),
+    trainer_booking_id INT REFERENCES trainer_booking(trainer_booking_id),
     price FLOAT
 );
 
@@ -111,7 +112,7 @@ CREATE TABLE room_bookings (
 
 -- Creating Member Class Booking table
 CREATE TABLE member_class_booking (
-    member_class_booking_id INT REFERENCES member_booking(booking_id),
+    member_class_booking_id INT PRIMARY KEY REFERENCES member_booking(booking_id),
     member_id INT REFERENCES members(member_id),
     class_id INT REFERENCES classes(class_id)
 );
@@ -165,12 +166,12 @@ CREATE TABLE member_health_statistics (
     recorded TIMESTAMPTZ
 );
 
--- Creating Member Training Reservation table
-CREATE TABLE member_training_booking (
-    member_training_booking_id INT REFERENCES member_booking(booking_id),
+-- Creating Member Trainer BOOKING
+CREATE TABLE member_trainer_booking (
+    member_trainer_booking_id INT PRIMARY KEY REFERENCES member_booking(booking_id),
     member_id INT REFERENCES members(member_id),
     trainer_id INT REFERENCES trainers(trainer_id),
-    slot_availability_id INT REFERENCES trainer_availability(availability_id)
+    trainer_booking_id INT REFERENCES trainer_booking(trainer_booking_id)
 );
 
 

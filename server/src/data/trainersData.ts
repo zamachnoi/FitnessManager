@@ -46,7 +46,7 @@ export async function getAllTrainers(): Promise<TrainersData[]> {
 export async function createTrainer(
 	trainer: TrainersApiRequest
 ): Promise<TrainersData> {
-	const { rate, ...userData } = trainer
+	const { start_availability, end_availability, rate, ...userData } = trainer
 	// Insert into the users table and get the inserted user
 	const user = await db
 		.insertInto("users")
@@ -60,7 +60,9 @@ export async function createTrainer(
 
 	const trainerData = {
 		trainer_id: user.user_id,
-		rate,
+		start_availability,
+		end_availability,
+		rate
 	}
 
 	// Insert into the trainers table and get the inserted trainer
@@ -87,7 +89,7 @@ export async function updateTrainer(
 	trainerId: number,
 	newData: TrainersApiRequest
 ) {
-	const { rate, ...userData } = newData
+	const { start_availability, end_availability, rate, ...userData } = newData
 
 	// Update the user data
 	const user = await db
@@ -104,7 +106,7 @@ export async function updateTrainer(
 	// Update the trainer data
 	const trainer = await db
 		.updateTable("trainers")
-		.set({ rate })
+		.set({ start_availability, end_availability, rate })
 		.where("trainer_id", "=", trainerId)
 		.returningAll()
 		.executeTakeFirst()

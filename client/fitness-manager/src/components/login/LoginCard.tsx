@@ -9,6 +9,16 @@ import {
 } from "@/components/ui/card"
 
 import { Input } from "@/components/ui/input"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  SelectGroup,
+  SelectLabel,
+} from "@/components/ui/select"
+
 
 const LoginCard = ({
 
@@ -17,9 +27,13 @@ const LoginCard = ({
   const [isLogin, setIsLogin] = useState(true)
 
   return (
-    <Card>
+    <Card className="w-[400px]">
       <CardHeader>
-        <CardTitle>Login</CardTitle>
+        <CardTitle>{isLogin ? (
+          "Login"
+          ) : (
+          "Signup"
+        )}</CardTitle>
       </CardHeader>
       <CardContent>
         <Input
@@ -27,11 +41,53 @@ const LoginCard = ({
           placeholder="Username"
           className="mb-4"
         />
+        { !isLogin ? (
+          <>
+
+            <Input  
+            type="firstName"
+            placeholder="First Name"
+            className="mb-4"
+            />
+            <Input 
+            type="lastName"
+            placeholder="Last Name"
+            className="mb-4"
+            />
+          </>
+          ) : (
+          null
+          )
+        } 
         <Input
           type="password"
           placeholder="Password"
           className="mb-4"
         />
+        
+        
+        <div className="h-[40px]">
+          {!isLogin ? (
+            <Select>
+              <SelectTrigger>
+                <SelectValue placeholder="Account Type"/>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Account Type</SelectLabel>
+                  <SelectItem value="member">Member</SelectItem>
+                  <SelectItem value="trainer">Trainer</SelectItem>
+                  <SelectItem value="admin">Admin</SelectItem>
+                </SelectGroup>
+                
+              </SelectContent>
+            </Select>
+            ) : (
+            null
+            )  }
+        </div>
+        
+
       </CardContent>
       <CardFooter>
               {isLogin ? (

@@ -12,8 +12,17 @@ import { memberRoute } from "./routes/memberRoute"
 import { memberGoalRoute } from "./routes/memberGoalsRoute"
 import { memberHealthStatsRoute } from "./routes/memberHealthStatsRoute"
 import { routineRoute } from "./routes/routineRoute"
+import { authRoute } from "./routes/authRoute"
 
 export const app: Application = express()
+
+declare module "express-session" {
+	export interface SessionData {
+		user_id: number
+		type: "Member" | "Trainer" | "Admin"
+		authenticated: boolean
+	}
+}
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -49,7 +58,7 @@ app.use("/members", memberRoute)
 app.use("/members", memberGoalRoute)
 app.use("/members", memberHealthStatsRoute)
 app.use("/routines", routineRoute)
-
+app.use("/auth", authRoute)
 
 const port = process.env.PORT || 8000
 

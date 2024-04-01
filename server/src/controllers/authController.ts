@@ -6,9 +6,12 @@ import {
 	LogoutApiResponse,
 } from "../models/io/authIo"
 
+import { Request } from "express"
+
 import * as authData from "../data/authData"
 
-export default async function generateAuthRegisterPostResponse(
+export async function generateAuthRegisterPostResponse(
+	req: Request,
 	registerDetails: RegisterApiRequest
 ) {
 	try {
@@ -19,6 +22,12 @@ export default async function generateAuthRegisterPostResponse(
 			status: 200,
 			data: user,
 		}
+
+		req.session.user_id = user.user_id
+		req.session.type = user.type || undefined
+		req.session.authenticated = true
+
+		return res
 	} catch (e) {
 		return {
 			message: "Could not create account",
@@ -29,16 +38,22 @@ export default async function generateAuthRegisterPostResponse(
 }
 
 export async function generateAuthLoginPostResponse(
+	req: Request,
 	loginDetails: LoginApiRequest
 ): Promise<LoginApiResponse> {
 	try {
-		const success = await authData.login(loginDetails)
+		const user = await authData.login(loginDetails)
 
 		let res: LoginApiResponse = {
 			message: `success`,
 			status: 200,
-			data: success,
+			data: user,
 		}
+
+		req.session.user_id = user.user_id
+		req.session.type = user.type || undefined
+		req.session.authenticated = true
+
 		return res
 	} catch (e) {
 		return {
@@ -46,5 +61,23 @@ export async function generateAuthLoginPostResponse(
 			status: 404,
 			data: null,
 		}
+	}
+}
+
+export async function generateAuthLogoutPostResponse(
+	req: Request
+): Promise<LogoutApiResponse> {
+	req.session.destroy((err) => {
+		if (err) {
+			return {
+				message: "Could not logout",
+				status: 404,
+			}
+		}
+	})
+
+	return {
+		message: "Logged out",
+		status: 200,
 	}
 }

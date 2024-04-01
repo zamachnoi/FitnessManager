@@ -1,6 +1,7 @@
-export type AccountData = {
+import { Users } from "../db/types"
+
+export type AccountData = Omit<Users, "user_id" | "password"> & {
 	user_id: number
-	username: string
 }
 
 export type LoginApiRequest = {
@@ -22,6 +23,8 @@ export type LogoutApiResponse = {
 export type RegisterApiRequest = {
 	username: string
 	password: string
+	first_name: string
+	last_name: string
 	type: "Member" | "Trainer" | "Admin"
 }
 

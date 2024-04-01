@@ -1,7 +1,7 @@
 import { db } from "../lib/db";
-import { RoutineApiResponse, RoutinesApiResponse } from "../models/io/routines";
+import { RoutineApiResponse, RoutineDataResponse, RoutinesDataResponse } from "../models/io/routinesIo";
 
-export async function getRoutineById(id: number): Promise<RoutineApiResponse> {
+export async function getRoutineById(id: number): Promise<RoutineDataResponse> {
   const routine = await db
     .selectFrom("exercise_routines")
     .where("routine_id", "=", id)
@@ -12,22 +12,22 @@ export async function getRoutineById(id: number): Promise<RoutineApiResponse> {
     throw new Error("No routine found");
   }
 
-  return { message: "Routine found", status: 200, data: routine };
+  return routine;
 }
 
-export async function getAllRoutines(): Promise<RoutinesApiResponse> {
+export async function getAllRoutines(): Promise<RoutinesDataResponse> {
   const routines = await db
     .selectFrom("exercise_routines")
     .selectAll()
     .execute();
 
-  return { message: "Routines found", status: 200, data: routines };
+  return routines;
 }
 
 export async function assignRoutineToMember(
   memberId: number,
   routineId: number
-): Promise<RoutineApiResponse> {
+): Promise<RoutineDataResponse> {
 
   // check if routine / member exists
   const member = await db
@@ -55,13 +55,13 @@ export async function assignRoutineToMember(
     .values({ member_id: memberId, routine_id: routineId })
     .execute();
 
-  return { message: "Routine assigned", status: 200, data: routine };
+  return routine;
 }
 
 export async function unassignRoutineFromMember(
   memberId: number,
   routineId: number
-): Promise<RoutineApiResponse> {
+): Promise<RoutineDataResponse> {
   const routine = await db
     .selectFrom("exercise_routines")
     .where("routine_id", "=", routineId)
@@ -78,22 +78,22 @@ export async function unassignRoutineFromMember(
     .where("routine_id", "=", routineId)
     .execute();
 
-  return { message: "Routine unassigned", status: 200, data: routine };
+  return routine;
 }
 
 export async function getRoutinesByMemberId(
   memberId: number
-): Promise<RoutinesApiResponse> {
-  const routine = await db
+): Promise<RoutinesDataResponse> {
+  const routines = await db
     .selectFrom("exercise_routines")
     .innerJoin("member_exercise_routines", "exercise_routines.routine_id", "member_exercise_routines.routine_id")
     .where("member_exercise_routines.member_id", "=", memberId)
     .selectAll()
     .execute();
 
-  if (!routine) {
+  if (!routines.length) {
     throw new Error("No routines found");
   }
 
-  return { message: "Routine found", status: 200, data: routine };
+  return routines;
 }

@@ -2,7 +2,7 @@ import {
   RoutineApiResponse,
   RoutinesApiResponse,
   RoutineDataResponse
-} from "../models/io/routines";
+} from "../models/io/routinesIo";
 
 import { 
   getRoutineById,
@@ -20,7 +20,7 @@ export async function generateRoutineByIdGetResponse(
     let res: RoutineApiResponse = {
       message: `success`,
       status: 200,
-      data: routine.data,
+      data: routine,
     }
     return res;
   } catch (e) {
@@ -34,7 +34,7 @@ export async function generateAllRoutinesGetResponse(): Promise<RoutinesApiRespo
     let res: RoutinesApiResponse = {
       message: `success`,
       status: 200,
-      data: routines.data,
+      data: routines,
     }
     return res;
   } catch (e) {
@@ -51,7 +51,7 @@ export async function generateAssignRoutineToMemberPostResponse(
     let res: RoutineApiResponse = {
       message: `success`,
       status: 200,
-      data: routine.data,
+      data: routine,
     }
     return res;
   } catch (e) {
@@ -68,7 +68,7 @@ export async function generateUnassignRoutineFromMemberPostResponse(
     let res: RoutineApiResponse = {
       message: `success`,
       status: 200,
-      data: routine.data,
+      data: routine,
     }
     return res;
   } catch (e) {
@@ -84,7 +84,7 @@ export async function generateRoutinesByMemberIdGetResponse(
     let res: RoutinesApiResponse = {
       message: `success`,
       status: 200,
-      data: routines.data,
+      data: routines,
     }
     return res;
   } catch (e) {

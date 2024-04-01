@@ -4,7 +4,7 @@ import MemberDashboard from "./components/memberDashboard/MemberDashboard"
 function App() {
 
   return (
-    <MemberDashboard />
+    <MemberDashboard memberId={1} />
   )
 }
 

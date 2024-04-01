@@ -1,7 +1,5 @@
 import { Classes } from "../db/types"
 
-
-
 export type ClassesData = Omit<
 	Classes,
 	"class_id"

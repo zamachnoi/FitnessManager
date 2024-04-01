@@ -14,6 +14,7 @@ DROP TABLE IF EXISTS equipment_type CASCADE;
 DROP TABLE IF EXISTS trainer_booking CASCADE;
 DROP TABLE IF EXISTS trainers CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS admins CASCADE;
 DROP TABLE IF EXISTS room CASCADE;
 DROP TABLE IF EXISTS members CASCADE;
 DROP TABLE IF EXISTS member_booking CASCADE;
@@ -29,7 +30,7 @@ CREATE TABLE users (
     first_name TEXT,
     username TEXT UNIQUE,
     password TEXT,
-    type USER_TYPE CHECK (type IN ('Member', 'Trainer', 'Admin'))
+    type USER_TYPE CHECK (type IN ('Member', 'Trainer', 'Admin')) NOT NULL
 );
 
 -- Creating Trainers table
@@ -45,6 +46,11 @@ CREATE TABLE members (
     member_id INT PRIMARY KEY REFERENCES users(user_id),
     weight FLOAT
 );
+
+CREATE TABLE admins (
+    admin_id INT PRIMARY KEY REFERENCES users(user_id)
+);
+
 
 -- Creating Room table
 CREATE TABLE room (

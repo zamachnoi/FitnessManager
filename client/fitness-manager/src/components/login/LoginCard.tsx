@@ -66,26 +66,24 @@ const LoginCard = ({
         />
         
         
-        <div className="h-[40px]">
-          {!isLogin ? (
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Account Type"/>
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Account Type</SelectLabel>
-                  <SelectItem value="member">Member</SelectItem>
-                  <SelectItem value="trainer">Trainer</SelectItem>
-                  <SelectItem value="admin">Admin</SelectItem>
-                </SelectGroup>
-                
-              </SelectContent>
-            </Select>
-            ) : (
-            null
-            )  }
-        </div>
+        {!isLogin ? (
+          <Select>
+            <SelectTrigger>
+              <SelectValue placeholder="Account Type"/>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Account Type</SelectLabel>
+                <SelectItem value="member">Member</SelectItem>
+                <SelectItem value="trainer">Trainer</SelectItem>
+                <SelectItem value="admin">Admin</SelectItem>
+              </SelectGroup>
+              
+            </SelectContent>
+          </Select>
+          ) : (
+          null
+          )  }
         
 
       </CardContent>
@@ -97,7 +95,9 @@ const LoginCard = ({
                 )}
             </CardFooter>
           </Card>
+
         )
+
 }
 
 export default LoginCard

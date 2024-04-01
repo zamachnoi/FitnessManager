@@ -11,6 +11,7 @@ import { userRoute } from "./routes/userRoute"
 import { memberRoute } from "./routes/memberRoute"
 import { memberGoalRoute } from "./routes/memberGoalsRoute"
 import { memberHealthStatsRoute } from "./routes/memberHealthStatsRoute"
+import { trainerRoute } from "./routes/trainersRoute"
 import { routineRoute } from "./routes/routineRoute"
 
 export const app: Application = express()
@@ -48,6 +49,7 @@ app.use("/users", userRoute)
 app.use("/members", memberRoute)
 app.use("/members", memberGoalRoute)
 app.use("/members", memberHealthStatsRoute)
+app.use("/trainers",trainerRoute)
 app.use("/routines", routineRoute)
 
 

@@ -47,7 +47,7 @@ export async function generateAllTrainersGetResponse(): Promise<TrainersArrayApi
 	try {
 		const trainers = await getAllTrainers()
 		let res: TrainersArrayApiResponse = {
-			message: `success`,
+			message: `success getting all trainers`,
 			status: 200,
 			data: trainers,
 		}

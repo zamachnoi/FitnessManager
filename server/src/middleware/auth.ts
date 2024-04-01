@@ -1,34 +1,50 @@
 import { Request, Response, NextFunction } from "express"
-
+import { authEnabled } from "../app"
 export function ensureAuthenticated(
 	req: Request,
 	res: Response,
 	next: NextFunction
 ) {
+	if (!authEnabled) {
+		return next()
+	}
+
+	const pathSegments = req.path.split("/").filter(Boolean)
+
 	// Check if user is authenticated
 	if (!(req.session?.user && req.session.user.authenticated)) {
+		console.log("No session")
 		return res.status(401).json({ status: 401, message: "Unauthorized" })
 	}
 
-	// Extract IDs from URL parameters
-	const { memberId, adminId, trainerId } = req.params
-
-	// Assuming there's a 'user_id' and 'role' in the session to compare
-	const userId = req.session.user.user_id
-	const userRole = req.session.user.type
-
-	// Compare the IDs based on the role; adjust logic as needed for your session structure
-	if (
-		(memberId && userRole === "Member" && memberId !== userId.toString()) ||
-		(adminId && userRole === "Admin" && adminId !== userId.toString()) ||
-		(trainerId && userRole === "Trainer" && trainerId !== userId.toString())
-	) {
-		return res
-			.status(403)
-			.json({ status: 403, message: "Forbidden: ID mismatch" })
+	// Check if path is valid
+	if (pathSegments.length < 2) {
+		console.log("Invalid path")
+		return res.status(401).json({ status: 401, message: "Unauthorized" })
 	}
 
-	// Proceed if everything checks out
+	const pathId = parseInt(pathSegments[1])
+
+	const routeType = pathSegments[0]
+
+	// Check if user is authorized
+	if (req.session.user.user_id !== pathId) {
+		console.log("wrong user id")
+		return res.status(401).json({ status: 401, message: "Unauthorized" })
+	}
+
+	const allowedTypes = {
+		Member: ["members"],
+		Trainer: ["trainers", "members"],
+		Admin: ["trainers", "members", "admins"],
+	}
+
+	// Check if user type is allowed to access the route
+	if (!allowedTypes[req.session.user.type].includes(routeType)) {
+		console.log("wrong user type")
+		return res.status(401).json({ status: 401, message: "Unauthorized" })
+	}
+
 	next()
 }
 

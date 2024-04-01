@@ -11,6 +11,7 @@ import { userRoute } from "./routes/userRoute"
 import { memberRoute } from "./routes/memberRoute"
 import { memberGoalRoute } from "./routes/memberGoalsRoute"
 import { memberHealthStatsRoute } from "./routes/memberHealthStatsRoute"
+import { routineRoute } from "./routes/routineRoute"
 
 export const app: Application = express()
 
@@ -47,6 +48,8 @@ app.use("/users", userRoute)
 app.use("/members", memberRoute)
 app.use("/members", memberGoalRoute)
 app.use("/members", memberHealthStatsRoute)
+app.use("/routines", routineRoute)
+
 
 const port = process.env.PORT || 8000
 

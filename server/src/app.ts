@@ -13,7 +13,10 @@ import { memberGoalRoute } from "./routes/memberGoalsRoute"
 import { memberHealthStatsRoute } from "./routes/memberHealthStatsRoute"
 import { trainerRoute } from "./routes/trainersRoute"
 import { routineRoute } from "./routes/routineRoute"
+import { memberTrainerBookingRoute } from "./routes/memberTrainerBookingRoute"
+
 import { authRoute } from "./routes/authRoute"
+
 import {
 	applyMiddlewareToRoutesStartingWith,
 	ensureAuthenticated,
@@ -74,7 +77,8 @@ app.use("/users", userRoute)
 app.use("/members", memberRoute)
 app.use("/members", memberGoalRoute)
 app.use("/members", memberHealthStatsRoute)
-app.use("/trainers",trainerRoute)
+app.use("/members", memberTrainerBookingRoute)
+app.use("/trainers", trainerRoute)
 app.use("/routines", routineRoute)
 
 const port = process.env.PORT || 8000

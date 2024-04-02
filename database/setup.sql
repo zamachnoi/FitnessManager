@@ -65,7 +65,7 @@ CREATE TABLE room (
 CREATE TABLE trainer_booking (
     trainer_booking_id SERIAL PRIMARY KEY,
     trainer_id INT REFERENCES trainers(trainer_id),
-    booking_time TIMESTAMPTZ
+    booking_date_and_time TIMESTAMPTZ
 );
 
 -- Creating Equipment Type table

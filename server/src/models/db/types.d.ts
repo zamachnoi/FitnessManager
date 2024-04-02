@@ -122,7 +122,7 @@ export interface RoutineExercises {
 }
 
 export interface TrainerBooking {
-  booking_time: Timestamp | null;
+  booking_date_and_time: Timestamp | null;
   trainer_booking_id: Generated<number>;
   trainer_id: number | null;
 }

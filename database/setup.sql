@@ -9,7 +9,7 @@ DROP TABLE IF EXISTS exercises CASCADE;
 DROP TABLE IF EXISTS exercise_routines CASCADE;
 DROP TABLE IF EXISTS classes CASCADE;
 DROP TABLE IF EXISTS equipment CASCADE;
-DROP TABLE IF EXISTS payment CASCADE;
+DROP TABLE IF EXISTS payments CASCADE;
 DROP TABLE IF EXISTS equipment_type CASCADE;
 DROP TABLE IF EXISTS trainer_booking CASCADE;
 DROP TABLE IF EXISTS trainers CASCADE;
@@ -17,6 +17,8 @@ DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS admins CASCADE;
 DROP TABLE IF EXISTS room CASCADE;
 DROP TABLE IF EXISTS members CASCADE;
+DROP TABLE IF EXISTS member_bookings CASCADE;
+DROP TABLE IF EXISTS payment CASCADE;
 DROP TABLE IF EXISTS member_booking CASCADE;
 
 DROP TYPE IF EXISTS USER_TYPE;
@@ -96,7 +98,7 @@ CREATE TABLE classes (
 );
 
 -- Create Bookings Table
-CREATE TABLE member_booking (
+CREATE TABLE member_bookings (
     member_booking_id SERIAL PRIMARY KEY,
     member_id INT REFERENCES members(member_id),
     booking_timestamp TIMESTAMPTZ
@@ -113,7 +115,7 @@ CREATE TABLE room_bookings (
 
 -- Creating Member Class Booking table
 CREATE TABLE member_class_booking (
-    member_class_booking_id INT PRIMARY KEY REFERENCES member_booking(member_booking_id),
+    member_class_booking_id INT PRIMARY KEY REFERENCES member_bookings(member_booking_id),
     member_id INT REFERENCES members(member_id),
     class_id INT REFERENCES classes(class_id)
 );
@@ -169,7 +171,7 @@ CREATE TABLE member_health_statistics (
 
 -- Creating Member Trainer BOOKING
 CREATE TABLE member_trainer_booking (
-    member_booking_id INT REFERENCES member_booking(member_booking_id),
+    member_booking_id INT REFERENCES member_bookings(member_booking_id),
     trainer_booking_id INT REFERENCES trainer_booking(trainer_booking_id),
     PRIMARY KEY (member_booking_id, trainer_booking_id),
     member_id INT REFERENCES members(member_id),
@@ -178,10 +180,10 @@ CREATE TABLE member_trainer_booking (
 
 
 -- Creating Payment History table
-CREATE TABLE payment (
+CREATE TABLE payments (
     payment_id SERIAL PRIMARY KEY,
     member_id INT REFERENCES members(member_id),
-    booking_id INT REFERENCES member_booking(member_booking_id),
+    booking_id INT REFERENCES member_bookings(member_booking_id),
     date_paid DATE,
     amount_paid FLOAT,
     processed BOOLEAN DEFAULT FALSE

@@ -28,7 +28,7 @@ export async function bookTrainer(
 		.execute(async (transaction) => {
 			// check if trainer is available
 			const memberBookingId = await transaction
-				.insertInto("member_booking")
+				.insertInto("member_bookings")
 				.values({
 					member_id: memberId,
 					booking_timestamp: booking_timestamp,
@@ -61,6 +61,25 @@ export async function bookTrainer(
 				...memberTrainerBooking,
 				booking_timestamp,
 			}
+
+			const payment = await transaction
+				.insertInto("payments")
+				.values({
+					member_id: memberId,
+					booking_id: bookingData.member_booking_id,
+					amount_paid: (
+						await db
+							.selectFrom("trainers")
+							.select("rate")
+							.where("trainer_id", "=", trainer_id)
+							.executeTakeFirstOrThrow()
+					).rate,
+					date_paid: new Date(),
+					processed: false,
+				})
+				.returningAll()
+				.executeTakeFirstOrThrow()
+
 			return bookingData
 		})
 	return memberTrainerBooking
@@ -103,7 +122,7 @@ export async function getMemberAvailableHours(memberId: number, date: string) {
 
 	console.log(date)
 	const memberBookings = await db
-		.selectFrom("member_booking")
+		.selectFrom("member_bookings")
 		.select(
 			sql<string>`EXTRACT(HOUR FROM booking_timestamp AT TIME ZONE \'America/New_York\')`.as(
 				"hour"
@@ -129,7 +148,7 @@ export async function getMemberAvailableHours(memberId: number, date: string) {
 
 async function getMemberAvailable(timestamp: Date) {
 	const memberBooked = await db
-		.selectFrom("member_booking")
+		.selectFrom("member_bookings")
 		.selectAll()
 		.where("booking_timestamp", "=", timestamp)
 		.executeTakeFirst()

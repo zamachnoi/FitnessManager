@@ -46,7 +46,7 @@ export interface Exercises {
   type: string | null;
 }
 
-export interface MemberBooking {
+export interface MemberBookings {
   booking_timestamp: Timestamp | null;
   member_booking_id: Generated<number>;
   member_id: number | null;
@@ -93,7 +93,7 @@ export interface MemberTrainerBooking {
   trainer_id: number | null;
 }
 
-export interface Payment {
+export interface Payments {
   amount_paid: number | null;
   booking_id: number | null;
   date_paid: Timestamp | null;
@@ -151,14 +151,14 @@ export interface DB {
   equipment_type: EquipmentType;
   exercise_routines: ExerciseRoutines;
   exercises: Exercises;
-  member_booking: MemberBooking;
+  member_bookings: MemberBookings;
   member_class_booking: MemberClassBooking;
   member_exercise_routines: MemberExerciseRoutines;
   member_goals: MemberGoals;
   member_health_statistics: MemberHealthStatistics;
   member_trainer_booking: MemberTrainerBooking;
   members: Members;
-  payment: Payment;
+  payments: Payments;
   room: Room;
   room_bookings: RoomBookings;
   routine_exercises: RoutineExercises;

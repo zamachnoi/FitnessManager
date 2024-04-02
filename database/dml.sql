@@ -33,7 +33,7 @@ INSERT INTO routine_exercises (routine_id, exercise_id) VALUES (2, 4);
 
 
 INSERT INTO users (user_id, last_name, first_name, username, password, type) VALUES (1, 'Member', '1', 'm1', '123', 'Member');
-INSERT INTO members (member_id, weight) VALUES (1, 150);
+INSERT INTO members (member_id, weight) VALUES (1, 300);
 
 INSERT INTO users (user_id, last_name, first_name, username, password, type) VALUES (2, 'Member', '2', 'm2', '123', 'Member');
 INSERT INTO members (member_id, weight) VALUES (2, 200);
@@ -55,8 +55,20 @@ INSERT INTO admins (admin_id) VALUES (7);
 
 
 
+INSERT INTO member_bookings (member_id, booking_timestamp) VALUES (1, '2024-04-30T16:00:00Z');
+INSERT INTO trainer_booking (trainer_id, trainer_booking_timestamp) VALUES (6, '2024-04-30T16:00:00Z');
+
+INSERT INTO member_trainer_booking (member_booking_id, trainer_booking_id, member_id, trainer_id) VALUES (1, 1, 1, 6);
+
+INSERT INTO payments (member_id, booking_id, date_paid, amount_paid, processed) VALUES (1, 1, '2024-04-01', 70, FALSE);
 
 
+INSERT INTO member_goals (member_id, weight_goal, goal_start, achieved_date, deleted) VALUES (1, 300, '2024-02-01', '2024-02-29', FALSE);
 
+INSERT INTO member_goals (member_id, weight_goal, goal_start, achieved_date, deleted) VALUES (1, 250, '2024-03-01', NULL, TRUE);
 
+INSERT INTO member_goals (member_id, weight_goal, goal_start, achieved_date, deleted) VALUES (1, 275, '2024-04-01', NULL, FALSE);
+
+INSERT INTO member_health_statistics (member_id, systolic_bp, diastolic_bp, heart_rate, recorded) VALUES (1, 150, 120, 110, '2024-04-01T23:51:23Z');
+INSERT INTO member_health_statistics (member_id, systolic_bp, diastolic_bp, heart_rate, recorded) VALUES (1, 145, 110, 90, '2024-04-01T22:12:00Z');
 

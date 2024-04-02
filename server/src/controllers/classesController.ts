@@ -53,13 +53,19 @@ export async function generateClassesGetByIdResponse(
 // POST
 export async function generateClassesPostResponse(
 	class_id: number,
-	stats: ClassesApiRequest
+	classRequest: ClassesApiRequest
 ): Promise<ClassesApiResponse> {
 	try {
+		const timeslot = new Date(classRequest.timeslot)
+
+		const createClassData = classRequest
+
+		createClassData.timeslot = timeslot
+
 		const classes =
 			await classesData.createClass(
 				class_id,
-				stats
+				classRequest
 			)
 		let res: ClassesApiResponse = {
 			message: `success`,

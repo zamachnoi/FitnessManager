@@ -23,11 +23,11 @@ classesRoute.get("/:classId", async (req, res) => {
 // POST
 classesRoute.post("/:classId", async (req, res) => {
 	const classId = parseInt(req.params.classId)
-	const stats = req.body
+	const classRequest = req.body
 	const data =
 		await classesController.generateClassesPostResponse(
 			classId,
-			stats
+			classRequest
 		)
 
 	res.status(data.status).json(data)

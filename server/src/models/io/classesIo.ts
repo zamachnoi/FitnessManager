@@ -1,4 +1,4 @@
-import { Classes } from "../db/types"
+import { Classes, TrainerBooking } from "../db/types"
 
 export type ClassesData = Omit<
 	Classes,
@@ -12,7 +12,7 @@ export type ClassesApiRequest = {
 	price: number
 	room_id: number
     trainer_id: number
-    timeslot_availability_id: number
+	timeslot: Date
 }
 
 export type ClassesApiResponse = {

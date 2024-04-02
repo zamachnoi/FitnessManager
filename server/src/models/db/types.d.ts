@@ -103,18 +103,15 @@ export interface Payments {
 }
 
 export interface Room {
-  close_time: string | null;
   name: string | null;
-  open_time: string | null;
   room_id: Generated<number>;
 }
 
 export interface RoomBookings {
   booking_id: Generated<number>;
   class_id: number | null;
-  end_time: string | null;
+  class_time: Timestamp | null;
   room_id: number | null;
-  start_time: string | null;
 }
 
 export interface RoutineExercises {

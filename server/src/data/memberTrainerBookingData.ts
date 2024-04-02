@@ -26,75 +26,78 @@ export async function bookTrainer(
 	memberId: number,
 	bookingRequest: MemberTrainerBookingRequest
 ): Promise<MemberTrainerBookingData> {
-	// check if trainer is available
-	const trainerAvailable: boolean = await isTrainerAvailable(
-		bookingRequest.trainer_id,
-		bookingRequest.booking_date_and_time
-	)
+	// Start a transaction
+	const res = await db.transaction().execute(async (transaction) => {
+		// check if trainer is available
+		const trainerAvailable: boolean = await isTrainerAvailable(
+			bookingRequest.trainer_id,
+			bookingRequest.booking_date_and_time
+		)
 
-	if (!trainerAvailable) {
-		throw new Error("Trainer is not available")
-	}
+		if (!trainerAvailable) {
+			throw new Error("Trainer is not available")
+		}
 
-	// create base booking
-	const memberBookingId = await db
-		.insertInto("member_booking")
-		.values({ member_id: memberId })
-		.returning("booking_id")
-		.execute()
+		// create base booking
+		const memberBookingId = await transaction
+			.insertInto("member_booking")
+			.values({ member_id: memberId })
+			.returning("booking_id")
+			.execute()
 
-	if (!memberBookingId) {
-		throw new Error("Failed to create member booking")
-	}
+		if (!memberBookingId) {
+			throw new Error("Failed to create member booking")
+		}
 
-	// create trainer booking
-	const trainerBookingValues = await db
-		.insertInto("trainer_booking")
-		.values({
+		// create trainer booking
+		const trainerBookingValues = await transaction
+			.insertInto("trainer_booking")
+			.values({
+				trainer_id: bookingRequest.trainer_id,
+				booking_date_and_time: bookingRequest.booking_date_and_time,
+			})
+			.returningAll()
+			.executeTakeFirst()
+
+		if (!trainerBookingValues) {
+			throw new Error("Failed to create trainer booking")
+		}
+
+		const bookingDateTime =
+			new Date(bookingRequest.booking_date_and_time) || new Date()
+
+		// create member trainer booking
+		const memberTrainerBookingValues = {
+			member_trainer_booking_id: memberBookingId[0].booking_id,
+			trainer_id: trainerBookingValues.trainer_id,
+			trainer_booking_id: trainerBookingValues.trainer_booking_id,
+		}
+
+		const memberTrainerBooking = await transaction
+			.insertInto("member_trainer_booking")
+			.values(memberTrainerBookingValues)
+			.returningAll()
+			.executeTakeFirstOrThrow()
+
+		if (!trainerBookingValues) {
+			throw new Error("Failed to create member trainer booking")
+		}
+
+		// recreate object
+		const res: MemberTrainerBookingData = {
+			member_trainer_booking_id:
+				memberTrainerBooking.member_trainer_booking_id,
+			member_id: memberId,
+			booking_date_and_time: bookingDateTime,
 			trainer_id: bookingRequest.trainer_id,
-			booking_date_and_time: bookingRequest.booking_date_and_time,
-		})
-		.returningAll()
-		.executeTakeFirst()
+			trainer_booking_id: memberTrainerBooking.trainer_booking_id,
+		}
 
-	if (!trainerBookingValues) {
-		throw new Error("Failed to create trainer booking")
-	}
-
-	const bookingDateTime =
-		new Date(bookingRequest.booking_date_and_time) || new Date()
-
-	// create member trainer booking
-	const memberTrainerBookingValues = {
-		member_trainer_booking_id: memberBookingId[0].booking_id,
-		member_trainer_booking_date_and_time:
-			trainerBookingValues.booking_date_and_time,
-		trainer_id: trainerBookingValues.trainer_id,
-		trainer_booking_id: trainerBookingValues.trainer_booking_id,
-	}
-
-	const memberTrainerBooking = await db
-		.insertInto("member_trainer_booking")
-		.values(memberTrainerBookingValues)
-		.returningAll()
-		.executeTakeFirstOrThrow()
-
-	if (!trainerBookingValues) {
-		throw new Error("Failed to create member trainer booking")
-	}
-
-	// recreate object
-	const res: MemberTrainerBookingData = {
-		member_trainer_booking_id:
-			memberTrainerBooking.member_trainer_booking_id,
-		member_id: memberId,
-		booking_date_and_time: bookingDateTime,
-		trainer_id: bookingRequest.trainer_id,
-		trainer_booking_id: memberTrainerBooking.trainer_booking_id,
-	}
-
+		return res
+	})
 	return res
 }
+
 export async function getAvailableTrainers(timestamp: Date): Promise<number[]> {
 	const hourOfInterest = timestamp.getHours()
 

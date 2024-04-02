@@ -23,6 +23,7 @@ export async function generateMemberTrainerBookingPostRespoonse(
 			data: booking,
 		}
 	} catch (e) {
+		console.log(e)
 		return {
 			message: "Could not book trainer",
 			status: 404,

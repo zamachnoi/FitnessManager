@@ -32,6 +32,29 @@ INSERT INTO routine_exercises (routine_id, exercise_id) VALUES (2, 3);
 INSERT INTO routine_exercises (routine_id, exercise_id) VALUES (2, 4);
 
 
+INSERT INTO users (user_id, last_name, first_name, username, password, type) VALUES (1, 'Member', '1', 'm1', '123', 'Member');
+INSERT INTO members (member_id, weight) VALUES (1, 150);
+
+INSERT INTO users (user_id, last_name, first_name, username, password, type) VALUES (2, 'Member', '2', 'm2', '123', 'Member');
+INSERT INTO members (member_id, weight) VALUES (2, 200);
+
+INSERT INTO users (user_id, last_name, first_name, username, password, type) VALUES (3, 'Member', '3', 'm3', '123', 'Member');
+INSERT INTO members (member_id, weight) VALUES (3, 175);
+
+INSERT INTO users (user_id, last_name, first_name, username, password, type) VALUES (4, 'Trainer', '1', 't1', '123', 'Trainer');
+INSERT INTO trainers (trainer_id, start_availability, end_availability ,rate) VALUES (4, '00:00:00', '23:59:59', 50);
+
+INSERT INTO users (user_id, last_name, first_name, username, password, type) VALUES (5, 'Trainer', '2', 't2', '123', 'Trainer');
+INSERT INTO trainers (trainer_id, start_availability, end_availability ,rate) VALUES (5, '00:00:00', '23:59:59', 60);
+
+INSERT INTO users (user_id, last_name, first_name, username, password, type) VALUES (6, 'Trainer', '3', 't3', '123', 'Trainer');
+INSERT INTO trainers (trainer_id, start_availability, end_availability, rate) VALUES (6, '00:00:00', '01:00:00', 70);
+
+INSERT INTO users (user_id, last_name, first_name, username, password, type) VALUES (7, 'Admin', '1', 'a1', '123', 'Admin');
+INSERT INTO admins (admin_id) VALUES (7);
+
+
+
 
 
 

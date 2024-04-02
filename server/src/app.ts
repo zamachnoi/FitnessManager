@@ -23,6 +23,7 @@ import {
 	excludeGetRequests,
 } from "./middleware/auth"
 
+export const authEnabled = process.env.AUTH === "true"
 export const app: Application = express()
 
 declare module "express-session" {
@@ -44,8 +45,6 @@ app.use(
 		credentials: true,
 	})
 )
-
-const authEnabled = process.env.AUTH === "true" || false
 
 if (authEnabled) {
 	app.use(
@@ -81,7 +80,7 @@ app.use("/members", memberTrainerBookingRoute)
 app.use("/trainers", trainerRoute)
 app.use("/routines", routineRoute)
 
-const port = process.env.PORT || 8000
+const port = process.env.PORT || 3000
 
 app.listen(port, () => {
 	console.log(`server started at at http://localhost:${port}`)

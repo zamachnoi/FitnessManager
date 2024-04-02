@@ -24,8 +24,17 @@ export async function generateAuthRegisterPostResponse(
 			data: user,
 		}
 
+		const sessionData = {
+			user_id: user.user_id,
+			type: user.type,
+			authenticated: true,
+		}
+
+		req.session.user = sessionData
+
 		return res
 	} catch (e) {
+		console.log(e)
 		return {
 			message: "Could not create account",
 			status: 404,
@@ -56,6 +65,8 @@ export async function generateAuthLoginPostResponse(
 
 		req.session.user = sessionData
 
+		console.log(req.session.user)
+
 		return res
 	} catch (e) {
 		return {
@@ -78,6 +89,8 @@ export async function generateAuthLogoutPostResponse(
 			}
 		}
 	})
+
+	console.log(req.session)
 
 	return {
 		message: "Logged out",

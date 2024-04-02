@@ -15,6 +15,16 @@ const PersonalInfoCard = ({
       )}
     >
       <Input
+        type="firstName"
+        placeholder="First Name"
+        className="mb-4"
+      />
+      <Input
+        type="lastName"
+        placeholder="Last Name"
+        className="mb-4"
+      />
+      <Input
         type="weight"
         placeholder="Weight"
         className="mb-4"

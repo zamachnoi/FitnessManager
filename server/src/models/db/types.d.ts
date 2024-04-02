@@ -8,12 +8,16 @@ export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
 export type UserType = "Admin" | "Member" | "Trainer";
 
+export interface Admins {
+  admin_id: number;
+}
+
 export interface Classes {
   class_id: Generated<number>;
   name: string | null;
   price: number | null;
   room_id: number | null;
-  timeslot_availability_id: number | null;
+  trainer_booking_id: number | null;
   trainer_id: number | null;
 }
 
@@ -36,14 +40,21 @@ export interface ExerciseRoutines {
 
 export interface Exercises {
   description: string | null;
+  equipment_id: number | null;
   exercise_id: Generated<number>;
   name: string | null;
   type: string | null;
 }
 
+export interface MemberBookings {
+  booking_timestamp: Timestamp | null;
+  member_booking_id: Generated<number>;
+  member_id: number | null;
+}
+
 export interface MemberClassBooking {
-  booking_id: Generated<number>;
   class_id: number | null;
+  member_class_booking_id: number;
   member_id: number | null;
 }
 
@@ -75,20 +86,20 @@ export interface Members {
   weight: number | null;
 }
 
-export interface MemberTrainingReservation {
+export interface MemberTrainerBooking {
+  member_booking_id: number;
   member_id: number | null;
-  reservation_id: Generated<number>;
-  slot_availability_id: number | null;
+  trainer_booking_id: number;
   trainer_id: number | null;
 }
 
-export interface PaymentHistory {
-  active_until: Timestamp | null;
+export interface Payments {
   amount_paid: number | null;
+  booking_id: number | null;
   date_paid: Timestamp | null;
-  description: string | null;
   member_id: number | null;
   payment_id: Generated<number>;
+  processed: Generated<boolean | null>;
 }
 
 export interface Room {
@@ -111,17 +122,16 @@ export interface RoutineExercises {
   routine_id: number;
 }
 
-export interface TrainerAvailability {
-  availability_id: Generated<number>;
-  available_date: Timestamp | null;
-  end_time: string | null;
-  is_booked: Generated<boolean | null>;
-  start_time: string | null;
+export interface TrainerBooking {
+  trainer_booking_id: Generated<number>;
+  trainer_booking_timestamp: Timestamp | null;
   trainer_id: number | null;
 }
 
 export interface Trainers {
+  end_availability: string | null;
   rate: number | null;
+  start_availability: string | null;
   trainer_id: number;
 }
 
@@ -129,28 +139,30 @@ export interface Users {
   first_name: string | null;
   last_name: string | null;
   password: string | null;
-  type: UserType | null;
+  type: UserType;
   user_id: Generated<number>;
   username: string | null;
 }
 
 export interface DB {
+  admins: Admins;
   classes: Classes;
   equipment: Equipment;
   equipment_type: EquipmentType;
   exercise_routines: ExerciseRoutines;
   exercises: Exercises;
+  member_bookings: MemberBookings;
   member_class_booking: MemberClassBooking;
   member_exercise_routines: MemberExerciseRoutines;
   member_goals: MemberGoals;
   member_health_statistics: MemberHealthStatistics;
-  member_training_reservation: MemberTrainingReservation;
+  member_trainer_booking: MemberTrainerBooking;
   members: Members;
-  payment_history: PaymentHistory;
+  payments: Payments;
   room: Room;
   room_bookings: RoomBookings;
   routine_exercises: RoutineExercises;
-  trainer_availability: TrainerAvailability;
+  trainer_booking: TrainerBooking;
   trainers: Trainers;
   users: Users;
 }

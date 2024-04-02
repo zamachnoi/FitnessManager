@@ -69,7 +69,6 @@ export async function generateMemberPostResponse(
 		}
 		return res
 	} catch (e) {
-		console.log(e)
 		return { message: "Could not create member", status: 404, data: null }
 	}
 }
@@ -87,7 +86,6 @@ export async function generateMemberPatchResponse(
 		}
 		return res
 	} catch (e) {
-		console.log(e)
 		return { message: "Could not update member", status: 404, data: null }
 	}
 }

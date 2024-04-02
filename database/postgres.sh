@@ -1,0 +1,1 @@
+docker run -d --name fitnessManager -e POSTGRES_PASSWORD=test -p 15432:5432 postgres

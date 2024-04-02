@@ -1,12 +1,12 @@
 import { MemberTrainerBooking } from "../db/types"
 
 export type MemberTrainerBookingData = MemberTrainerBooking & {
-	booking_date_and_time: Date
+	booking_timestamp: Date
 }
 
 export type MemberTrainerBookingRequest = {
 	trainer_id: number
-	booking_date_and_time: Date
+	booking_timestamp: Date
 }
 
 export type MemberTrainerBookingResponse = {
@@ -22,5 +22,11 @@ export type AvailableTrainersResponse = {
 }
 
 export type AvailableTrainersRequest = {
-	timestamp: number
+	booking_timestamp: Date
+}
+
+export type MemberAvailableHoursResponse = {
+	status: number
+	message: string
+	data: number[] // 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
 }

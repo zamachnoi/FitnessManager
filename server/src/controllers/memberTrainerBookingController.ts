@@ -12,9 +12,14 @@ export async function generateMemberTrainerBookingPostRespoonse(
 	bookingRequest: MemberTrainerBookingRequest
 ): Promise<MemberTrainerBookingResponse> {
 	try {
+		const timestamp = new Date(bookingRequest.booking_timestamp)
+
+		const bookTrainerData = bookingRequest
+
+		bookTrainerData.booking_timestamp = timestamp
 		const booking = await memberTrainerBookingData.bookTrainer(
 			member_id,
-			bookingRequest
+			bookTrainerData
 		)
 
 		return {
@@ -23,7 +28,6 @@ export async function generateMemberTrainerBookingPostRespoonse(
 			data: booking,
 		}
 	} catch (e) {
-		console.log(e)
 		return {
 			message: "Could not book trainer",
 			status: 404,
@@ -35,9 +39,7 @@ export async function generateMemberTrainerBookingPostRespoonse(
 export async function generateAvailableTrainersGetResponse(
 	request: AvailableTrainersRequest
 ): Promise<AvailableTrainersResponse> {
-	const timestampInt = request.timestamp
-
-	const timestamp = new Date(timestampInt)
+	const timestamp = new Date(request.booking_timestamp)
 
 	try {
 		const trainers = await memberTrainerBookingData.getAvailableTrainers(
@@ -52,6 +54,35 @@ export async function generateAvailableTrainersGetResponse(
 	} catch (e) {
 		return {
 			message: "Could not find available trainers",
+			status: 404,
+			data: [],
+		}
+	}
+}
+
+export async function generateMemberAvailableHoursGetResponse(
+	memberId: number,
+	day: Date
+): Promise<AvailableTrainersResponse> {
+	const dateString = day.toISOString().split("T")[0]
+	console.log(dateString)
+
+	console.log(memberId, dateString)
+	try {
+		const hours = await memberTrainerBookingData.getMemberAvailableHours(
+			memberId,
+			dateString
+		)
+
+		return {
+			message: `success`,
+			status: 200,
+			data: hours,
+		}
+	} catch (e) {
+		console.log(e)
+		return {
+			message: "Could not find available hours",
 			status: 404,
 			data: [],
 		}

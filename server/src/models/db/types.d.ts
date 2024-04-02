@@ -47,7 +47,8 @@ export interface Exercises {
 }
 
 export interface MemberBooking {
-  booking_id: Generated<number>;
+  booking_timestamp: Timestamp | null;
+  member_booking_id: Generated<number>;
   member_id: number | null;
 }
 
@@ -86,9 +87,9 @@ export interface Members {
 }
 
 export interface MemberTrainerBooking {
+  member_booking_id: number;
   member_id: number | null;
-  member_trainer_booking_id: number;
-  trainer_booking_id: number | null;
+  trainer_booking_id: number;
   trainer_id: number | null;
 }
 
@@ -122,8 +123,8 @@ export interface RoutineExercises {
 }
 
 export interface TrainerBooking {
-  booking_date_and_time: Timestamp | null;
   trainer_booking_id: Generated<number>;
+  trainer_booking_timestamp: Timestamp | null;
   trainer_id: number | null;
 }
 

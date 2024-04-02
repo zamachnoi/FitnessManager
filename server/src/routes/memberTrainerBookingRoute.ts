@@ -6,27 +6,42 @@ import * as memberTrainerBookingController from "../controllers/memberTrainerBoo
 export const memberTrainerBookingRoute = Router()
 
 memberTrainerBookingRoute.get(
-	"/:memberId/trainers/:timestamp",
+	"/:id/booking/trainers/:booking_timestamp",
 	async (req, res) => {
-		const timestamp = parseInt(req.params.timestamp)
+		const booking_timestamp = new Date(
+			parseInt(req.params.booking_timestamp)
+		)
 
 		const data =
 			await memberTrainerBookingController.generateAvailableTrainersGetResponse(
-				{ timestamp }
+				{ booking_timestamp }
 			)
 
 		res.status(data.status).json(data)
 	}
 )
 
-memberTrainerBookingRoute.post("/:memberId/trainers/book", async (req, res) => {
+memberTrainerBookingRoute.post("/:id/booking/trainers", async (req, res) => {
 	const bookingRequest: MemberTrainerBookingRequest = req.body
-	const memberId = parseInt(req.params.memberId)
+	const memberId = parseInt(req.params.id)
 
 	const data =
 		await memberTrainerBookingController.generateMemberTrainerBookingPostRespoonse(
 			memberId,
 			bookingRequest
+		)
+
+	res.status(data.status).json(data)
+})
+
+memberTrainerBookingRoute.get("/:id/booking/hours/:date", async (req, res) => {
+	const memberId = parseInt(req.params.id)
+	const day = new Date(parseInt(req.params.date))
+
+	const data =
+		await memberTrainerBookingController.generateMemberAvailableHoursGetResponse(
+			memberId,
+			day
 		)
 
 	res.status(data.status).json(data)

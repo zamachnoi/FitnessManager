@@ -48,7 +48,7 @@ INSERT INTO users (user_id, last_name, first_name, username, password, type) VAL
 INSERT INTO trainers (trainer_id, start_availability, end_availability ,rate) VALUES (5, '00:00:00', '23:59:59', 60);
 
 INSERT INTO users (user_id, last_name, first_name, username, password, type) VALUES (6, 'Trainer', '3', 't3', '123', 'Trainer');
-INSERT INTO trainers (trainer_id, start_availability, end_availability, rate) VALUES (6, '00:00:00', '01:00:00', 70);
+INSERT INTO trainers (trainer_id, start_availability, end_availability, rate) VALUES (6, '12:00:00', '13:00:00', 70);
 
 INSERT INTO users (user_id, last_name, first_name, username, password, type) VALUES (7, 'Admin', '1', 'a1', '123', 'Admin');
 INSERT INTO admins (admin_id) VALUES (7);

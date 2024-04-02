@@ -3,99 +3,67 @@ import {
 	MemberTrainerBookingRequest,
 } from "../models/io/memberTrainerBookingIo"
 import { db } from "../lib/db"
-
-async function isTrainerAvailable(
-	trainerId: number,
-	bookingDateTime: Date
-): Promise<boolean> {
-	const booked = await db
-		.selectFrom("trainer_booking")
-		.where("trainer_id", "=", trainerId)
-		.where("booking_date_and_time", "=", bookingDateTime)
-		.selectAll()
-		.executeTakeFirst()
-
-	if (booked) {
-		return false
-	}
-
-	return true
-}
+import { sql } from "kysely"
 
 export async function bookTrainer(
 	memberId: number,
 	bookingRequest: MemberTrainerBookingRequest
 ): Promise<MemberTrainerBookingData> {
-	// Start a transaction
-	const res = await db.transaction().execute(async (transaction) => {
-		// check if trainer is available
-		const trainerAvailable: boolean = await isTrainerAvailable(
-			bookingRequest.trainer_id,
-			bookingRequest.booking_date_and_time
-		)
+	const { trainer_id, booking_timestamp } = bookingRequest
 
-		if (!trainerAvailable) {
-			throw new Error("Trainer is not available")
-		}
+	const availableTrainers = await getAvailableTrainers(booking_timestamp)
 
-		// create base booking
-		const memberBookingId = await transaction
-			.insertInto("member_booking")
-			.values({ member_id: memberId })
-			.returning("booking_id")
-			.execute()
+	if (!availableTrainers.includes(trainer_id)) {
+		throw new Error("Trainer is not available")
+	}
 
-		if (!memberBookingId) {
-			throw new Error("Failed to create member booking")
-		}
+	const memberAvailable = await getMemberAvailable(booking_timestamp)
 
-		// create trainer booking
-		const trainerBookingValues = await transaction
-			.insertInto("trainer_booking")
-			.values({
-				trainer_id: bookingRequest.trainer_id,
-				booking_date_and_time: bookingRequest.booking_date_and_time,
-			})
-			.returningAll()
-			.executeTakeFirst()
+	if (!memberAvailable) {
+		throw new Error("Member is not available")
+	}
 
-		if (!trainerBookingValues) {
-			throw new Error("Failed to create trainer booking")
-		}
+	const memberTrainerBooking = await db
+		.transaction()
+		.execute(async (transaction) => {
+			// check if trainer is available
+			const memberBookingId = await transaction
+				.insertInto("member_booking")
+				.values({
+					member_id: memberId,
+					booking_timestamp: booking_timestamp,
+				})
+				.returning("member_booking_id")
+				.executeTakeFirstOrThrow()
 
-		const bookingDateTime =
-			new Date(bookingRequest.booking_date_and_time) || new Date()
+			const trainerBooking = await transaction
+				.insertInto("trainer_booking")
+				.values({
+					trainer_id,
+					trainer_booking_timestamp: booking_timestamp,
+				})
+				.returningAll()
+				.executeTakeFirstOrThrow()
 
-		// create member trainer booking
-		const memberTrainerBookingValues = {
-			member_trainer_booking_id: memberBookingId[0].booking_id,
-			trainer_id: trainerBookingValues.trainer_id,
-			trainer_booking_id: trainerBookingValues.trainer_booking_id,
-		}
+			const memberTrainerBookingData = {
+				member_id: memberId,
+				trainer_id,
+				member_booking_id: memberBookingId.member_booking_id,
+				trainer_booking_id: trainerBooking.trainer_booking_id,
+			}
+			const memberTrainerBooking = await transaction
+				.insertInto("member_trainer_booking")
+				.values(memberTrainerBookingData)
+				.returningAll()
+				.executeTakeFirstOrThrow()
 
-		const memberTrainerBooking = await transaction
-			.insertInto("member_trainer_booking")
-			.values(memberTrainerBookingValues)
-			.returningAll()
-			.executeTakeFirstOrThrow()
-
-		if (!trainerBookingValues) {
-			throw new Error("Failed to create member trainer booking")
-		}
-
-		// recreate object
-		const res: MemberTrainerBookingData = {
-			member_trainer_booking_id:
-				memberTrainerBooking.member_trainer_booking_id,
-			member_id: memberId,
-			booking_date_and_time: bookingDateTime,
-			trainer_id: bookingRequest.trainer_id,
-			trainer_booking_id: memberTrainerBooking.trainer_booking_id,
-		}
-
-		return res
-	})
-	return res
+			const bookingData: MemberTrainerBookingData = {
+				...memberTrainerBooking,
+				booking_timestamp,
+			}
+			return bookingData
+		})
+	return memberTrainerBooking
 }
 
 export async function getAvailableTrainers(timestamp: Date): Promise<number[]> {
@@ -111,7 +79,7 @@ export async function getAvailableTrainers(timestamp: Date): Promise<number[]> {
 				not(
 					exists(
 						selectFrom("trainer_booking")
-							.where("booking_date_and_time", "=", timestamp)
+							.where("trainer_booking_timestamp", "=", timestamp)
 							.whereRef(
 								"trainer_booking.trainer_id",
 								"=",
@@ -128,4 +96,46 @@ export async function getAvailableTrainers(timestamp: Date): Promise<number[]> {
 	}
 
 	return availableTrainers.map((trainer) => trainer.trainer_id)
+}
+
+export async function getMemberAvailableHours(memberId: number, date: string) {
+	const availableTimes = Array.from({ length: 24 }, (_, i) => i)
+
+	console.log(date)
+	const memberBookings = await db
+		.selectFrom("member_booking")
+		.select(
+			sql<string>`EXTRACT(HOUR FROM booking_timestamp AT TIME ZONE \'America/New_York\')`.as(
+				"hour"
+			)
+		)
+		.where("member_id", "=", memberId)
+		.where(db.fn("DATE", ["booking_timestamp"]), "=", date)
+		.execute()
+
+	if (!memberBookings) {
+		return availableTimes
+	}
+
+	const bookedTimes = memberBookings.map((booking) => parseInt(booking.hour))
+	console.log(bookedTimes)
+
+	const availableTimesFiltered = availableTimes.filter(
+		(time) => !bookedTimes.includes(time)
+	)
+
+	return availableTimesFiltered
+}
+
+async function getMemberAvailable(timestamp: Date) {
+	const memberBooked = await db
+		.selectFrom("member_booking")
+		.selectAll()
+		.where("booking_timestamp", "=", timestamp)
+		.executeTakeFirst()
+
+	if (memberBooked) {
+		return false
+	}
+	return true
 }

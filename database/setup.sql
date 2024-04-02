@@ -65,7 +65,7 @@ CREATE TABLE room (
 CREATE TABLE trainer_booking (
     trainer_booking_id SERIAL PRIMARY KEY,
     trainer_id INT REFERENCES trainers(trainer_id),
-    booking_date_and_time TIMESTAMPTZ
+    trainer_booking_timestamp TIMESTAMPTZ
 );
 
 -- Creating Equipment Type table
@@ -97,8 +97,9 @@ CREATE TABLE classes (
 
 -- Create Bookings Table
 CREATE TABLE member_booking (
-    booking_id SERIAL PRIMARY KEY,
-    member_id INT REFERENCES members(member_id)
+    member_booking_id SERIAL PRIMARY KEY,
+    member_id INT REFERENCES members(member_id),
+    booking_timestamp TIMESTAMPTZ
 );
 
 -- Creating Room Bookings table
@@ -112,7 +113,7 @@ CREATE TABLE room_bookings (
 
 -- Creating Member Class Booking table
 CREATE TABLE member_class_booking (
-    member_class_booking_id INT PRIMARY KEY REFERENCES member_booking(booking_id),
+    member_class_booking_id INT PRIMARY KEY REFERENCES member_booking(member_booking_id),
     member_id INT REFERENCES members(member_id),
     class_id INT REFERENCES classes(class_id)
 );
@@ -143,7 +144,7 @@ CREATE TABLE routine_exercises (
 CREATE TABLE member_exercise_routines (
     member_id INT REFERENCES members(member_id),
     routine_id INT REFERENCES exercise_routines(routine_id),
-    PRIMARY KEY (member_id, routine_id)
+    PRIMARY KEY (member_id, routine_id) 
 );
 
 -- Creating Member Goals table
@@ -168,10 +169,11 @@ CREATE TABLE member_health_statistics (
 
 -- Creating Member Trainer BOOKING
 CREATE TABLE member_trainer_booking (
-    member_trainer_booking_id INT PRIMARY KEY REFERENCES member_booking(booking_id),
+    member_booking_id INT REFERENCES member_booking(member_booking_id),
+    trainer_booking_id INT REFERENCES trainer_booking(trainer_booking_id),
+    PRIMARY KEY (member_booking_id, trainer_booking_id),
     member_id INT REFERENCES members(member_id),
-    trainer_id INT REFERENCES trainers(trainer_id),
-    trainer_booking_id INT REFERENCES trainer_booking(trainer_booking_id)
+    trainer_id INT REFERENCES trainers(trainer_id)
 );
 
 
@@ -179,7 +181,7 @@ CREATE TABLE member_trainer_booking (
 CREATE TABLE payment (
     payment_id SERIAL PRIMARY KEY,
     member_id INT REFERENCES members(member_id),
-    booking_id INT REFERENCES member_booking(booking_id),
+    booking_id INT REFERENCES member_booking(member_booking_id),
     date_paid DATE,
     amount_paid FLOAT,
     processed BOOLEAN DEFAULT FALSE

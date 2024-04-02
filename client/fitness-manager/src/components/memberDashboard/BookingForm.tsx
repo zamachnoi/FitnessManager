@@ -1,7 +1,6 @@
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -21,6 +20,10 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
+import { getData } from "@/utils/getData"
+
+import { useState, useEffect } from "react"
+
 const BookingSchema = z.object({
   date: z.date(),
   time: z.number(),
@@ -28,6 +31,25 @@ const BookingSchema = z.object({
   member_id: z.number(),
 })
 
+type TrainerType = {
+  trainerId: number,
+  rate: number,
+  trainer_id: number,
+  first_name: string,
+  last_name: string,
+}
+
+// get serverside props
+export async function getAvailableTrainers(date: Date, time: number) {
+  // add time to date
+  const dt = new Date(date)
+  dt.setHours(time)
+  // convert to unix
+  const unix = dt.getTime() / 1000
+
+  const res = await getData(`/members/1/booking/trainers/${unix}`)
+  return res
+}
 
 const BookingForm = ({
   times,
@@ -35,8 +57,22 @@ const BookingForm = ({
   times: number[]
 }) => {
 
+  const [trainers, setTrainers] = useState<TrainerType[]>([])
+
+  useEffect(() => {
+    getAvailableTrainers(new Date(), 0).then((res) => {
+      setTrainers(res)
+    })
+  }, [])
+
   const form = useForm<z.infer<typeof BookingSchema>>({
-    resolver: zodResolver(BookingSchema)
+    resolver: zodResolver(BookingSchema),
+    defaultValues: {
+      date: new Date(),
+      time: 0,
+      trainer_id: 1,
+      member_id: 1,
+    }
   })
 
   function onSubmit(values: z.infer<typeof BookingSchema>) {
@@ -83,6 +119,32 @@ const BookingForm = ({
                   </SelectContent>
                 </Select>
                 
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="trainer_id"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Trainer</FormLabel>
+              <FormControl>
+                <Select onValueChange={(val) => field.onChange(parseInt(val, 10))}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a trainer" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="trainer" disabled>
+                      Select a trainer
+                    </SelectItem>
+                    {trainers.map((trainer) => (
+                      <SelectItem key={trainer.trainer_id} value={String(trainer.trainer_id)}>
+                        {trainer.first_name} {trainer.last_name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </FormControl>
             </FormItem>
           )}

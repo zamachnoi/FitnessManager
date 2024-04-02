@@ -1,5 +1,7 @@
 import PersonalInfoCard from "./PersonalInfoCard"
 import GoalCard from "./GoalCard"
+import PersonalTrainingCard from "./PersonalTrainingCard"
+
 import { getData } from "@/utils/getData"
 
 export async function getServerSideProps(memberId: number) {
@@ -34,15 +36,36 @@ const MemberDashboard = ({
   
   ]
 
+  const testBookings = [
+    {
+      member_booking_id: 1,
+      trainer_booking_id: 1,
+      member_id: 1,
+      trainer_id: 6,
+      booking_timestamp: new Date("2024-04-02T16:00:00.000Z")
+    }
+  ]
+
+  const testTimes = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+  ]
+
+
+
   const props = getServerSideProps(memberId)
   console.log(props)
 
   return (
-    <div>
+    <div >
       <PersonalInfoCard />
       <GoalCard goals={testGoals} />
+      <PersonalTrainingCard bookings={testBookings} times={testTimes}/>
     </div>
-    
   )
 }
 

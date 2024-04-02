@@ -19,7 +19,7 @@ const DashboardCard = ({
   children: React.ReactNode,
 }) => {
   return (
-    <Card>
+    <Card className="max-w-[650px]">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>

@@ -9,4 +9,12 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    fs: {
+      strict: false,
+    },
+    hmr: {
+      overlay: false,
+    }
+  }
 })

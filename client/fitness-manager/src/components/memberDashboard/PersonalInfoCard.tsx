@@ -1,5 +1,6 @@
 import DashboardCard from "@/components/memberDashboard/DashboardCard"
 import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
 
 const PersonalInfoCard = ({
   weight=0
@@ -11,7 +12,7 @@ const PersonalInfoCard = ({
       title="Personal Info"
       description="Update your personal information"
       footer={(
-        <button className="btn">Update</button>
+        <Button className="btn">Update</Button>
       )}
     >
       <Input

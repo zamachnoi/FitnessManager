@@ -10,14 +10,14 @@ const GoalForm = ({
 }) => {
 
   return (
-    <div>
-      <div className="flex justify-between items-center h-[20px]">
-        <h2 className="text-2xl font-bold">{goalName}</h2>
+    <div className="padding-4 ">
+      <div className="flex justify-between items-center space-x-2">
+        <h2 className="text-m">{goalName}</h2>
         <Checkbox
           id={goalId}
         />
       </div>
-      <Separator />
+      <Separator className="mt-2" />
     </div>
     
   )

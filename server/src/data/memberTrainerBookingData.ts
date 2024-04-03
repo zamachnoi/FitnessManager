@@ -1,6 +1,7 @@
 import {
 	MemberTrainerBookingData,
 	MemberTrainerBookingRequest,
+	AvailableTrainersData,
 } from "../models/io/memberTrainerBookingIo"
 import { db } from "../lib/db"
 import { sql } from "kysely"
@@ -13,7 +14,9 @@ export async function bookTrainer(
 
 	const availableTrainers = await getAvailableTrainers(booking_timestamp)
 
-	if (!availableTrainers.includes(trainer_id)) {
+	if (
+		!availableTrainers.some((trainer) => trainer.trainer_id === trainer_id)
+	) {
 		throw new Error("Trainer is not available")
 	}
 
@@ -85,12 +88,15 @@ export async function bookTrainer(
 	return memberTrainerBooking
 }
 
-export async function getAvailableTrainers(timestamp: Date): Promise<number[]> {
+export async function getAvailableTrainers(
+	timestamp: Date
+): Promise<AvailableTrainersData[]> {
 	const hourOfInterest = timestamp.getHours()
 
 	const availableTrainers = await db
 		.selectFrom("trainers")
-		.select("trainer_id")
+		.innerJoin("users", "user_id", "trainer_id")
+		.select(["trainer_id", "first_name", "last_name", "rate"])
 		.where(({ eb, and, not, exists, selectFrom }) =>
 			and([
 				eb("start_availability", "<=", `${hourOfInterest}:00:00`),
@@ -114,7 +120,7 @@ export async function getAvailableTrainers(timestamp: Date): Promise<number[]> {
 		return []
 	}
 
-	return availableTrainers.map((trainer) => trainer.trainer_id)
+	return availableTrainers
 }
 
 export async function getMemberAvailableHours(memberId: number, date: string) {

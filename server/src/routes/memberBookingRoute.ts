@@ -61,7 +61,7 @@ memberBookingRoute.get("/:id/booking", async (req, res) => {
 	res.status(data.status).json(data)
 })
 
-memberBookingRoute.post("/:id/booking/class/:class_id", async (req, res) => {
+memberBookingRoute.post("/:id/booking/classes/:class_id", async (req, res) => {
 	const memberId = parseInt(req.params.id)
 	const classId = parseInt(req.params.class_id)
 

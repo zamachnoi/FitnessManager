@@ -11,9 +11,11 @@ import { userRoute } from "./routes/userRoute"
 import { memberRoute } from "./routes/memberRoute"
 import { memberGoalRoute } from "./routes/memberGoalsRoute"
 import { memberHealthStatsRoute } from "./routes/memberHealthStatsRoute"
+import { classesRoute } from "./routes/classesRoute"
 import { trainerRoute } from "./routes/trainersRoute"
 import { routineRoute } from "./routes/routineRoute"
 import { memberTrainerBookingRoute } from "./routes/memberTrainerBookingRoute"
+import { roomRoute } from "./routes/roomRoute"
 
 import { authRoute } from "./routes/authRoute"
 
@@ -76,9 +78,11 @@ app.use("/users", userRoute)
 app.use("/members", memberRoute)
 app.use("/members", memberGoalRoute)
 app.use("/members", memberHealthStatsRoute)
+app.use("/classes", classesRoute)
 app.use("/members", memberTrainerBookingRoute)
 app.use("/trainers", trainerRoute)
 app.use("/routines", routineRoute)
+app.use("/rooms", roomRoute)
 
 const port = process.env.PORT || 3000
 

@@ -74,8 +74,9 @@ export async function generateClassesPostResponse(
 		}
 		return res
 	} catch (e) {
+		console.log(e)
 		return {
-			message: "Could not create member health stats",
+			message: "Could not create class",
 			status: 404,
 			data: null,
 		}

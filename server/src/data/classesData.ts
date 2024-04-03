@@ -59,7 +59,7 @@ export async function createClass(
 				.values({
 					room_id: room_id,
 					class_time: timeslot,
-					class_id: -1
+					class_id: 0
 				})
 				.returningAll()
 				.executeTakeFirstOrThrow()
@@ -85,6 +85,7 @@ export async function createClass(
 				.values(classCreationData)
 				.returningAll()
 				.executeTakeFirstOrThrow()
+			roomBookingId.class_id = classes.class_id
 			return classes
 		})
 	return classe

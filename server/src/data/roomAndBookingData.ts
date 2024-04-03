@@ -1,56 +1,44 @@
 import { db } from "../lib/db"
-import {
-	RoomAndBookingData, RoomData
-} from "../models/io/roomAndBookingIo"
+import { RoomAndBookingData, RoomData } from "../models/io/roomAndBookingIo"
 
-export async function getAllRooms(
-): Promise<RoomData[]> {
-	const rooms = await db
-		.selectFrom("room")
-		.selectAll()
-		.execute()
+export async function getAllRooms(): Promise<RoomData[]> {
+	const rooms = await db.selectFrom("room").selectAll().execute()
 	return rooms
 }
 
-export async function getRoomAndBookingbyId(
-	roomId: number,
-): Promise<RoomAndBookingData> {
-
+export async function getAllRoomsAndBookings(): Promise<RoomAndBookingData[]> {
 	const roomAndBookings = await db
-		.transaction()
-		.execute(async (transaction) => {
-			// check if room is exists
-			const room = await transaction
-			.selectFrom("room")
-			.where("room_id", "=", roomId)
-			.selectAll()
-			.executeTakeFirst()
+		.selectFrom("room")
+		.innerJoin("room_bookings", "room.room_id", "room_bookings.room_id")
+		.where("room_bookings.class_time", ">", new Date())
+		.selectAll()
+		.execute()
 
-			if (!room) {
-				throw new Error("No such room found")
-			}
+	console.log(roomAndBookings)
 
-			const bookingData = await transaction
-			.selectFrom("room_bookings")
-			.where("room_id", "=", roomId)
-			.selectAll()
-			.execute()
+	return roomAndBookings
+}
 
-			const futureBookings = bookingData.map((booking) => {
-					return {
-						booking_id: booking.booking_id,
-						class_id: booking.class_id,
-						room_booking_timestamp: booking.class_time,
-					}
-				})
+interface RoomAndBookingDbData {
+	room_id: number
+	name: string
+	class_id: number
+	class_time: Date
+	booking_id: number
+}
+export async function getRoomAndBookingbyId(
+	roomId: number
+): Promise<RoomAndBookingData> {
+	const roomAndBookings = await db
+		.selectFrom("room")
+		.innerJoin("room_bookings", "room.room_id", "room_bookings.room_id")
+		.where("room_id", "=", roomId)
+		.where("class_time", ">", new Date())
+		.select(["room_id", "name", "class_id", "class_time", "booking_id"])
+		.execute()
 
-			const roomAndBookingData = {
-				room_id: room.room_id,
-				name: room.name,
-				future_bookings: futureBookings
-			}
+	// roomAndBookings [{1, "room1", 1, "2021-08-01T00:00:00.000Z", 1}, {1, "room1", 2, "2021-08-01T00:00:00.000Z", 2}]
+	console.log(roomAndBookings)
 
-			return roomAndBookingData
-		})
-		return roomAndBookings
+	return returnData
 }

@@ -1,23 +1,15 @@
 import { db } from "../lib/db"
 import { sql } from "kysely"
-import {
-	ClassesData,
-	ClassesApiRequest,
-} from "../models/io/classesIo"
+import { ClassesData, ClassesApiRequest } from "../models/io/classesIo"
+import { RoomAndBookingData } from "../models/io/roomAndBookingIo"
 
-export async function getAllClasses(
-): Promise<ClassesData[]> {
-	const classes = await db
-		.selectFrom("classes")
-		.selectAll()
-		.execute()
+export async function getAllClasses(): Promise<ClassesData[]> {
+	const classes = await db.selectFrom("classes").selectAll().execute()
 	return classes
 }
 
-export async function getClassByClassId(
-	classId: number,
-): Promise<ClassesData> {
-    //classe spelt this way to indicate singular class for semanitics
+export async function getClassByClassId(classId: number): Promise<ClassesData> {
+	//classe spelt this way to indicate singular class for semanitics
 	const classe = await db
 		.selectFrom("classes")
 		.where("class_id", "=", classId)
@@ -52,44 +44,42 @@ export async function createClass(
 
 	//Pre check if existing room booking
 
-    //classe spelt this way to indicate singular class for semanitics
-	const classe = await db
-		.transaction()
-		.execute(async (transaction) => {
-			//trainer is available
-			const trainerBooking = await transaction
-				.insertInto("trainer_booking")
-				.values({
-					trainer_id,
-					trainer_booking_timestamp: timeslot,
-				})
-				.returningAll()
-				.executeTakeFirstOrThrow()
-
-			const classCreationData = {
-				name,
-				price,
-				room_id,
+	//classe spelt this way to indicate singular class for semanitics
+	const classe = await db.transaction().execute(async (transaction) => {
+		//trainer is available
+		const trainerBooking = await transaction
+			.insertInto("trainer_booking")
+			.values({
 				trainer_id,
-				trainer_booking_id: trainerBooking.trainer_booking_id
-			}
-			const classes = await transaction
-				.insertInto("classes")
-				.values(classCreationData)
-				.returningAll()
-				.executeTakeFirstOrThrow()
-			const classId = classes.class_id
-			const roomBookingId = await transaction
-				.insertInto("room_bookings")
-				.values({
-					room_id: room_id,
-					class_time: timeslot,
-					class_id: classId
-				})
-				.returningAll()
-				.executeTakeFirstOrThrow()
-			return classes
-		})
+				trainer_booking_timestamp: timeslot,
+			})
+			.returningAll()
+			.executeTakeFirstOrThrow()
+
+		const classCreationData = {
+			name,
+			price,
+			room_id,
+			trainer_id,
+			trainer_booking_id: trainerBooking.trainer_booking_id,
+		}
+		const classes = await transaction
+			.insertInto("classes")
+			.values(classCreationData)
+			.returningAll()
+			.executeTakeFirstOrThrow()
+		const classId = classes.class_id
+		const roomBookingId = await transaction
+			.insertInto("room_bookings")
+			.values({
+				room_id: room_id,
+				class_time: timeslot,
+				class_id: classId,
+			})
+			.returningAll()
+			.executeTakeFirstOrThrow()
+		return classes
+	})
 	return classe
 }
 

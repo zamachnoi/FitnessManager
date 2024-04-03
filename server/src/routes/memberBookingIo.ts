@@ -1,7 +1,7 @@
 import { Router } from "express"
 
-import { MemberTrainerBookingRequest } from "../models/io/memberTrainerBookingIo"
-import * as memberTrainerBookingController from "../controllers/memberTrainerBookingController"
+import { MemberTrainerBookingRequest } from "../models/io/memberBookingIo"
+import * as memberTrainerBookingController from "../controllers/memberBookingIo"
 
 export const memberTrainerBookingRoute = Router()
 

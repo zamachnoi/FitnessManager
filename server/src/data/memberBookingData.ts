@@ -2,7 +2,7 @@ import {
 	MemberTrainerBookingData,
 	MemberTrainerBookingRequest,
 	AvailableTrainersData,
-} from "../models/io/memberTrainerBookingIo"
+} from "../models/io/memberBookingIo"
 import { db } from "../lib/db"
 import { sql } from "kysely"
 

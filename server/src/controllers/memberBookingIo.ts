@@ -4,9 +4,9 @@ import {
 	AvailableTrainersResponse,
 	AvailableTrainersRequest,
 	MemberAvailableHoursResponse,
-} from "../models/io/memberTrainerBookingIo"
+} from "../models/io/memberBookingIo"
 
-import * as memberTrainerBookingData from "../data/memberTrainerBookingData"
+import * as memberTrainerBookingData from "../data/memberBookingData"
 
 export async function generateMemberTrainerBookingPostRespoonse(
 	member_id: number,

@@ -14,7 +14,7 @@ import { memberHealthStatsRoute } from "./routes/memberHealthStatsRoute"
 import { classesRoute } from "./routes/classesRoute"
 import { trainerRoute } from "./routes/trainersRoute"
 import { routineRoute } from "./routes/routineRoute"
-import { memberTrainerBookingRoute } from "./routes/memberTrainerBookingRoute"
+import { memberTrainerBookingRoute } from "./routes/memberBookingIo"
 import { roomRoute } from "./routes/roomRoute"
 
 import { authRoute } from "./routes/authRoute"

@@ -4,9 +4,11 @@ import {
 	AvailableTrainersResponse,
 	AvailableTrainersRequest,
 	MemberAvailableHoursResponse,
-} from "../models/io/memberTrainerBookingIo"
+	MemberBookingsResponse,
+	MemberClassBookingResponse,
+} from "../models/io/memberBookingIo"
 
-import * as memberTrainerBookingData from "../data/memberTrainerBookingData"
+import * as memberTrainerBookingData from "../data/memberBookingData"
 
 export async function generateMemberTrainerBookingPostRespoonse(
 	member_id: number,
@@ -86,6 +88,51 @@ export async function generateMemberAvailableHoursGetResponse(
 			message: "Could not find available hours",
 			status: 404,
 			data: [],
+		}
+	}
+}
+
+export async function generateMemberBookingsGetResponse(
+	memberId: number
+): Promise<MemberBookingsResponse> {
+	try {
+		const memberBookings = await memberTrainerBookingData.getMemberBookings(
+			memberId
+		)
+
+		return {
+			message: `success`,
+			status: 200,
+			data: memberBookings,
+		}
+	} catch (e) {
+		return {
+			message: "Could not find member bookings",
+			status: 404,
+			data: null,
+		}
+	}
+}
+
+export async function generateMemberClassBookingPostResponse(
+	memberId: number,
+	classId: number
+): Promise<MemberClassBookingResponse> {
+	try {
+		const classBooking = await memberTrainerBookingData.bookClass(
+			memberId,
+			classId
+		)
+		return {
+			message: `success`,
+			status: 200,
+			data: classBooking,
+		}
+	} catch (e) {
+		return {
+			message: "Could not book class",
+			status: 404,
+			data: null,
 		}
 	}
 }

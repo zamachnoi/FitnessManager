@@ -1,7 +1,10 @@
 import {
 	MemberArrayApiResponse,
 	MemberApiResponse,
-	MemberDataInsert,
+	MemberDataUpdate,
+	MemberDataCreate,
+	MemberDataCreateRequest,
+	MemberDataUpdateRequest,
 } from "../models/io/memberIo"
 import {
 	getMemberById,
@@ -60,10 +63,13 @@ export async function generateAllMembersGetResponse(): Promise<MemberArrayApiRes
 }
 
 export async function generateMemberPostResponse(
-	member: MemberDataInsert
+	member: MemberDataCreateRequest
 ): Promise<MemberApiResponse> {
 	try {
-		const newMember = await createMember(member)
+		const newMember = await createMember(
+			transformMemberCreateRequest(member)
+		)
+
 		let res: MemberApiResponse = {
 			message: `success`,
 			status: 200,
@@ -78,10 +84,12 @@ export async function generateMemberPostResponse(
 
 export async function generateMemberPatchResponse(
 	memberId: number,
-	member: MemberDataInsert
+	memberRequest: MemberDataUpdateRequest
 ) {
 	try {
-		const updatedMember = await updateMember(memberId, member)
+		const memberUpdate = transformUpdateRequest(memberRequest)
+		const updatedMember = await updateMember(memberId, memberUpdate)
+
 		let res: MemberApiResponse = {
 			message: `success`,
 			status: 200,
@@ -123,5 +131,37 @@ export async function generateSearchMembersProfilePartNameGetResponse(
 		return res
 	} catch (e) {
 		return { message: "Could not find member", status: 404, data: null }
+	}
+}
+function transformMemberCreateRequest(
+	member: MemberDataCreateRequest
+): MemberDataCreate {
+	return {
+		userData: {
+			username: member.username,
+			password: member.password,
+			first_name: member.first_name,
+			last_name: member.last_name,
+			type: "Member",
+		},
+		memberData: {
+			weight: member.weight,
+		},
+	}
+}
+
+function transformUpdateRequest(
+	member: MemberDataUpdateRequest
+): MemberDataUpdate {
+	return {
+		memberData: {
+			weight: member.weight,
+		},
+		userData: {
+			first_name: member.first_name,
+			last_name: member.last_name,
+			username: member.username,
+			password: member.password,
+		},
 	}
 }

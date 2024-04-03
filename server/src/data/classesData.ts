@@ -1,7 +1,7 @@
 import { db } from "../lib/db"
 import { sql } from "kysely"
 import { ClassesData, ClassesApiRequest } from "../models/io/classesIo"
-import { RoomAndBookingData } from "../models/io/roomAndBookingIo"
+import { RoomAndBookingData } from "../models/io/roomIo"
 
 export async function getAllClasses(): Promise<ClassesData[]> {
 	const classes = await db.selectFrom("classes").selectAll().execute()
@@ -27,10 +27,9 @@ export async function createClass(
 	classRequest: ClassesApiRequest
 ): Promise<ClassesData> {
 	const { name, price, room_id, trainer_id, timeslot } = classRequest
+	const class_time = timeslot
 
-	console.log(timeslot)
 	const availableTrainers = await getAvailableTrainers(timeslot)
-	console.log(availableTrainers)
 
 	if (!availableTrainers.includes(trainer_id)) {
 		throw new Error("Trainer is not available")
@@ -62,13 +61,16 @@ export async function createClass(
 			room_id,
 			trainer_id,
 			trainer_booking_id: trainerBooking.trainer_booking_id,
+			class_time,
 		}
 		const classes = await transaction
 			.insertInto("classes")
 			.values(classCreationData)
 			.returningAll()
 			.executeTakeFirstOrThrow()
+
 		const classId = classes.class_id
+
 		const roomBookingId = await transaction
 			.insertInto("room_bookings")
 			.values({

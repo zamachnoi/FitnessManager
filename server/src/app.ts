@@ -15,6 +15,7 @@ import { classesRoute } from "./routes/classesRoute"
 import { trainerRoute } from "./routes/trainersRoute"
 import { routineRoute } from "./routes/routineRoute"
 import { memberTrainerBookingRoute } from "./routes/memberTrainerBookingRoute"
+import { roomRoute } from "./routes/roomRoute"
 
 import { authRoute } from "./routes/authRoute"
 
@@ -81,6 +82,7 @@ app.use("/classes", classesRoute)
 app.use("/members", memberTrainerBookingRoute)
 app.use("/trainers", trainerRoute)
 app.use("/routines", routineRoute)
+app.use("/rooms", roomRoute)
 
 const port = process.env.PORT || 3000
 

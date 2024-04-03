@@ -15,12 +15,12 @@ DROP TABLE IF EXISTS trainer_booking CASCADE;
 DROP TABLE IF EXISTS trainers CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS admins CASCADE;
-DROP TABLE IF EXISTS room CASCADE;
+DROP TABLE IF EXISTS rooms CASCADE;
 DROP TABLE IF EXISTS members CASCADE;
 DROP TABLE IF EXISTS member_bookings CASCADE;
 DROP TABLE IF EXISTS payment CASCADE;
 DROP TABLE IF EXISTS member_booking CASCADE;
-
+DROP TABLE IF EXISTS room CASCADE;
 DROP TYPE IF EXISTS USER_TYPE;
 
 CREATE TYPE USER_TYPE AS ENUM ('Member', 'Trainer', 'Admin');
@@ -55,11 +55,10 @@ CREATE TABLE admins (
 
 
 -- Creating Room table
-CREATE TABLE room (
+CREATE TABLE rooms (
     room_id SERIAL PRIMARY KEY,
     name TEXT,
-    open_time TIME,
-    close_time TIME
+    room_number INT
 );
 
 -- Creating Trainer Availability table
@@ -92,9 +91,10 @@ CREATE TABLE classes (
     class_id SERIAL PRIMARY KEY,
     name TEXT,
     trainer_id INT REFERENCES trainers(trainer_id),
-    room_id INT REFERENCES room(room_id),
+    room_id INT REFERENCES rooms(room_id),
     trainer_booking_id INT REFERENCES trainer_booking(trainer_booking_id),
-    price FLOAT
+    price FLOAT,
+    class_time TIMESTAMPTZ
 );
 
 -- Create Bookings Table
@@ -107,7 +107,7 @@ CREATE TABLE member_bookings (
 -- Creating Room Bookings table
 CREATE TABLE room_bookings (
     booking_id SERIAL PRIMARY KEY,
-    room_id INT REFERENCES room(room_id),
+    room_id INT REFERENCES rooms(room_id) NOT NULL,
     class_time TIMESTAMPTZ,
     class_id INT REFERENCES classes(class_id)
 );

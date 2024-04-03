@@ -1,7 +1,12 @@
-import { Room, RoomBookings } from "../db/types"
+import { Rooms, RoomBookings } from "../db/types"
 
-export type RoomData = Omit<Room, "room_id"> & {
+export type RoomAndBookingDbData = Omit<
+	Rooms & RoomBookings,
+	"room_id" | "booking_id" | "class_time"
+> & {
 	room_id: number
+	booking_id: number | null
+	class_time: Date | null
 }
 
 export type RoomAndBookingData = {
@@ -12,12 +17,6 @@ export type RoomAndBookingData = {
 		class_id: number | null
 		class_time: Date | null
 	}[]
-}
-
-export type RoomArrayApiResponse = {
-	message: string
-	status: number
-	data: RoomData[] | null
 }
 
 export type RoomAndBookingApiResponse = {

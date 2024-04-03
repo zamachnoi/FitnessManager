@@ -22,8 +22,11 @@ DROP TABLE IF EXISTS payment CASCADE;
 DROP TABLE IF EXISTS member_booking CASCADE;
 DROP TABLE IF EXISTS room CASCADE;
 DROP TYPE IF EXISTS USER_TYPE;
+DROP TYPE IF EXISTS USER_BOOKING_TYPE;
 
 CREATE TYPE USER_TYPE AS ENUM ('Member', 'Trainer', 'Admin');
+
+CREATE TYPE USER_BOOKING_TYPE AS ENUM ('Class', 'Trainer');
 
 -- Creating Users table
 CREATE TABLE users (
@@ -101,7 +104,8 @@ CREATE TABLE classes (
 CREATE TABLE member_bookings (
     member_booking_id SERIAL PRIMARY KEY,
     member_id INT REFERENCES members(member_id),
-    booking_timestamp TIMESTAMPTZ
+    booking_timestamp TIMESTAMPTZ,
+    type USER_BOOKING_TYPE CHECK (type IN ('Trainer', 'Class')) NOT NULL
 );
 
 -- Creating Room Bookings table
@@ -170,9 +174,8 @@ CREATE TABLE member_health_statistics (
 
 -- Creating Member Trainer BOOKING
 CREATE TABLE member_trainer_booking (
-    member_booking_id INT REFERENCES member_bookings(member_booking_id),
+    member_booking_id INT PRIMARY KEY REFERENCES member_bookings(member_booking_id),
     trainer_booking_id INT REFERENCES trainer_booking(trainer_booking_id),
-    PRIMARY KEY (member_booking_id, trainer_booking_id),
     member_id INT REFERENCES members(member_id),
     trainer_id INT REFERENCES trainers(trainer_id)
 );

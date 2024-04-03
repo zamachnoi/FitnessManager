@@ -55,7 +55,7 @@ INSERT INTO admins (admin_id) VALUES (7);
 
 
 
-INSERT INTO member_bookings (member_id, booking_timestamp) VALUES (1, '2024-04-30T16:00:00Z');
+INSERT INTO member_bookings (member_id, booking_timestamp, type) VALUES (1, '2024-04-30T16:00:00Z', 'Trainer');
 INSERT INTO trainer_booking (trainer_id, trainer_booking_timestamp) VALUES (6, '2024-04-30T16:00:00Z');
 
 INSERT INTO member_trainer_booking (member_booking_id, trainer_booking_id, member_id, trainer_id) VALUES (1, 1, 1, 6);

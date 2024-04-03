@@ -6,6 +6,8 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
 
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
+export type UserBookingType = "Class" | "Trainer";
+
 export type UserType = "Admin" | "Member" | "Trainer";
 
 export interface Admins {
@@ -51,6 +53,7 @@ export interface MemberBookings {
   booking_timestamp: Timestamp | null;
   member_booking_id: Generated<number>;
   member_id: number | null;
+  type: UserBookingType;
 }
 
 export interface MemberClassBooking {
@@ -90,7 +93,7 @@ export interface Members {
 export interface MemberTrainerBooking {
   member_booking_id: number;
   member_id: number | null;
-  trainer_booking_id: number;
+  trainer_booking_id: number | null;
   trainer_id: number | null;
 }
 

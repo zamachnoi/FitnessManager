@@ -14,7 +14,7 @@ import { memberHealthStatsRoute } from "./routes/memberHealthStatsRoute"
 import { classesRoute } from "./routes/classesRoute"
 import { trainerRoute } from "./routes/trainersRoute"
 import { routineRoute } from "./routes/routineRoute"
-import { memberTrainerBookingRoute } from "./routes/memberBookingIo"
+import { memberBookingRoute } from "./routes/memberBookingRoute"
 import { roomRoute } from "./routes/roomRoute"
 
 import { authRoute } from "./routes/authRoute"
@@ -79,7 +79,7 @@ app.use("/members", memberRoute)
 app.use("/members", memberGoalRoute)
 app.use("/members", memberHealthStatsRoute)
 app.use("/classes", classesRoute)
-app.use("/members", memberTrainerBookingRoute)
+app.use("/members", memberBookingRoute)
 app.use("/trainers", trainerRoute)
 app.use("/routines", routineRoute)
 app.use("/rooms", roomRoute)

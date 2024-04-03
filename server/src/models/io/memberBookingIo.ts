@@ -1,14 +1,8 @@
-import { MemberTrainerBooking } from "../db/types"
+import { MemberTrainerBooking, MemberBookings } from "../db/types"
 
+// MemberTrainerBooking
 export type MemberTrainerBookingData = MemberTrainerBooking & {
 	booking_timestamp: Date
-}
-
-export type AvailableTrainersData = {
-	trainer_id: number
-	first_name: string | null
-	last_name: string | null
-	rate: number | null
 }
 
 export type MemberTrainerBookingRequest = {
@@ -22,18 +16,70 @@ export type MemberTrainerBookingResponse = {
 	data: MemberTrainerBookingData | null
 }
 
-export type AvailableTrainersResponse = {
-	status: number
-	message: string
-	data: AvailableTrainersData[]
+// AvailableTrainers
+export type AvailableTrainersData = {
+	trainer_id: number
+	first_name: string | null
+	last_name: string | null
+	rate: number | null
 }
 
 export type AvailableTrainersRequest = {
 	booking_timestamp: Date
 }
 
+export type AvailableTrainersResponse = {
+	status: number
+	message: string
+	data: AvailableTrainersData[]
+}
+
+// MemberAvailableHours
 export type MemberAvailableHoursResponse = {
 	status: number
 	message: string
 	data: number[] // 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+}
+
+export type MemberBookingData = {
+	trainer_bookings: {
+		trainer_id: number | null
+		first_name: string | null
+		last_name: string | null
+		rate: number | null
+		booking_timestamp: Date | null
+	}[]
+	class_bookings: {
+		class_id: number | null
+		class_name: string | null
+		price: number | null
+		first_name: string | null
+		last_name: string | null
+		room_number: number | null
+		booking_timestamp: Date | null
+	}[]
+}
+
+export type MemberBookingsResponse = {
+	status: number
+	message: string
+	data: MemberBookingData | null
+}
+
+export type MemberClassBookingData = {
+	class_id: number | null
+	member_id: number | null
+	booking_timestamp: Date | null
+	class_name: string | null
+	price: number | null
+	first_name: string | null
+	last_name: string | null
+	room_number: number | null
+	name: string | null
+}
+
+export type MemberClassBookingResponse = {
+	status: number
+	message: string
+	data: MemberClassBookingData | null
 }

@@ -1,5 +1,5 @@
 import { db } from "../lib/db"
-import { MemberDataResponse, MemberDataInsert } from "../models/io/memberIo"
+import { MemberDataResponse, MemberDataInsert, MemberApiResponse } from "../models/io/memberIo"
 import * as util from "./dataUtil"
 
 export async function getMemberById(id: number): Promise<MemberDataResponse> {
@@ -114,4 +114,43 @@ export async function updateMember(
 	}
 
 	return util.removePassword({ ...user, ...member })
+}
+
+export async function SearchMembersProfileFullName(
+	firstName: string,
+	lastName: string
+): Promise<MemberDataResponse[]>{
+	const members = await db
+		.selectFrom("users")
+		.innerJoin("members","user_id", 'member_id')
+		.where("first_name", "like", firstName)
+		.where("last_name", "like", lastName)
+		.where("type", "=", "Member")
+		.selectAll()
+		.execute()
+
+	if (!members) {
+		throw new Error("No member found")
+	}
+
+	return await Promise.all(members.map(util.removePassword))
+}
+
+export async function SearchMembersProfilePartName(
+	Name: string,
+): Promise<MemberDataResponse[]> {
+	const members = await db
+		.selectFrom("users")
+		.innerJoin("members","user_id", 'member_id')
+		.where("first_name", "like", Name)
+		.where("last_name", "like", Name)
+		.where("type", "=", "Member")
+		.selectAll()
+		.execute()
+	
+	if (!members) {
+		throw new Error("No members found")
+	}
+
+	return await Promise.all(members.map(util.removePassword))
 }

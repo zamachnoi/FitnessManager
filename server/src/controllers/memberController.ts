@@ -1,6 +1,6 @@
 import {
+	MemberArrayApiResponse,
 	MemberApiResponse,
-	MembersApiResponse,
 	MemberDataInsert,
 } from "../models/io/memberIo"
 import {
@@ -9,6 +9,8 @@ import {
 	getAllMembers,
 	createMember,
 	updateMember,
+	SearchMembersProfileFullName,
+	SearchMembersProfilePartName
 } from "../data/memberData"
 
 export async function generateMemberByIdGetResponse(
@@ -43,10 +45,10 @@ export async function generateMemberByUsernameGetResponse(
 	}
 }
 
-export async function generateAllMembersGetResponse(): Promise<MembersApiResponse> {
+export async function generateAllMembersGetResponse(): Promise<MemberArrayApiResponse> {
 	try {
 		const members = await getAllMembers()
-		let res: MembersApiResponse = {
+		let res: MemberArrayApiResponse = {
 			message: `success`,
 			status: 200,
 			data: members,
@@ -87,5 +89,38 @@ export async function generateMemberPatchResponse(
 		return res
 	} catch (e) {
 		return { message: "Could not update member", status: 404, data: null }
+	}
+}
+
+export async function generateSearchMembersProfileFullNameGetResponse(
+	firstName: string,
+	lastName: string
+): Promise<MemberArrayApiResponse> {
+	try {
+		const member = await SearchMembersProfileFullName(firstName,lastName)
+		let res: MemberArrayApiResponse = {
+			message: `success`,
+			status: 200,
+			data: member,
+		}
+		return res
+	} catch (e) {
+		return { message: "Could not find member", status: 404, data: null }
+	}
+}
+
+export async function generateSearchMembersProfilePartNameGetResponse(
+	Name: string
+): Promise<MemberArrayApiResponse> {
+	try {
+		const member = await SearchMembersProfilePartName(Name)
+		let res: MemberArrayApiResponse = {
+			message: `success`,
+			status: 200,
+			data: member,
+		}
+		return res
+	} catch (e) {
+		return { message: "Could not find member", status: 404, data: null }
 	}
 }

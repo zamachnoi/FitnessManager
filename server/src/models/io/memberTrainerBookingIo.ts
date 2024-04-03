@@ -4,6 +4,13 @@ export type MemberTrainerBookingData = MemberTrainerBooking & {
 	booking_timestamp: Date
 }
 
+export type AvailableTrainersData = {
+	trainer_id: number
+	first_name: string | null
+	last_name: string | null
+	rate: number | null
+}
+
 export type MemberTrainerBookingRequest = {
 	trainer_id: number
 	booking_timestamp: Date
@@ -18,7 +25,7 @@ export type MemberTrainerBookingResponse = {
 export type AvailableTrainersResponse = {
 	status: number
 	message: string
-	data: number[]
+	data: AvailableTrainersData[]
 }
 
 export type AvailableTrainersRequest = {

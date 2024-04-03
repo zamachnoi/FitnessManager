@@ -3,6 +3,7 @@ import {
 	MemberTrainerBookingResponse,
 	AvailableTrainersResponse,
 	AvailableTrainersRequest,
+	MemberAvailableHoursResponse,
 } from "../models/io/memberTrainerBookingIo"
 
 import * as memberTrainerBookingData from "../data/memberTrainerBookingData"
@@ -63,7 +64,7 @@ export async function generateAvailableTrainersGetResponse(
 export async function generateMemberAvailableHoursGetResponse(
 	memberId: number,
 	day: Date
-): Promise<AvailableTrainersResponse> {
+): Promise<MemberAvailableHoursResponse> {
 	const dateString = day.toISOString().split("T")[0]
 	console.log(dateString)
 

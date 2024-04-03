@@ -103,7 +103,9 @@ export interface Payments {
 }
 
 export interface Room {
+  close_time: string | null;
   name: string | null;
+  open_time: string | null;
   room_id: Generated<number>;
 }
 

@@ -32,12 +32,13 @@ export async function getClassByClassId(
 }
 
 export async function createClass(
-	classId: number,
 	classRequest: ClassesApiRequest
 ): Promise<ClassesData> {
 	const { name, price, room_id, trainer_id, timeslot } = classRequest
 
+	console.log(timeslot)
 	const availableTrainers = await getAvailableTrainers(timeslot)
+	console.log(availableTrainers)
 
 	if (!availableTrainers.includes(trainer_id)) {
 		throw new Error("Trainer is not available")
@@ -49,21 +50,13 @@ export async function createClass(
 		throw new Error("Room is not available")
 	}
 
+	//Pre check if existing room booking
+
     //classe spelt this way to indicate singular class for semanitics
 	const classe = await db
 		.transaction()
 		.execute(async (transaction) => {
-			// check if room & trainer trainer are available
-			const roomBookingId = await transaction
-				.insertInto("room_bookings")
-				.values({
-					room_id: room_id,
-					class_time: timeslot,
-					class_id: 0
-				})
-				.returningAll()
-				.executeTakeFirstOrThrow()
-
+			//trainer is available
 			const trainerBooking = await transaction
 				.insertInto("trainer_booking")
 				.values({
@@ -85,7 +78,16 @@ export async function createClass(
 				.values(classCreationData)
 				.returningAll()
 				.executeTakeFirstOrThrow()
-			roomBookingId.class_id = classes.class_id
+			const classId = classes.class_id
+			const roomBookingId = await transaction
+				.insertInto("room_bookings")
+				.values({
+					room_id: room_id,
+					class_time: timeslot,
+					class_id: classId
+				})
+				.returningAll()
+				.executeTakeFirstOrThrow()
 			return classes
 		})
 	return classe

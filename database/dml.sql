@@ -72,3 +72,4 @@ INSERT INTO member_goals (member_id, weight_goal, goal_start, achieved_date, del
 INSERT INTO member_health_statistics (member_id, systolic_bp, diastolic_bp, heart_rate, recorded) VALUES (1, 150, 120, 110, '2024-04-01T23:51:23Z');
 INSERT INTO member_health_statistics (member_id, systolic_bp, diastolic_bp, heart_rate, recorded) VALUES (1, 145, 110, 90, '2024-04-01T22:12:00Z');
 
+INSERT INTO room (name, open_time, close_time) VALUES ('test', '00:00', '23:59');

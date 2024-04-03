@@ -108,8 +108,7 @@ CREATE TABLE member_bookings (
 CREATE TABLE room_bookings (
     booking_id SERIAL PRIMARY KEY,
     room_id INT REFERENCES room(room_id),
-    start_time TIME,
-    end_time TIME,
+    class_time TIMESTAMPTZ,
     class_id INT REFERENCES classes(class_id)
 );
 

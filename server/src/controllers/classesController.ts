@@ -64,7 +64,6 @@ export async function generateClassesPostResponse(
 
 		const classes =
 			await classesData.createClass(
-				class_id,
 				classRequest
 			)
 		let res: ClassesApiResponse = {

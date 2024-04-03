@@ -38,6 +38,9 @@ memberTrainerBookingRoute.get("/:id/booking/hours/:date", async (req, res) => {
 	const memberId = parseInt(req.params.id)
 	const day = new Date(parseInt(req.params.date))
 
+	// change the date to the beginning of the day
+	day.setHours(0, 0, 0, 0)
+
 	const data =
 		await memberTrainerBookingController.generateMemberAvailableHoursGetResponse(
 			memberId,

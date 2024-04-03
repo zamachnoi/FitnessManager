@@ -1,8 +1,9 @@
 import { db } from "../lib/db"
 import {
 	MemberDataResponse,
-	MemberDataInsert,
+	MemberDataCreateRequest,
 	MemberDataUpdate,
+	MemberDataCreate,
 } from "../models/io/memberIo"
 import * as util from "./dataUtil"
 
@@ -47,75 +48,98 @@ export async function getAllMembers(): Promise<MemberDataResponse[]> {
 	return await Promise.all(members.map(util.removePassword))
 }
 
+interface UserData {
+	username: string
+	password: string
+	first_name: string
+	last_name: string
+	type: "Member"
+}
+
 export async function createMember(
-	member: MemberDataInsert
+	member: MemberDataCreate
 ): Promise<MemberDataResponse> {
-	const { weight, ...userData } = member
-	// Insert into the users table and get the inserted user
-	const user = await db
-		.insertInto("users")
-		.values(userData)
-		.returningAll()
-		.executeTakeFirst()
+	const { memberData, userData } = member
 
-	if (!user) {
-		throw new Error("Failed to create user")
-	}
+	const createdMember = await db.transaction().execute(async (trx) => {
+		const createdUser = await trx
+			.insertInto("users")
+			.values(userData)
+			.returningAll()
+			.executeTakeFirstOrThrow()
 
-	const memberData = {
-		member_id: user.user_id,
-		weight,
-	}
+		memberData.member_id = createdUser.user_id
 
-	// Insert into the members table and get the inserted member
-	const newMember = await db
-		.insertInto("members")
-		.values(memberData)
-		.returningAll()
-		.executeTakeFirst()
+		const newMember = await trx
+			.insertInto("members")
+			.values({
+				member_id: memberData.member_id,
+				weight: memberData.weight,
+			})
+			.returningAll()
+			.executeTakeFirstOrThrow()
 
-	if (!newMember) {
-		throw new Error("Failed to create member")
-	}
+		const newMemberData = {
+			...createdUser,
+			...newMember,
+		}
 
-	const newMemberData = {
-		...user,
-		...newMember,
-	}
+		return newMemberData
+	})
 
-	return util.removePassword(newMemberData)
+	return util.removePassword(createdMember)
 }
 
 export async function updateMember(
 	memberId: number,
 	newData: MemberDataUpdate
 ) {
-	const { weight, ...userData } = newData
+	const { memberData, userData } = newData
 
-	// Update the user data
+	const updatedData = await db.transaction().execute(async (trx) => {
+		let updatedUser
+		let updatedMember
 
-	const updatedUser = await db
-		.updateTable("users")
-		.set(userData)
-		.where("user_id", "=", memberId)
-		.returningAll()
-		.executeTakeFirst()
+		if (Object.values(userData).some((value) => value !== undefined)) {
+			updatedUser = await trx
+				.updateTable("users")
+				.set(userData)
+				.where("user_id", "=", memberId)
+				.returningAll()
+				.executeTakeFirstOrThrow()
+		}
 
-	const updatedMember = await db
-		.updateTable("members")
-		.set({ weight })
-		.where("member_id", "=", memberId)
-		.returningAll()
-		.executeTakeFirst()
+		if (Object.values(memberData).some((value) => value !== undefined)) {
+			updatedMember = await trx
+				.updateTable("members")
+				.set(memberData)
+				.where("member_id", "=", memberId)
+				.returningAll()
+				.executeTakeFirstOrThrow()
+		}
 
-	if (!updatedUser || !updatedMember) {
-		throw new Error("Failed to update member")
-	}
+		if (!updatedUser) {
+			updatedUser = await trx
+				.selectFrom("users")
+				.where("user_id", "=", memberId)
+				.selectAll()
+				.executeTakeFirstOrThrow()
+		}
 
-	const updatedMemberData = {
-		...updatedUser,
-		...updatedMember,
-	}
+		if (!updatedMember) {
+			updatedMember = await trx
+				.selectFrom("members")
+				.where("member_id", "=", memberId)
+				.selectAll()
+				.executeTakeFirstOrThrow()
+		}
 
-	return util.removePassword(updatedMemberData)
+		const updatedMemberData = {
+			...updatedUser,
+			...updatedMember,
+		}
+		return updatedMemberData
+	})
+
+	return util.removePassword(updatedData)
 }

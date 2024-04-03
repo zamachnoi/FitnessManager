@@ -2,6 +2,7 @@ import {
 	MemberApiResponse,
 	MembersApiResponse,
 	MemberDataInsert,
+	MemberDataUpdate,
 } from "../models/io/memberIo"
 import {
 	getMemberById,
@@ -75,7 +76,7 @@ export async function generateMemberPostResponse(
 
 export async function generateMemberPatchResponse(
 	memberId: number,
-	member: MemberDataInsert
+	member: MemberDataUpdate
 ) {
 	try {
 		const updatedMember = await updateMember(memberId, member)

@@ -1,5 +1,9 @@
 import { db } from "../lib/db"
-import { MemberDataResponse, MemberDataInsert } from "../models/io/memberIo"
+import {
+	MemberDataResponse,
+	MemberDataInsert,
+	MemberDataUpdate,
+} from "../models/io/memberIo"
 import * as util from "./dataUtil"
 
 export async function getMemberById(id: number): Promise<MemberDataResponse> {
@@ -82,36 +86,36 @@ export async function createMember(
 	return util.removePassword(newMemberData)
 }
 
-// TODO: authorize
 export async function updateMember(
 	memberId: number,
-	newData: MemberDataInsert
+	newData: MemberDataUpdate
 ) {
 	const { weight, ...userData } = newData
 
 	// Update the user data
-	const user = await db
+
+	const updatedUser = await db
 		.updateTable("users")
 		.set(userData)
 		.where("user_id", "=", memberId)
 		.returningAll()
 		.executeTakeFirst()
 
-	if (!user) {
-		throw new Error("Failed to update user")
-	}
-
-	// Update the member data
-	const member = await db
+	const updatedMember = await db
 		.updateTable("members")
 		.set({ weight })
 		.where("member_id", "=", memberId)
 		.returningAll()
 		.executeTakeFirst()
 
-	if (!member) {
+	if (!updatedUser || !updatedMember) {
 		throw new Error("Failed to update member")
 	}
 
-	return util.removePassword({ ...user, ...member })
+	const updatedMemberData = {
+		...updatedUser,
+		...updatedMember,
+	}
+
+	return util.removePassword(updatedMemberData)
 }

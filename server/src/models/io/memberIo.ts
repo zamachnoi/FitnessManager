@@ -13,3 +13,11 @@ export type MembersApiResponse = Omit<MemberApiResponse, "data"> & {
 
 export type MemberDataInsert = Omit<Users, "user_id" | "type"> &
 	Omit<Members, "member_id"> & { type: "Member" }
+
+export type MemberDataUpdate = {
+	weight: number | null | undefined
+	first_name: string | null | undefined
+	last_name: string | null | undefined
+	username: string | null | undefined
+	password: string | null | undefined
+}

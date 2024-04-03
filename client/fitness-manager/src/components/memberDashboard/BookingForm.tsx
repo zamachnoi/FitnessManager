@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/select"
 
 import { getData } from "@/utils/getData"
+import { postData } from "@/utils/postData"
 
 import { useState, useEffect } from "react"
 
@@ -43,51 +44,88 @@ type TrainerType = {
 export async function getAvailableTrainers(date: Date, time: number) {
   // add time to date
   const dt = new Date(date)
-  dt.setHours(time)
+  dt.setHours(time, 0, 0, 0)
   // convert to unix
   const unix = dt.getTime() / 1000
+  console.log(unix)
 
-  const res = await getData(`/members/1/booking/trainers/${unix}`)
-  return res
+  const res = await getData(`members/2/booking/trainers/${unix}000`)
+  console.log(res)
+  return res.data
+}
+
+export async function getAvailableHours(date: Date) {
+  const dt = new Date(date)
+  dt.setHours(0, 0, 0, 0)
+  const unix = dt.getTime() / 1000
+  const res = await getData(`members/2/booking/hours/${unix}000/available`)
+  return res.data
+}
+
+export async function book(date: Date, time: number, trainerId: number) {
+  const dt = new Date(date)
+  dt.setHours(time, 0, 0, 0)
+  const unix = dt.getTime() / 1000
+  const res = await postData(`members/2/booking/trainers`, {
+    trainer_id: trainerId,
+    booking_timestamp: unix * 1000
+  })
+  return res.data
 }
 
 const BookingForm = ({
-  times,
 }: {
-  times: number[]
 }) => {
 
   const [trainers, setTrainers] = useState<TrainerType[]>([])
 
-  useEffect(() => {
-    getAvailableTrainers(new Date(), 0).then((res) => {
-      setTrainers(res)
-    })
-  }, [])
+  const [times, setTimes] = useState([])
 
   const form = useForm<z.infer<typeof BookingSchema>>({
     resolver: zodResolver(BookingSchema),
     defaultValues: {
-      date: new Date(),
-      time: 0,
-      trainer_id: 1,
+      date: undefined,
+      time: undefined,
+      trainer_id: undefined,
       member_id: 1,
     }
   })
 
+  const watchedDate = form.watch('date')
+  const watchedTime = form.watch('time')
+
+  useEffect(() => {
+    if(!watchedDate) return
+    getAvailableHours(watchedDate).then((res) => {
+      setTimes(res)
+    })
+    //form.resetField("time", { defaultValue: undefined })
+
+  }, [watchedDate])
+
+  useEffect(() => {
+    if(!watchedTime || !watchedDate) return
+    getAvailableTrainers(watchedDate, watchedTime).then((res) => {
+      setTrainers(res)
+      //form.resetField("trainer_id", { defaultValue: undefined })
+    })
+  
+  }, [watchedTime])
+
   function onSubmit(values: z.infer<typeof BookingSchema>) {
-    console.log('here')
-    console.log(values)
+    book(values.date, values.time, values.trainer_id).then((res) => {
+      console.log(res)
+    })
   }
   
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col space-y-2">
         <FormField
           control={form.control}
           name="date"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="flex flex-col space-y-3">
               <FormLabel>Date</FormLabel>
               <FormControl>
                 <DatePicker date={field.value} setDate={field.onChange} />
@@ -95,7 +133,7 @@ const BookingForm = ({
             </FormItem>
           )}
         />
-        <FormField
+        { watchedDate && (<FormField
           control={form.control}
           name="time"
           render={({ field }) => (
@@ -103,7 +141,7 @@ const BookingForm = ({
               <FormLabel>Time</FormLabel>
               <FormControl>
                 
-                <Select onValueChange={(val) => field.onChange(parseInt(val, 10))}>
+                <Select key={watchedDate && +watchedDate}  onValueChange={(val) => field.onChange(parseInt(val, 10))}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select a time" />
                   </SelectTrigger>
@@ -122,25 +160,27 @@ const BookingForm = ({
               </FormControl>
             </FormItem>
           )}
-        />
-        <FormField
+        />)}
+        { watchedTime && watchedDate && (<FormField
           control={form.control}
           name="trainer_id"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Trainer</FormLabel>
               <FormControl>
-                <Select onValueChange={(val) => field.onChange(parseInt(val, 10))}>
+                <Select key={(watchedTime && watchedDate) && watchedTime +  +watchedDate}  onValueChange={(val) => field.onChange(parseInt(val, 10))}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select a trainer" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="trainer" disabled>
+                    <SelectItem value="trainer_id" disabled>
                       Select a trainer
                     </SelectItem>
                     {trainers.map((trainer) => (
                       <SelectItem key={trainer.trainer_id} value={String(trainer.trainer_id)}>
-                        {trainer.first_name} {trainer.last_name}
+
+                            {trainer.first_name} {trainer.last_name} - ${trainer.rate}/hr
+                        
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -148,7 +188,7 @@ const BookingForm = ({
               </FormControl>
             </FormItem>
           )}
-        />
+        />)}
         <Button type="submit">Book</Button>
       </form>
     </Form>

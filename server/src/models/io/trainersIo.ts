@@ -16,3 +16,27 @@ export type TrainersArrayApiResponse = {
 	status: number
 	data: TrainersData[] | null
 }
+
+export type TrainerDataUpdate = {
+	trainerData: {
+		start_availability?: string | null
+		end_availability?: string | null
+		rate?: number | null
+	}
+	userData: {
+		first_name?: string | null
+		last_name?: string | null
+		username?: string | null
+		password?: string | null
+	}
+}
+
+export type TrainerDataUpdateRequest = {
+	start_availability?: string | null
+	end_availability?: string | null
+	rate?: number | null
+	first_name?: string | null
+	last_name?: string | null
+	username?: string | null
+	password?: string | null
+}

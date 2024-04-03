@@ -2,6 +2,8 @@ import {
 	TrainersArrayApiResponse,
 	TrainersApiResponse,
 	TrainersApiRequest,
+	TrainerDataUpdateRequest,
+	TrainerDataUpdate,
 } from "../models/io/trainersIo"
 import {
 	getTrainerById,
@@ -79,15 +81,36 @@ export async function generateTrainerPatchResponse(
 	trainer: TrainersApiRequest
 ) {
 	try {
-		const updatedTrainer = await updateTrainer(trainerId, trainer)
+		const trainerUpdate = transformUpdateRequest(trainer)
+		const updatedTrainer = await updateTrainer(trainerId, trainerUpdate)
+
 		let res: TrainersApiResponse = {
 			message: `success`,
 			status: 200,
 			data: updatedTrainer,
 		}
 		return res
-	} catch (e) {
-		console.log(e)
-		return { message: "Could not update trainer", status: 404, data: null }
+	} catch (e: any) {
+		console.log(e.message)
+		return { message: "Could not update trainer" + e, status: 404, data: null }
+	}
+}
+
+
+function transformUpdateRequest(
+	member: TrainerDataUpdateRequest
+): TrainerDataUpdate {
+	return {
+		trainerData: {
+			start_availability: member.start_availability,
+			end_availability: member.end_availability,
+			rate: member.rate,
+		},
+		userData: {
+			first_name: member.first_name,
+			last_name: member.last_name,
+			username: member.username,
+			password: member.password,
+		},
 	}
 }

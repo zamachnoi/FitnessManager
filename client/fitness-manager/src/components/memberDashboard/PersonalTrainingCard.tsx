@@ -1,4 +1,4 @@
-import DashboardCard from "./DashboardCard"
+import DashboardCard from "../util/DashboardCard"
 
 import TrainerBooking from "./TrainerBooking"
 import BookingDialog from "./BookingDialog"

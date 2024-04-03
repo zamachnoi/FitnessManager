@@ -3,6 +3,12 @@ import { Button } from "@/components/ui/button"
 
 import { useState } from "react"
 
+import { postData } from "@/utils/postData"
+
+export async function postGoal(goalVal: number) {
+  const res = await postData(`members/1/goals`, { weight_goal: goalVal })
+  return res.data
+}
 
 const GoalForm = ({
   goals,
@@ -14,18 +20,21 @@ const GoalForm = ({
 
   const [goal, setGoal] = useState('')
 
+  const onAdd = async () => {
+    const newGoal = await postGoal(parseInt(goal))
+    setGoalsState([...goals, newGoal])
+  }
+
   return (
     <div className="flex justify-between items-center space-x-4">
       <Input
-        type="goalName"
+        type="number"
         placeholder="add a goal..."
         value={goal}
         onChange={(e) => setGoal(e.target.value)}
       />
       <Button className="btn" onClick={
-        () => {
-          setGoalsState([...goals, { goalId: goals[goals.length - 1].goalId + 1, goalName: goal }])
-        }
+        onAdd
       }>Add</Button>
     </div>
   )

@@ -1,23 +1,39 @@
-import DashboardCard from './DashboardCard';
+import DashboardCard from '../util/DashboardCard';
 import Goal from './Goal';
 import GoalForm from './GoalForm';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getData } from '@/utils/getData';
 
 type GoalType = {
-  goalId: string,
-  goalName: string
+  goal_id: number
+  member_id: number
+  weight_goal: number
+  goal_start: Date
+  achieved_date: Date
+  deleted: boolean
 
 }
 
+export async function getGoals() {
+  const res = await getData(`members/1/goals`)
+  console.log(res)
+  return res.data
+}
+
 const GoalCard = ({
-  goals = []
 }: {
-  goals?: GoalType[]
 
 }) => {
 
-  const [goalsState, setGoalsState] = useState(goals)
+  const [goalsState, setGoalsState] = useState([])
 
+  useEffect(() => {
+    getGoals().then((data) => {
+      setGoalsState(data)
+    })
+  }, [])
+
+  console.log(goalsState)
 
   return (
     <DashboardCard
@@ -29,8 +45,12 @@ const GoalCard = ({
         {goalsState.map((goal: GoalType, index: number) => (
           <Goal
             key={index}
-            goalId={goal?.goalId}
-            goalName={goal?.goalName}
+            goalId={goal.goal_id}
+            goalVal={goal.weight_goal}
+            goalStart={goal.goal_start}
+            achievedDate={goal.achieved_date}
+            deleted={goal.deleted}
+
           />
         ))}
         <GoalForm goals={goalsState} setGoalsState={setGoalsState}/>

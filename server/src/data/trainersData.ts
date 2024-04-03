@@ -1,5 +1,5 @@
 import { db } from "../lib/db"
-import { TrainersData, TrainersApiRequest } from "../models/io/trainersIo"
+import { TrainersData, TrainersApiRequest, TrainerDataUpdate } from "../models/io/trainersIo"
 import * as util from "./dataUtil"
 
 export async function getTrainerById(id: number): Promise<TrainersData> {
@@ -84,36 +84,85 @@ export async function createTrainer(
 	return util.removePassword(newTrainerData)
 }
 
-// TODO: authorize
+// // TODO: authorize
+// export async function updateTrainer(
+// 	trainerId: number,
+// 	newData: TrainersApiRequest
+// ) {
+// 	const { start_availability, end_availability, rate, ...userData } = newData
+
+// 	// Update the user data
+// 	const user = await db
+// 		.updateTable("users")
+// 		.set(userData)
+// 		.where("user_id", "=", trainerId)
+// 		.returningAll()
+// 		.executeTakeFirst()
+
+// 	if (!user) {
+// 		throw new Error("Failed to update user")
+// 	}
+
+// 	// Update the trainer data
+// 	const trainer = await db
+// 		.updateTable("trainers")
+// 		.set({ start_availability, end_availability, rate })
+// 		.where("trainer_id", "=", trainerId)
+// 		.returningAll()
+// 		.executeTakeFirst()
+
+// 	if (!trainer) {
+// 		throw new Error("Failed to update trainer")
+// 	}
+
+// 	return util.removePassword({ ...user, ...trainer })
+// }
 export async function updateTrainer(
 	trainerId: number,
-	newData: TrainersApiRequest
+	newData: TrainerDataUpdate
 ) {
-	const { start_availability, end_availability, rate, ...userData } = newData
+	const { trainerData, userData } = newData
 
-	// Update the user data
-	const user = await db
-		.updateTable("users")
-		.set(userData)
-		.where("user_id", "=", trainerId)
-		.returningAll()
-		.executeTakeFirst()
+	const updateData = await db.transaction().execute(async (trx) => {
+		let updatedUser
+		let updatedTrainer
 
-	if (!user) {
-		throw new Error("Failed to update user")
-	}
+		if (Object.values(userData).some((value) => value !== undefined)) {
+			updatedUser = await trx
+				.updateTable("users")
+				.set(userData)
+				.where("user_id", "=", trainerId)
+				.returningAll()
+				.executeTakeFirstOrThrow()
+		}
 
-	// Update the trainer data
-	const trainer = await db
-		.updateTable("trainers")
-		.set({ start_availability, end_availability, rate })
-		.where("trainer_id", "=", trainerId)
-		.returningAll()
-		.executeTakeFirst()
+		if (Object.values(trainerData).some((value) => value !== undefined)) {
+			updatedTrainer = await trx
+				.updateTable("trainers")
+				.set(trainerData)
+				.where("trainer_id", "=", trainerId)
+				.returningAll()
+				.executeTakeFirstOrThrow()
+		}
 
-	if (!trainer) {
-		throw new Error("Failed to update trainer")
-	}
+		if (!updatedUser) {
+			updatedUser = await trx
+				.selectFrom("users")
+				.where("user_id", "=", trainerId)
+				.selectAll()
+				.executeTakeFirstOrThrow()
+		}
 
-	return util.removePassword({ ...user, ...trainer })
+		if (!updatedTrainer) {
+			updatedTrainer = await trx
+				.selectFrom("trainers")
+				.where("trainer_id", "=", trainerId)
+				.selectAll()
+				.executeTakeFirstOrThrow()
+		}
+
+		return { ...updatedUser, ...updatedTrainer }
+	})
+
+	return util.removePassword(updateData)
 }

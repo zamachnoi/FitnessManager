@@ -1,6 +1,7 @@
 import { db } from "../lib/db"
 import { MemberDataResponse, MemberDataInsert, MemberApiResponse } from "../models/io/memberIo"
 import * as util from "./dataUtil"
+import { sql } from "kysely"
 
 export async function getMemberById(id: number): Promise<MemberDataResponse> {
 	const member = await db
@@ -123,8 +124,10 @@ export async function SearchMembersProfileFullName(
 	const members = await db
 		.selectFrom("users")
 		.innerJoin("members","user_id", 'member_id')
-		.where("first_name", "like", firstName)
-		.where("last_name", "like", lastName)
+		.where((eb) => eb.or([
+			eb("first_name", 'like', '%' + firstName + '%'),
+			eb("last_name", 'like', '%' + lastName + '%')
+		  ]))
 		.where("type", "=", "Member")
 		.selectAll()
 		.execute()
@@ -142,12 +145,13 @@ export async function SearchMembersProfilePartName(
 	const members = await db
 		.selectFrom("users")
 		.innerJoin("members","user_id", 'member_id')
-		.where("first_name", "like", Name)
-		.where("last_name", "like", Name)
+		.where((eb) => eb.or([
+			eb("first_name", 'like', '%' + Name + '%'),
+			eb("last_name", 'like', '%' + Name + '%')
+		  ]))
 		.where("type", "=", "Member")
 		.selectAll()
 		.execute()
-	
 	if (!members) {
 		throw new Error("No members found")
 	}

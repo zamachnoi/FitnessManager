@@ -14,6 +14,7 @@ export interface Admins {
 
 export interface Classes {
   class_id: Generated<number>;
+  class_time: Timestamp | null;
   name: string | null;
   price: number | null;
   room_id: number | null;
@@ -102,19 +103,17 @@ export interface Payments {
   processed: Generated<boolean | null>;
 }
 
-export interface Room {
-  close_time: string | null;
-  name: string | null;
-  open_time: string | null;
-  room_id: Generated<number>;
-}
-
 export interface RoomBookings {
   booking_id: Generated<number>;
   class_id: number | null;
-  end_time: string | null;
-  room_id: number | null;
-  start_time: string | null;
+  class_time: Timestamp | null;
+  room_id: number;
+}
+
+export interface Rooms {
+  name: string | null;
+  room_id: Generated<number>;
+  room_number: number | null;
 }
 
 export interface RoutineExercises {
@@ -159,8 +158,8 @@ export interface DB {
   member_trainer_booking: MemberTrainerBooking;
   members: Members;
   payments: Payments;
-  room: Room;
   room_bookings: RoomBookings;
+  rooms: Rooms;
   routine_exercises: RoutineExercises;
   trainer_booking: TrainerBooking;
   trainers: Trainers;

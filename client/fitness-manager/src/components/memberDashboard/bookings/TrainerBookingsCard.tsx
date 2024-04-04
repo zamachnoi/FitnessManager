@@ -1,5 +1,6 @@
 import DashboardCard from "@/components/util/DashboardCard"
 import TrainerBooking from "./TrainerBooking"
+import BookingDialog from "./BookingDialog"
 
 type TrainerBookingsProps = {
 	trainerBookings: {
@@ -17,7 +18,9 @@ export default function TrainerBookingsCard(props: TrainerBookingsProps) {
 			<DashboardCard
 				title="Trainer Bookings"
 				description="View all your trainer bookings here."
-				footer={<div>Footer</div>}
+				footer={
+					<BookingDialog />
+				}
 			>
 				<div>
 					{props.trainerBookings.map((booking, index) => (

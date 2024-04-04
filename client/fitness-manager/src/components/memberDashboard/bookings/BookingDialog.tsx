@@ -8,29 +8,11 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 
-import { DatePicker } from "../../util/DatePicker"
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select"
 
 import BookingForm from "./BookingForm"
 
-import { useState } from "react"
 
-const BookingDialog = ({
-	date,
-	setDate,
-	times,
-}: {
-	date: Date | null
-	setDate: any
-	times: number[]
-}) => {
-	const [selectedTime, setSelectedTime] = useState<number | null>(null)
+const BookingDialog = () => {
 
 	return (
 		<Dialog>
@@ -45,26 +27,7 @@ const BookingDialog = ({
 					</DialogDescription>
 				</DialogHeader>
 				<div className="flex flex-col space-y-4">
-					{/* <DatePicker date={date} setDate={setDate} />
-          {date && (
-            <Select >
-              <SelectTrigger>
-                <SelectValue placeholder="Select a time" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="time" disabled>
-                  Select a time
-                </SelectItem>
-                {times.map((time) => (
-                  <SelectItem key={time} value={String(time)}>
-                    {time}:00
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          )} */}
-					<BookingForm times={times} />
-					{/* <Button className="btn">Book</Button> */}
+					<BookingForm  />
 				</div>
 			</DialogContent>
 		</Dialog>

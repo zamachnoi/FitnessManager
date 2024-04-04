@@ -49,7 +49,7 @@ export async function getAvailableTrainers(date: Date, time: number) {
 	const unix = dt.getTime() / 1000
 	console.log(unix)
 
-	const res = await getData(`members/2/booking/trainers/${unix}000`)
+	const res = await getData(`members/1/booking/trainers/${unix}000`)
 	console.log(res)
 	return res.data
 }
@@ -58,7 +58,7 @@ export async function getAvailableHours(date: Date) {
 	const dt = new Date(date)
 	dt.setHours(0, 0, 0, 0)
 	const unix = dt.getTime() / 1000
-	const res = await getData(`members/2/booking/hours/${unix}000/available`)
+	const res = await getData(`members/1/booking/hours/${unix}000`)
 	return res.data
 }
 
@@ -66,7 +66,7 @@ export async function book(date: Date, time: number, trainerId: number) {
 	const dt = new Date(date)
 	dt.setHours(time, 0, 0, 0)
 	const unix = dt.getTime() / 1000
-	const res = await postData(`members/2/booking/trainers`, {
+	const res = await postData(`members/1/booking/trainers`, {
 		trainer_id: trainerId,
 		booking_timestamp: unix * 1000,
 	})

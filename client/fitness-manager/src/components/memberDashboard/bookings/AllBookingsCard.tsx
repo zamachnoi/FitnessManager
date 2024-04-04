@@ -3,6 +3,7 @@ import TrainerBookingsCard from "./TrainerBookingsCard"
 import ClassBookingsCard from "./ClassBookingsCard"
 import { useEffect, useState } from "react"
 import { getData } from "@/utils/getData"
+import  BookingDialog  from "./BookingDialog"
 
 export default function AllBookingsCard() {
 	const memberId = 1
@@ -23,7 +24,9 @@ export default function AllBookingsCard() {
 			<DashboardCard
 				title="Bookings"
 				description="View all your bookings here."
-				footer={<div>Footer</div>}
+				footer={
+					null
+				}
 			>
 				<div className="flex flex-col justify-around gap-4">
 					<TrainerBookingsCard

@@ -1,10 +1,8 @@
-import React from 'react'
-import TrainerScheduleCard from './TrainerScheduleCard'
+import React from "react"
+import TrainerScheduleCard from "./TrainerScheduleCard"
 
 const TrainerDashboard = () => {
-  return (
-    <TrainerScheduleCard />
-  )
+	return <TrainerScheduleCard />
 }
 
 export default TrainerDashboard

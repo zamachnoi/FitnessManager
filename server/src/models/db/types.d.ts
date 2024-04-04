@@ -27,6 +27,7 @@ export interface Classes {
 export interface Equipment {
   equipment_id: Generated<number>;
   equipment_type_id: number | null;
+  last_maintained: Timestamp | null;
   name: string | null;
   under_maintenance: boolean | null;
 }
@@ -43,7 +44,7 @@ export interface ExerciseRoutines {
 
 export interface Exercises {
   description: string | null;
-  equipment_id: number | null;
+  equipment_type_id: number | null;
   exercise_id: Generated<number>;
   name: string | null;
   type: string | null;

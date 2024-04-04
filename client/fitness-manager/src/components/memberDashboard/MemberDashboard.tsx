@@ -7,8 +7,8 @@ import AllBookingsCard from "./bookings/AllBookingsCard"
 import HealthStatsCard from "./healthStats/HealthStatsCard"
 
 export async function getServerSideProps(memberId: number) {
-	const memberHealthStats = await getData(`/member/${memberId}/stats`)
-	const memberGoals = await getData(`/member/${memberId}/goals`)
+	const memberHealthStats = await getData(`member/${memberId}/stats`)
+	const memberGoals = await getData(`member/${memberId}/goals`)
 
 	return {
 		props: {

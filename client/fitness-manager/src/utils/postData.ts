@@ -1,4 +1,5 @@
 export async function postData(endpoint: string, data: any) {
+	console.log(data)
 	const response = await fetch(`http://localhost:3000/${endpoint}`, {
 		method: "POST",
 		headers: {

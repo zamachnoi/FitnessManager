@@ -58,6 +58,7 @@ if (authEnabled) {
 			cookie: {
 				secure: false, // TRUE in production (with HTTPS), FALSE in development
 				httpOnly: true, // Helps mitigate the risk of client side script accessing the protected cookie
+				sameSite: "lax",
 				maxAge: 1000 * 60 * 60 * 24, // Example: sets cookie to expire in 1 day
 			},
 		})

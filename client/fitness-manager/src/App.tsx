@@ -1,11 +1,22 @@
-//import LoginCard from "./components/login/LoginCard"
 import MemberDashboard from "./components/memberDashboard/MemberDashboard"
-import TrainerDashboard from "./components/trainerDashboard/TrainerDashboard"
-function App() {
+import LoggedInNavbar from "./components/navbar/LoggedInNavbar"
+import LoggedOutNavbar from "./components/navbar/LoggedOutNavbar"
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import DashboardSelector from "./components/dashboardSelector/DashboardSelector"
+import MainPage from "./components/mainPage/MainPage"
 
-  return (
-    <TrainerDashboard />
-  )
+function App() {
+	const loggedIn = false
+
+	return (
+		<Router>
+			{loggedIn ? <LoggedInNavbar /> : <LoggedOutNavbar />}
+			<Routes>
+				<Route path="/" element={<MainPage />} />
+				<Route path="/dashboard" element={<DashboardSelector />} />
+			</Routes>
+		</Router>
+	)
 }
 
 export default App

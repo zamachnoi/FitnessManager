@@ -147,14 +147,16 @@ export async function updateMember(
 export async function SearchMembersProfileFullName(
 	firstName: string,
 	lastName: string
-): Promise<MemberDataResponse[]>{
+): Promise<MemberDataResponse[]> {
 	const members = await db
 		.selectFrom("users")
-		.innerJoin("members","user_id", 'member_id')
-		.where((eb) => eb.or([
-			eb("first_name", 'like', '%' + firstName + '%'),
-			eb("last_name", 'like', '%' + lastName + '%')
-		  ]))
+		.innerJoin("members", "user_id", "member_id")
+		.where((eb) =>
+			eb.and([
+				eb("first_name", "like", "%" + firstName + "%"),
+				eb("last_name", "like", "%" + lastName + "%"),
+			])
+		)
 		.where("type", "=", "Member")
 		.selectAll()
 		.execute()
@@ -167,15 +169,17 @@ export async function SearchMembersProfileFullName(
 }
 
 export async function SearchMembersProfilePartName(
-	Name: string,
+	Name: string
 ): Promise<MemberDataResponse[]> {
 	const members = await db
 		.selectFrom("users")
-		.innerJoin("members","user_id", 'member_id')
-		.where((eb) => eb.or([
-			eb("first_name", 'like', '%' + Name + '%'),
-			eb("last_name", 'like', '%' + Name + '%')
-		  ]))
+		.innerJoin("members", "user_id", "member_id")
+		.where((eb) =>
+			eb.or([
+				eb("first_name", "like", "%" + Name + "%"),
+				eb("last_name", "like", "%" + Name + "%"),
+			])
+		)
 		.where("type", "=", "Member")
 		.selectAll()
 		.execute()

@@ -1,3 +1,4 @@
+import { sql } from "kysely"
 import { db } from "../lib/db"
 import {
 	MemberDataResponse,
@@ -148,13 +149,16 @@ export async function SearchMembersProfileFullName(
 	firstName: string,
 	lastName: string
 ): Promise<MemberDataResponse[]> {
+	const fn = firstName.toUpperCase()
+	const ln = lastName.toUpperCase()
+
 	const members = await db
 		.selectFrom("users")
 		.innerJoin("members", "user_id", "member_id")
 		.where((eb) =>
 			eb.and([
-				eb("first_name", "like", "%" + firstName + "%"),
-				eb("last_name", "like", "%" + lastName + "%"),
+				eb(sql<string>`upper(first_name)`, "like", "%" + fn + "%"),
+				eb(sql<string>`upper(first_name)`, "like", "%" + ln + "%"),
 			])
 		)
 		.where("type", "=", "Member")
@@ -171,13 +175,14 @@ export async function SearchMembersProfileFullName(
 export async function SearchMembersProfilePartName(
 	Name: string
 ): Promise<MemberDataResponse[]> {
+	Name = Name.toUpperCase()
 	const members = await db
 		.selectFrom("users")
 		.innerJoin("members", "user_id", "member_id")
 		.where((eb) =>
 			eb.or([
-				eb("first_name", "like", "%" + Name + "%"),
-				eb("last_name", "like", "%" + Name + "%"),
+				eb(sql<string>`UPPER(first_name)`, "like", "%" + Name + "%"),
+				eb(sql<string>`UPPER(last_name)`, "like", "%" + Name + "%"),
 			])
 		)
 		.where("type", "=", "Member")

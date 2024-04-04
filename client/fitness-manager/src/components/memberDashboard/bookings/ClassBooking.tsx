@@ -20,7 +20,7 @@ type ClassBookingProps = {
 export default function ClassBooking(props: ClassBookingProps) {
 
 	const deleteClass = async (class_id: number): Promise<any> => {
-		const res = await deleteData(`classes/${class_id}`);
+		const res = await deleteData(`classes/${class_id}`, {});
 		return res;
 	};
 

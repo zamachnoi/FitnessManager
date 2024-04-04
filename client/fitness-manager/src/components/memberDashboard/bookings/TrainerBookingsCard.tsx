@@ -9,6 +9,8 @@ type TrainerBookingsProps = {
 		last_name: string
 		rate: number
 		booking_timestamp: Date
+		member_booking_id: number
+		trainer_booking_id: number
 	}[],
 	setTrainerBookings: any
 }

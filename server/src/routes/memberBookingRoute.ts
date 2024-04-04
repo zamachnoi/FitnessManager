@@ -62,10 +62,9 @@ memberBookingRoute.post("/:id/booking/classes/:class_id", async (req, res) => {
 // DELETE
 memberBookingRoute.delete("/:id/booking/", async (req, res) => {
 	const memberId = parseInt(req.params.id)
-
 	// get the class id from the request body
-	const memberBookingId = req.body.memberBookingId
-	const trainerBookingId = req.body.trainerBookingId
+	const memberBookingId = req.body.member_booking_id
+	const trainerBookingId = req.body.trainer_booking_id
 
 	const data =
 		await memberTrainerBookingController.generateMemberBookingDeleteResponse(

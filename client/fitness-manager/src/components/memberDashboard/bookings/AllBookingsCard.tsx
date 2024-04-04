@@ -13,9 +13,13 @@ export default function AllBookingsCard() {
 		class_bookings: [],
 	})
 
+	const [trainerBookings, setTrainerBookings] = useState([])
+	const [classBookings, setClassBookings] = useState([])
+
 	useEffect(() => {
 		getData(`members/${memberId}/booking`).then((response) => {
-			setBookings(response.data)
+			setTrainerBookings(response.data?.trainer_bookings || [])
+			setClassBookings(response.data?.class_bookings || [])
 		})
 	}, [])
 
@@ -30,11 +34,11 @@ export default function AllBookingsCard() {
 			>
 				<div className="flex flex-col justify-around gap-4">
 					<TrainerBookingsCard
-						trainerBookings={bookings.trainer_bookings}
-						setTrainerBookings={setBookings}
+						trainerBookings={trainerBookings}
+						setTrainerBookings={setTrainerBookings}
 					/>
 					<ClassBookingsCard
-						classBookings={bookings.class_bookings}
+						classBookings={classBookings}
 					/>
 				</div>
 			</DashboardCard>

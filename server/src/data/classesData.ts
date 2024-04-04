@@ -158,3 +158,25 @@ async function getRoomAvailable(timestamp: Date) {
 	}
 	return true
 }
+
+export async function getMemberAvailableClasses(memberId: number) {
+	const classes = await db
+		.selectFrom("classes")
+		.where(({ not, exists, selectFrom }) =>
+			not(
+				exists(
+					selectFrom("member_bookings")
+						.where("member_id", "=", memberId)
+						.whereRef(
+							"booking_timestamp",
+							"=",
+							"classes.class_time"
+						)
+				)
+			)
+		)
+		.selectAll()
+		.execute()
+
+	return classes
+}

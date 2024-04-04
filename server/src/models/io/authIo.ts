@@ -39,3 +39,9 @@ export type RegisterApiResponse = {
 	message: string
 	data: AccountData | null
 }
+
+export type GetDashboardApiResponse = {
+	status: number
+	message: string
+	data: SessionData | null
+}

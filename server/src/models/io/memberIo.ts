@@ -1,7 +1,7 @@
 import { Users, Members } from "../db/types"
 import { ApiResponse } from "./util"
 
-export type MemberDataResponse = Omit<Users & Members, "user_id" | "password">
+export type MemberDataResponse = Omit<Users, "user_id" | "password"> & Members
 
 export type MemberApiResponse = {
 	message: string
@@ -9,8 +9,10 @@ export type MemberApiResponse = {
 	data: MemberDataResponse | null
 }
 
-export type MembersApiResponse = Omit<MemberApiResponse, "data"> & {
-	data: Omit<MemberDataResponse, "password">[]
+export type MemberArrayApiResponse = {
+	message: string
+	status: number
+	data: MemberDataResponse[] | null
 }
 
 export type MemberDataCreateRequest = {

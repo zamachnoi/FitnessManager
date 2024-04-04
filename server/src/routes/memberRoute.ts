@@ -26,6 +26,23 @@ memberRoute.get("/username/:username", async (req, res) => {
 	res.status(data.status).json(data)
 })
 
+memberRoute.get("/profile/:name", async (req, res) => {
+	const Name = req.params.name
+	if(!(Name.includes(" "))){
+		const data = await memberController.generateSearchMembersProfilePartNameGetResponse(
+			Name
+		)
+		res.status(data.status).json(data)
+	}
+	else{
+		const [firstName, lastName] = Name.split(' ')
+		const data = await memberController.generateSearchMembersProfileFullNameGetResponse(
+			firstName,lastName
+		)
+		res.status(data.status).json(data)
+	}
+})
+
 // POST
 memberRoute.post("/", async (req, res) => {
 	const data = await memberController.generateMemberPostResponse(req.body)

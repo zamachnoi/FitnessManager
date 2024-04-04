@@ -143,3 +143,45 @@ export async function updateMember(
 
 	return util.removePassword(updatedData)
 }
+
+export async function SearchMembersProfileFullName(
+	firstName: string,
+	lastName: string
+): Promise<MemberDataResponse[]>{
+	const members = await db
+		.selectFrom("users")
+		.innerJoin("members","user_id", 'member_id')
+		.where((eb) => eb.or([
+			eb("first_name", 'like', '%' + firstName + '%'),
+			eb("last_name", 'like', '%' + lastName + '%')
+		  ]))
+		.where("type", "=", "Member")
+		.selectAll()
+		.execute()
+
+	if (!members) {
+		throw new Error("No member found")
+	}
+
+	return await Promise.all(members.map(util.removePassword))
+}
+
+export async function SearchMembersProfilePartName(
+	Name: string,
+): Promise<MemberDataResponse[]> {
+	const members = await db
+		.selectFrom("users")
+		.innerJoin("members","user_id", 'member_id')
+		.where((eb) => eb.or([
+			eb("first_name", 'like', '%' + Name + '%'),
+			eb("last_name", 'like', '%' + Name + '%')
+		  ]))
+		.where("type", "=", "Member")
+		.selectAll()
+		.execute()
+	if (!members) {
+		throw new Error("No members found")
+	}
+
+	return await Promise.all(members.map(util.removePassword))
+}

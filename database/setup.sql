@@ -84,7 +84,8 @@ CREATE TABLE equipment (
     equipment_id SERIAL PRIMARY KEY,
     name TEXT,
     equipment_type_id INT REFERENCES equipment_type(equipment_type_id),
-    under_maintenance BOOLEAN
+    under_maintenance BOOLEAN,
+    last_maintained TIMESTAMPTZ
 );
 
 
@@ -135,7 +136,7 @@ CREATE TABLE exercises (
     name TEXT,
     type TEXT,
     description TEXT,
-    equipment_id INT REFERENCES equipment_type(equipment_type_id)
+    equipment_type_id INT REFERENCES equipment_type(equipment_type_id)
 );
 
 -- Creating Routine Exercises table

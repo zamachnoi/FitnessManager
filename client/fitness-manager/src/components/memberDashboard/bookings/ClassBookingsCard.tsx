@@ -1,9 +1,10 @@
 import DashboardCard from "@/components/util/DashboardCard"
 import ClassBooking from "./ClassBooking"
+import ClassBookingDialog from "./ClassBookingDialog"
 type ClassBookingsProps = {
 	classBookings: {
 		class_id: number
-		class_name: string
+		name: string
 		price: number
 		first_name: string
 		last_name: string
@@ -18,7 +19,9 @@ export default function ClassBookingsCard(props: ClassBookingsProps) {
 			<DashboardCard
 				title="Class"
 				description="View all your class bookings here."
-				footer={<div>Footer</div>}
+				footer={
+					<ClassBookingDialog />
+				}
 			>
 				{props.classBookings.map((booking) => (
 					<ClassBooking {...booking} key={booking.class_id} />

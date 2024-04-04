@@ -1,5 +1,5 @@
 import { db } from "../lib/db"
-import { RoomAndBookingDbData } from "../models/io/roomIo"
+import { RoomAndBookingDbData, RoomData } from "../models/io/roomIo"
 
 export async function getRoomsAndBooking(
 	roomId?: number
@@ -37,4 +37,32 @@ export async function getRoomsAndBooking(
 	const roomAndBooking = await query.execute()
 
 	return roomAndBooking
+}
+
+export async function getAvailableRooms(
+	timestamp: Date
+): Promise<RoomData[]> {
+	const hourOfInterest = timestamp.getHours()
+
+	const availableRooms = await db
+		.selectFrom("rooms")
+		.selectAll()
+		.where(({ eb, and, not, exists, selectFrom }) =>
+			and([
+				not(
+					exists(
+						selectFrom("room_bookings")
+							.where("class_time", "=", timestamp)
+							.whereRef("rooms.room_id", "=", "room_bookings.room_id")
+					)
+				),
+			])
+		)
+		.execute()
+
+	if (!availableRooms) {
+		return []
+	}
+
+	return availableRooms
 }

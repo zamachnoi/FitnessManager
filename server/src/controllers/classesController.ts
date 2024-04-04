@@ -1,4 +1,5 @@
 import {
+	BookableClassessApiResponse,
 	ClassesApiRequest,
 	ClassesApiResponse,
 	ClassesArrayApiResponse,
@@ -50,9 +51,29 @@ export async function generateClassesGetByIdResponse(
 	}
 }
 
+export async function generateBookableClassesGetResponse(
+	memberId: number
+): Promise<BookableClassessApiResponse> {
+	try {
+		const classes =
+			await classesData.getBookableClasses(memberId)
+		let res: BookableClassessApiResponse = {
+			message: `success`,
+			status: 200,
+			data: classes,
+		}
+		return res
+	} catch (e) {
+		return {
+			message: "Could not find classes",
+			status: 404,
+			data: [],
+		}
+	}
+}
+
 // POST
 export async function generateClassesPostResponse(
-	class_id: number,
 	classRequest: ClassesApiRequest
 ): Promise<ClassesApiResponse> {
 	try {
@@ -81,3 +102,4 @@ export async function generateClassesPostResponse(
 		}
 	}
 }
+

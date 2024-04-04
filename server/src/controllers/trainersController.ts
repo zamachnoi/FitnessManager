@@ -4,6 +4,8 @@ import {
 	TrainersApiRequest,
 	TrainerDataUpdateRequest,
 	TrainerDataUpdate,
+	AvailableTrainersRequest,
+	AvailableTrainersResponse,
 } from "../models/io/trainersIo"
 import {
 	getTrainerById,
@@ -11,7 +13,10 @@ import {
 	getAllTrainers,
 	createTrainer,
 	updateTrainer,
+	getAvailableTrainers,
 } from "../data/trainersData"
+
+
 
 export async function generateTrainerByIdGetResponse(
 	id: number
@@ -112,5 +117,30 @@ function transformUpdateRequest(
 			username: member.username,
 			password: member.password,
 		},
+	}
+}
+
+
+export async function generateAvailableTrainersGetResponse(
+	request: AvailableTrainersRequest
+): Promise<AvailableTrainersResponse> {
+	const timestamp = new Date(request.booking_timestamp)
+
+	try {
+		const trainers = await getAvailableTrainers(
+			timestamp
+		)
+
+		return {
+			message: `success`,
+			status: 200,
+			data: trainers,
+		}
+	} catch (e) {
+		return {
+			message: "Could not find available trainers",
+			status: 404,
+			data: [],
+		}
 	}
 }

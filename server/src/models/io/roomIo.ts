@@ -30,3 +30,19 @@ export type RoomAndBookingArrayApiResponse = {
 	status: number
 	data: RoomAndBookingData[] | null
 }
+
+export type RoomData = Omit<Rooms, "room_id"> & {
+	room_id: number
+}
+
+export type RoomApiResponse = {
+	message: string
+	status: number
+	data: RoomData | null
+}
+
+export type RoomsApiResponse = {
+	message: string
+	status: number
+	data: RoomData[] | null
+}

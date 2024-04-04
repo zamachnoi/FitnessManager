@@ -13,3 +13,9 @@ roomRoute.get("/:roomId", async (req, res) => {
 	const data = await roomController.generateRoomByIdGetResponse(roomId)
 	res.status(data.status).json(data)
 })
+
+roomRoute.get("/available/:date", async (req, res) => {
+	const date = new Date(parseInt(req.params.date))
+	const data = await roomController.generateAvailableRoomsGetResponse(date)
+	res.status(data.status).json(data)
+})

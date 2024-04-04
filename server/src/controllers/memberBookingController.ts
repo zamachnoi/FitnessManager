@@ -1,8 +1,6 @@
 import {
 	MemberTrainerBookingRequest,
 	MemberTrainerBookingResponse,
-	AvailableTrainersResponse,
-	AvailableTrainersRequest,
 	MemberAvailableHoursResponse,
 	MemberBookingsResponse,
 	MemberClassBookingResponse,
@@ -39,29 +37,6 @@ export async function generateMemberTrainerBookingPostRespoonse(
 	}
 }
 
-export async function generateAvailableTrainersGetResponse(
-	request: AvailableTrainersRequest
-): Promise<AvailableTrainersResponse> {
-	const timestamp = new Date(request.booking_timestamp)
-
-	try {
-		const trainers = await memberTrainerBookingData.getAvailableTrainers(
-			timestamp
-		)
-
-		return {
-			message: `success`,
-			status: 200,
-			data: trainers,
-		}
-	} catch (e) {
-		return {
-			message: "Could not find available trainers",
-			status: 404,
-			data: [],
-		}
-	}
-}
 
 export async function generateMemberAvailableHoursGetResponse(
 	memberId: number,

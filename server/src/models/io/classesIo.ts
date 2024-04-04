@@ -5,6 +5,18 @@ export type ClassesData = Omit<Classes, "class_id" | "class_time"> & {
 	class_time: Date | null
 }
 
+export type BookableClassesData = ClassesData & {
+	first_name: string | null
+	last_name: string | null
+	room_number: number | null
+}
+
+export type BookableClassessApiResponse = {
+	message: string
+	status: number
+	data: BookableClassesData[] | null
+}
+
 export type ClassesApiRequest = {
 	name: string
 	price: number

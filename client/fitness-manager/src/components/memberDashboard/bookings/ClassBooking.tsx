@@ -4,7 +4,7 @@ import moment from "moment"
 
 type ClassBookingProps = {
 	class_id: number
-	class_name: string
+	name: string
 	price: number
 	first_name: string
 	last_name: string
@@ -18,7 +18,7 @@ export default function ClassBooking(props: ClassBookingProps) {
 			<div>
 				<div className="flex flex-row items-center justify-between gap-2 align-center">
 					<h3 className="flex flex-row items-center justify-center font-bold">
-						{props.class_name} - Room {props.room_number}
+						{props.name} - Room {props.room_number}
 					</h3>
 
 					<p className="flex flex-row items-center justify-center text-xs text-center">

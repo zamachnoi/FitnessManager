@@ -40,3 +40,22 @@ export type TrainerDataUpdateRequest = {
 	username?: string | null
 	password?: string | null
 }
+
+
+// AvailableTrainers
+export type AvailableTrainersData = {
+	trainer_id: number
+	first_name: string | null
+	last_name: string | null
+	rate: number | null
+}
+
+export type AvailableTrainersRequest = {
+	booking_timestamp: Date
+}
+
+export type AvailableTrainersResponse = {
+	status: number
+	message: string
+	data: AvailableTrainersData[]
+}

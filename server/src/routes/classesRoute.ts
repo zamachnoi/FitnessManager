@@ -20,13 +20,21 @@ classesRoute.get("/:classId", async (req, res) => {
 	res.status(data.status).json(data)
 })
 
+classesRoute.get("/:memberId/bookable", async (req, res) => {
+	const memberId = parseInt(req.params.memberId)
+	const data =
+		await classesController.generateBookableClassesGetResponse(
+			memberId
+		)
+
+	res.status(data.status).json(data)
+})
+
 // POST
-classesRoute.post("/:classId", async (req, res) => {
-	const classId = parseInt(req.params.classId)
+classesRoute.post("/", async (req, res) => {
 	const classRequest = req.body
 	const data =
 		await classesController.generateClassesPostResponse(
-			classId,
 			classRequest
 		)
 

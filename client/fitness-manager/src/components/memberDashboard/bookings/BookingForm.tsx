@@ -5,11 +5,9 @@ import { Button } from "@/components/ui/button"
 import {
 	Form,
 	FormControl,
-	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
-	FormMessage,
 } from "@/components/ui/form"
 import { DatePicker } from "../../util/DatePicker"
 import {
@@ -49,7 +47,7 @@ export async function getAvailableTrainers(date: Date, time: number) {
 	const unix = dt.getTime() / 1000
 	console.log(unix)
 
-	const res = await getData(`members/1/booking/trainers/${unix}000`)
+	const res = await getData(`trainers/booking/${unix}000`)
 	console.log(res)
 	return res.data
 }

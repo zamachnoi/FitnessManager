@@ -16,23 +16,6 @@ export type MemberTrainerBookingResponse = {
 	data: MemberTrainerBookingData | null
 }
 
-// AvailableTrainers
-export type AvailableTrainersData = {
-	trainer_id: number
-	first_name: string | null
-	last_name: string | null
-	rate: number | null
-}
-
-export type AvailableTrainersRequest = {
-	booking_timestamp: Date
-}
-
-export type AvailableTrainersResponse = {
-	status: number
-	message: string
-	data: AvailableTrainersData[]
-}
 
 // MemberAvailableHours
 export type MemberAvailableHoursResponse = {
@@ -51,7 +34,7 @@ export type MemberBookingData = {
 	}[]
 	class_bookings: {
 		class_id: number | null
-		class_name: string | null
+		name: string | null
 		price: number | null
 		first_name: string | null
 		last_name: string | null

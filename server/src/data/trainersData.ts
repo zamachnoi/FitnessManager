@@ -1,5 +1,5 @@
 import { db } from "../lib/db"
-import { TrainersData, TrainersApiRequest, TrainerDataUpdate } from "../models/io/trainersIo"
+import { TrainersData, TrainersApiRequest, TrainerDataUpdate, AvailableTrainersData } from "../models/io/trainersIo"
 import * as util from "./dataUtil"
 
 export async function getTrainerById(id: number): Promise<TrainersData> {
@@ -165,4 +165,40 @@ export async function updateTrainer(
 	})
 
 	return util.removePassword(updateData)
+}
+
+
+export async function getAvailableTrainers(
+	timestamp: Date
+): Promise<AvailableTrainersData[]> {
+	const hourOfInterest = timestamp.getHours()
+
+	const availableTrainers = await db
+		.selectFrom("trainers")
+		.innerJoin("users", "user_id", "trainer_id")
+		.select(["trainer_id", "first_name", "last_name", "rate"])
+		.where(({ eb, and, not, exists, selectFrom }) =>
+			and([
+				eb("start_availability", "<=", `${hourOfInterest}:00:00`),
+				eb("end_availability", ">", `${hourOfInterest}:00:00`),
+				not(
+					exists(
+						selectFrom("trainer_booking")
+							.where("trainer_booking_timestamp", "=", timestamp)
+							.whereRef(
+								"trainer_booking.trainer_id",
+								"=",
+								"trainers.trainer_id"
+							)
+					)
+				),
+			])
+		)
+		.execute()
+
+	if (!availableTrainers) {
+		return []
+	}
+
+	return availableTrainers
 }

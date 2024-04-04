@@ -5,21 +5,6 @@ import * as memberTrainerBookingController from "../controllers/memberBookingCon
 
 export const memberBookingRoute = Router()
 
-memberBookingRoute.get(
-	"/:id/booking/trainers/:booking_timestamp",
-	async (req, res) => {
-		const booking_timestamp = new Date(
-			parseInt(req.params.booking_timestamp)
-		)
-
-		const data =
-			await memberTrainerBookingController.generateAvailableTrainersGetResponse(
-				{ booking_timestamp }
-			)
-
-		res.status(data.status).json(data)
-	}
-)
 
 memberBookingRoute.post("/:id/booking/trainers", async (req, res) => {
 	const bookingRequest: MemberTrainerBookingRequest = req.body

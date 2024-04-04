@@ -1,13 +1,13 @@
 import {
 	MemberTrainerBookingData,
 	MemberTrainerBookingRequest,
-	AvailableTrainersData,
 	MemberBookingData,
 	MemberClassBookingData,
 } from "../models/io/memberBookingIo"
 import { db } from "../lib/db"
 import { sql } from "kysely"
 import { MemberClassBooking } from "../models/db/types"
+import { getAvailableTrainers } from "./trainersData"
 
 export async function bookTrainer(
 	memberId: number,
@@ -93,41 +93,6 @@ export async function bookTrainer(
 			return bookingData
 		})
 	return memberTrainerBooking
-}
-
-export async function getAvailableTrainers(
-	timestamp: Date
-): Promise<AvailableTrainersData[]> {
-	const hourOfInterest = timestamp.getHours()
-
-	const availableTrainers = await db
-		.selectFrom("trainers")
-		.innerJoin("users", "user_id", "trainer_id")
-		.select(["trainer_id", "first_name", "last_name", "rate"])
-		.where(({ eb, and, not, exists, selectFrom }) =>
-			and([
-				eb("start_availability", "<=", `${hourOfInterest}:00:00`),
-				eb("end_availability", ">", `${hourOfInterest}:00:00`),
-				not(
-					exists(
-						selectFrom("trainer_booking")
-							.where("trainer_booking_timestamp", "=", timestamp)
-							.whereRef(
-								"trainer_booking.trainer_id",
-								"=",
-								"trainers.trainer_id"
-							)
-					)
-				),
-			])
-		)
-		.execute()
-
-	if (!availableTrainers) {
-		return []
-	}
-
-	return availableTrainers
 }
 
 export async function getMemberAvailableHours(memberId: number, date: string) {
@@ -259,7 +224,7 @@ export async function getMemberBookings(
 		.innerJoin("rooms as r", "cl.room_id", "r.room_id")
 		.select([
 			"cl.class_id",
-			"cl.name as class_name",
+			"cl.name",
 			"cl.price",
 			"u.first_name",
 			"u.last_name",

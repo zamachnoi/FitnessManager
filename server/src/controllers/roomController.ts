@@ -3,8 +3,9 @@ import {
 	RoomAndBookingApiResponse,
 	RoomAndBookingDbData,
 	RoomAndBookingData,
+	RoomsApiResponse
 } from "../models/io/roomIo"
-import { getRoomsAndBooking } from "../data/roomData"
+import { getRoomsAndBooking, getAvailableRooms } from "../data/roomData"
 
 export async function generateRoomByIdGetResponse(
 	roomId: number
@@ -79,4 +80,24 @@ function transformDbToResponseData(
 	) // This empty object is now understood to be of type Record<number, RoomAndBookingData>
 
 	return Object.values(groupedByRoomId)
+}
+
+export async function generateAvailableRoomsGetResponse(
+	timestamp: Date
+): Promise<RoomsApiResponse> {
+	try {
+		const availableRooms = await getAvailableRooms(timestamp)
+
+		return {
+			message: "Available rooms",
+			status: 200,
+			data: availableRooms,
+		}
+	} catch (error) {
+		return {
+			message: "Error finding available rooms",
+			status: 404,
+			data: null,
+		}
+	}
 }

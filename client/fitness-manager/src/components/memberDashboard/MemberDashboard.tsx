@@ -1,6 +1,5 @@
 import PersonalInfoCard from "./PersonalInfoCard"
 import GoalCard from "./GoalCard"
-import PersonalTrainingCard from "./PersonalTrainingCard"
 
 import { getData } from "@/utils/getData"
 import AllBookingsCard from "./bookings/AllBookingsCard"
@@ -50,10 +49,7 @@ const MemberDashboard = ({ memberId }: { memberId: number }) => {
 			<div>
 				<PersonalInfoCard />
 				<GoalCard />
-				<PersonalTrainingCard
-					bookings={testBookings}
-					times={testTimes}
-				/>
+
 			</div>
 			<div>
 				<AllBookingsCard />

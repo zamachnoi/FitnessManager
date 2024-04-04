@@ -1,10 +1,25 @@
 import { db } from "../lib/db"
 import { sql } from "kysely"
-import { ClassesData, ClassesApiRequest } from "../models/io/classesIo"
+import { ClassesData, ClassesApiRequest, BookableClassesData } from "../models/io/classesIo"
 import { RoomAndBookingData } from "../models/io/roomIo"
 
-export async function getAllClasses(): Promise<ClassesData[]> {
-	const classes = await db.selectFrom("classes").selectAll().execute()
+export async function getAllClasses(): Promise<BookableClassesData[]> {
+	const classes = await db.selectFrom("classes")
+		.innerJoin("users", "users.user_id", "classes.trainer_id")
+		.innerJoin("rooms", "rooms.room_id", "classes.room_id")
+		.select([
+			"classes.trainer_id",
+			"classes.class_id",
+			"classes.name",
+			"classes.price",
+			"classes.class_time",
+			"users.first_name",
+			"users.last_name",
+			"rooms.room_number",
+			"rooms.room_id",
+			"classes.trainer_booking_id"
+		])
+		.execute()
 	return classes
 }
 
@@ -157,4 +172,50 @@ async function getRoomAvailable(timestamp: Date) {
 		return false
 	}
 	return true
+}
+
+
+export async function getBookableClasses(
+	memberId: number
+
+): Promise<BookableClassesData[]> {
+
+	const classes = await db
+			.selectFrom("classes")
+			.where(({ not, exists, selectFrom }) =>
+					not(
+							exists(
+								selectFrom("member_bookings")
+									.where("member_id", "=", memberId)
+									.whereRef(
+										"booking_timestamp",
+										"=",
+										"classes.class_time"
+									)
+									.whereRef(
+										"classes.class_time",
+										">",
+										db.fn("NOW")
+									)
+							)
+					)
+			)
+			.innerJoin("users", "users.user_id", "classes.trainer_id")
+			.innerJoin("rooms", "rooms.room_id", "classes.room_id")
+			.select([
+					"classes.trainer_id",
+					"classes.class_id",
+					"classes.name",
+					"classes.price",
+					"classes.class_time",
+					"users.first_name",
+					"users.last_name",
+					"rooms.room_number",
+					"rooms.room_id",
+					"classes.trainer_booking_id"
+			])
+			.execute()
+
+
+	return classes
 }

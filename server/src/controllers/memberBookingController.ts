@@ -111,3 +111,26 @@ export async function generateMemberClassBookingPostResponse(
 		}
 	}
 }
+
+// DELETE
+export async function generateMemberBookingDeleteResponse(
+	memberId: number,
+	memberBookingId: number,
+	trainerBookingId: number
+): Promise<MemberClassBookingResponse> {
+	try {
+		await memberTrainerBookingData.deleteMemberBooking(memberId, memberBookingId, trainerBookingId)
+		return {
+			message: `success`,
+			status: 200,
+			data: null,
+		}
+	} catch (e) {
+		console.log(e)
+		return {
+			message: "Could not delete class booking",
+			status: 404,
+			data: null,
+		}
+	}
+}

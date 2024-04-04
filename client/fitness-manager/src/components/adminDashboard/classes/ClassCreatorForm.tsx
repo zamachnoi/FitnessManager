@@ -23,7 +23,6 @@ import { getData } from "@/utils/getData"
 import { postData } from "@/utils/postData"
 
 import { useState, useEffect } from "react"
-import { book } from "@/components/memberDashboard/bookings/BookingForm"
 
 const ClassSchema = z.object({
   date: z.date(),

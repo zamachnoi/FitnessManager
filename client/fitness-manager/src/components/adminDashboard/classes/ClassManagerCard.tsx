@@ -25,6 +25,8 @@ async function getClasses() {
 
 }
 
+
+
 const ClassManagerCard = () => {
 
   const [classes, setClasses] = useState<ClassType[]>([])
@@ -47,7 +49,7 @@ const ClassManagerCard = () => {
     >
       <div>
         {classes.map((booking, index) => (
-          <ClassBooking {...booking} key={index} />
+          <ClassBooking {...booking} classes={classes} setClasses={setClasses} key={index} />
         ))}
       </div>
     </DashboardCard>

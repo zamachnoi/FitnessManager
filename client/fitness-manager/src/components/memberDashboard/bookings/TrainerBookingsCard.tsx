@@ -9,7 +9,8 @@ type TrainerBookingsProps = {
 		last_name: string
 		rate: number
 		booking_timestamp: Date
-	}[]
+	}[],
+	setTrainerBookings: any
 }
 
 export default function TrainerBookingsCard(props: TrainerBookingsProps) {
@@ -24,7 +25,7 @@ export default function TrainerBookingsCard(props: TrainerBookingsProps) {
 			>
 				<div>
 					{props.trainerBookings.map((booking, index) => (
-						<TrainerBooking {...booking} key={index} />
+						<TrainerBooking {...booking} key={index} bookings={props.trainerBookings} setBookings={props.setTrainerBookings} />
 					))}
 				</div>
 			</DashboardCard>

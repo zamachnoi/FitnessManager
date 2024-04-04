@@ -31,6 +31,7 @@ export default function AllBookingsCard() {
 				<div className="flex flex-col justify-around gap-4">
 					<TrainerBookingsCard
 						trainerBookings={bookings.trainer_bookings}
+						setTrainerBookings={setBookings}
 					/>
 					<ClassBookingsCard
 						classBookings={bookings.class_bookings}

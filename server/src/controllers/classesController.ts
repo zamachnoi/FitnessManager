@@ -4,6 +4,9 @@ import {
 	ClassesApiResponse,
 	ClassesArrayApiResponse,
 } from "../models/io/classesIo"
+import {
+	DefaultDeleteApiResponse,
+} from "../models/io/defaultIo"
 
 import * as classesData from "../data/classesData"
 
@@ -101,5 +104,28 @@ export async function generateClassesPostResponse(
 			data: null,
 		}
 	}
+}
+
+// DELETE
+export async function generateClassesDeleteResponse(
+	class_id: number,
+): Promise<DefaultDeleteApiResponse> {
+	try {
+		const classes =
+			await classesData.deleteClass(
+				class_id,
+			)
+		let res: DefaultDeleteApiResponse = {
+			message: "Class deleted",
+			status: 'success',
+		}
+		return res
+	} catch (e) {
+		return {
+			message: "Error deleting class",
+			status: 'error',
+		}
+	}
+
 }
 

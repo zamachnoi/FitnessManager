@@ -8,7 +8,11 @@ type TrainerBookingProps = {
 	last_name: string
 	rate: number
 	booking_timestamp: Date
+	bookings: any
+	setBookings: any
 }
+
+
 
 function TrainerBooking(props: TrainerBookingProps) {
 	return (

@@ -229,7 +229,7 @@ export async function getMemberBookings(
 			"u.first_name",
 			"u.last_name",
 			"r.room_number",
-			"mb.booking_timestamp",
+			"mb.booking_timestamp",			
 		])
 		.where("mb.member_id", "=", memberId)
 		.where("mb.type", "=", "Class")
@@ -250,6 +250,8 @@ export async function getMemberBookings(
 			"u.last_name",
 			"t.rate",
 			"mb.booking_timestamp",
+			"mb.member_booking_id",
+			"mtb.trainer_booking_id",
 		])
 		.where("mb.member_id", "=", memberId)
 		.where("mb.type", "=", "Trainer")
@@ -276,3 +278,33 @@ async function getMemberAvailable(timestamp: Date, memberId: number) {
 	}
 	return true
 }
+
+// delete
+export async function deleteMemberBooking(
+	memberId: number,
+	memberBookingId: number,
+	trainerBookingId: number
+): Promise<void> {
+	// delete member booking and trainer booking
+	try {
+		await db.transaction().execute(async (trx) => {
+			await trx
+				.deleteFrom("member_bookings")
+				.where("member_id", "=", memberId)
+				.where("member_booking_id", "=", memberBookingId)
+				.execute()
+
+			await trx
+				.deleteFrom("trainer_booking")
+				.where("trainer_booking_id", "=", trainerBookingId)
+				.execute()
+		}
+		)
+	
+	} catch (e) {
+		console.log(e)
+		throw new Error("Failed to delete booking")
+	}
+
+}
+

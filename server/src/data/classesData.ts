@@ -219,3 +219,40 @@ export async function getBookableClasses(
 
 	return classes
 }
+
+
+// DELETE
+export async function deleteClass(classId: number): Promise<void> {
+	console.log(classId)
+	try{
+		await db.transaction().execute(async (transaction) => {
+			console.log('here')
+			const trainerBooking = await transaction
+				.selectFrom("classes")
+				.where("class_id", "=", classId)
+				.select("trainer_booking_id")
+				.executeTakeFirst()
+			console.log('here')
+			if (!trainerBooking) {
+				throw new Error("No such class found")
+			}
+			console.log('here2')
+			// await transaction.deleteFrom("trainer_booking")
+			// 	.where("trainer_booking_id", "=", trainerBooking.trainer_booking_id)
+			// 	.execute()
+			console.log('here3')
+			const classDeleted = await transaction.deleteFrom("classes")
+				.where("class_id", "=", classId)
+				.execute()
+			
+			console.log('here')
+			console.log(classDeleted)
+		})
+	} catch (e) {
+		console.log(e)
+		throw new Error("Error deleting class")
+	}
+
+	return
+
+}

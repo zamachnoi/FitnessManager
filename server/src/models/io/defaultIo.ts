@@ -11,3 +11,8 @@ export type DefaultGetApiResponse = {
 export interface GetDefaultApiResponse extends ApiResponse {
 	data: GetUserDbRow | null
 }
+
+export type DefaultDeleteApiResponse = {
+	message: string
+	status: "success" | "error"
+}

@@ -40,3 +40,11 @@ classesRoute.post("/", async (req, res) => {
 
 	res.status(data.status).json(data)
 })
+
+// DELETE
+classesRoute.delete("/:classId", async (req, res) => {
+	const classId = parseInt(req.params.classId)
+	await classesController.generateClassesDeleteResponse(classId)
+
+	res.status(200).json({ message: "success" })
+})

@@ -31,6 +31,8 @@ export type MemberBookingData = {
 		last_name: string | null
 		rate: number | null
 		booking_timestamp: Date | null
+		member_booking_id: number | null
+		trainer_booking_id: number | null
 	}[]
 	class_bookings: {
 		class_id: number | null

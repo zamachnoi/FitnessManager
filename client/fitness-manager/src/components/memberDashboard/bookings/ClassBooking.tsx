@@ -56,6 +56,7 @@ export default function ClassBooking(props: ClassBookingProps) {
 		})
 	}
 
+	const previous = moment(props.booking_timestamp).isBefore(moment())
 
 	return (
 		<div>
@@ -74,17 +75,19 @@ export default function ClassBooking(props: ClassBookingProps) {
 									"MMMM Do YYYY h:mm:ss a"
 							  )}
 					</p>
-					<div className="flex flex-row">
+					{!previous ? (
+						<div className="flex flex-row">
 						{props.deleteType == "class" && <ClassRescheduleDialog date={date} setDate={setDate} classId={props.class_id} />}
-						<Button
-							variant="link"
-							onClick={() => {
-								onCancel()
-							}}
-						>
-							Cancel
-						</Button>
-					</div>
+							<Button
+								variant="link"
+								onClick={() => {
+									onCancel()
+								}}
+							>
+								Cancel
+							</Button>
+						</div>
+					) : null}
 				</div>
 				<Separator />
 			</div>

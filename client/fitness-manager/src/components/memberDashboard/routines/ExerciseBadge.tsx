@@ -56,15 +56,17 @@ export default function ExerciseBadge(props: ExerciseBadgeProps) {
 				</Badge>
 			</HoverCardTrigger>
 			<HoverCardContent className="w-[700px]">
-				<div className="flex flex-row items-center gap-4">
-					<div className="grid items-center w-full grid-cols-4 grid-rows-1 gap-1 pl-6">
+				<div className="flex flex-col items-center">
+					<h1 className="text-xl font-bold">Exercise Info</h1>
+					<div className="grid items-center w-full grid-cols-4 grid-rows-1 pl-6 justify-items-center">
 						<p className="font-bold">Name</p>
 						<p className="font-bold">Description</p>
 						<p className="font-bold">Equipment</p>
 						<p className="font-bold">Type</p>
 					</div>
+
+					<ExerciseInfo exercise={props.exercise} index={-1} />
 				</div>
-				<ExerciseInfo exercise={props.exercise} index={0} />
 			</HoverCardContent>
 		</HoverCard>
 	)

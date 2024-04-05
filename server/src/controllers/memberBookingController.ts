@@ -4,6 +4,8 @@ import {
 	MemberAvailableHoursResponse,
 	MemberBookingsResponse,
 	MemberClassBookingResponse,
+	ChangeMemberBookingRequest,
+	ChangeMemberBookingResponse,
 } from "../models/io/memberBookingIo"
 
 import * as memberBookingData from "../data/memberBookingData"
@@ -29,6 +31,7 @@ export async function generateMemberTrainerBookingPostRespoonse(
 			data: booking,
 		}
 	} catch (e) {
+		console.log(e)
 		return {
 			message: "Could not book trainer",
 			status: 404,
@@ -158,6 +161,64 @@ export async function generateMemberClassBookingPatchResponse(
 			message: "Could not delete class booking",
 			status: 404,
 			data: null,
+		}
+	}
+}
+
+export async function generateChangeTrainerBookingPatchResponse(
+	bookingRequest: ChangeMemberBookingRequest
+): Promise<ChangeMemberBookingResponse> {
+	try {
+		console.log(bookingRequest)
+		const timestamp = new Date(bookingRequest.booking_timestamp)
+
+		const bookTrainerData = bookingRequest
+
+		bookTrainerData.booking_timestamp = timestamp
+		const booking = await memberBookingData.changeMemberTrainerBooking(
+			bookTrainerData
+		)
+
+		return {
+			message: `success`,
+			status: 200,
+			data: booking,
+		}
+	} catch (e) {
+		console.log(e)
+		return {
+			message: "Could not book trainer",
+			status: 404,
+			data: null,
+		}
+	}
+}
+
+export async function generateTrainerAvailableHoursGetResponse(
+	trainerId: number,
+	date: Date
+): Promise<MemberAvailableHoursResponse> {
+	const dateString = date.toISOString().split("T")[0]
+	console.log(dateString)
+
+	console.log(trainerId, dateString)
+	try {
+		const hours = await memberBookingData.getTrainerAvailableHours(
+			trainerId,
+			dateString
+		)
+
+		return {
+			message: `success`,
+			status: 200,
+			data: hours,
+		}
+	} catch (e) {
+		console.log(e)
+		return {
+			message: "Could not find available hours",
+			status: 404,
+			data: [],
 		}
 	}
 }

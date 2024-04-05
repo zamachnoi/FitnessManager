@@ -1,5 +1,10 @@
 import { db } from "../lib/db"
-import { TrainersData, TrainersApiRequest, TrainerDataUpdate, AvailableTrainersData } from "../models/io/trainersIo"
+import {
+	TrainersData,
+	TrainersApiRequest,
+	TrainerDataUpdate,
+	AvailableTrainersData,
+} from "../models/io/trainersIo"
 import * as util from "./dataUtil"
 
 export async function getTrainerById(id: number): Promise<TrainersData> {
@@ -62,7 +67,7 @@ export async function createTrainer(
 		trainer_id: user.user_id,
 		start_availability,
 		end_availability,
-		rate
+		rate,
 	}
 
 	// Insert into the trainers table and get the inserted trainer
@@ -166,7 +171,6 @@ export async function updateTrainer(
 
 	return util.removePassword(updateData)
 }
-
 
 export async function getAvailableTrainers(
 	timestamp: Date

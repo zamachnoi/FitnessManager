@@ -191,11 +191,10 @@ export async function getBookableClasses(
 					selectFrom("member_bookings")
 						.where("member_id", "=", memberId)
 						.whereRef(
-							"booking_timestamp",
+							"member_bookings.booking_timestamp",
 							"=",
 							"classes.class_time"
 						)
-						.whereRef("classes.class_time", ">", db.fn("NOW"))
 				)
 			)
 		)
@@ -213,6 +212,7 @@ export async function getBookableClasses(
 			"rooms.room_id",
 			"classes.trainer_booking_id",
 		])
+		.whereRef("classes.class_time", ">", db.fn("NOW"))
 		.execute()
 
 	return classes

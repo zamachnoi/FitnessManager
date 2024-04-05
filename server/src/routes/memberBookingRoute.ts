@@ -1,6 +1,9 @@
 import { Router } from "express"
 
-import { MemberTrainerBookingRequest } from "../models/io/memberBookingIo"
+import {
+	ChangeMemberBookingRequest,
+	MemberTrainerBookingRequest,
+} from "../models/io/memberBookingIo"
 import * as memberTrainerBookingController from "../controllers/memberBookingController"
 
 export const memberBookingRoute = Router()
@@ -87,6 +90,51 @@ memberBookingRoute.patch(
 				memberId,
 				memberBookingId,
 				trainerBookingId
+			)
+
+		res.status(data.status).json(data)
+	}
+)
+
+memberBookingRoute.get(
+	"/:memberId/booking/trainers/:trainerId/hours/:date",
+	async (req, res) => {
+		const memberId = parseInt(req.params.memberId)
+		const trainerId = parseInt(req.params.trainerId)
+		const date = new Date(parseInt(req.params.date))
+
+		const data =
+			await memberTrainerBookingController.generateTrainerAvailableHoursGetResponse(
+				trainerId,
+				date
+			)
+
+		res.status(data.status).json(data)
+	}
+)
+
+memberBookingRoute.patch(
+	"/:memberId/booking/:memberBookingId/trainers/:trainerId/booking/:trainerBookingId/reschedule",
+	async (req, res) => {
+		const memberId = parseInt(req.params.memberId)
+		const memberBookingId = parseInt(req.params.memberBookingId)
+		const trainerBookingId = parseInt(req.params.trainerBookingId)
+		const trainerId = parseInt(req.params.trainerId)
+
+		const body = req.body
+
+		const request: ChangeMemberBookingRequest = {
+			booking_timestamp: new Date(body.new_booking_timestamp),
+			booking_id: memberBookingId,
+			member_id: memberId,
+			trainer_booking_id: trainerBookingId,
+			trainer_id: trainerId,
+		}
+		console.log(request)
+
+		const data =
+			await memberTrainerBookingController.generateChangeTrainerBookingPatchResponse(
+				request
 			)
 
 		res.status(data.status).json(data)

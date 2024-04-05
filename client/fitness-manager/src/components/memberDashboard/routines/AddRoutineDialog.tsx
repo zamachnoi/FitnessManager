@@ -47,12 +47,12 @@ export default function AddRoutineDialog({
 			<DialogTrigger asChild>
 				<Button className="m-2">Add Routine</Button>
 			</DialogTrigger>
-			<DialogContent>
+			<DialogContent className="max-w-3xl">
 				<DialogHeader>
 					<DialogTitle>Add Routine</DialogTitle>
 					<DialogDescription>Add a new routine</DialogDescription>
 				</DialogHeader>
-				<div className="flex flex-col space-y-2">
+				<div className="flex flex-col">
 					{dialogRoutines.map((routine) => (
 						<RoutineInfo
 							routine={routine}

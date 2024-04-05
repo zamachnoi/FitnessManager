@@ -56,9 +56,6 @@ export default function ClassBooking(props: ClassBookingProps) {
 		})
 	}
 
-	const reschedule = () => {
-
-	}
 
 	return (
 		<div>
@@ -78,7 +75,7 @@ export default function ClassBooking(props: ClassBookingProps) {
 							  )}
 					</p>
 					<div className="flex flex-row">
-						<ClassRescheduleDialog date={date} setDate={setDate} classId={props.class_id} />
+						{props.deleteType == "class" && <ClassRescheduleDialog date={date} setDate={setDate} classId={props.class_id} />}
 						<Button
 							variant="link"
 							onClick={() => {

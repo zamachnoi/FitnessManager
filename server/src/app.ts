@@ -65,7 +65,7 @@ if (authEnabled) {
 	)
 
 	const protectedNonGetMiddleware = applyMiddlewareToRoutesStartingWith(
-		["/members", "/admins", "/trainers", "/routines"],
+		["/members", "/admins", "/trainers"],
 		excludeGetRequests(ensureAuthenticated)
 	)
 

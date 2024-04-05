@@ -7,14 +7,6 @@ import { postData } from "@/utils/postData"
 import HealthStat from "./HealthStat"
 import { useUser } from "@/context/userContext"
 
-export async function postHealthStat(data: HealthStatsData) {
-	const user = useUser()
-	const userId = user.userId
-
-	const res = await postData(`members/${userId}/stats`, data)
-	return res.data
-}
-
 export type HealthStatsFormProps = {
 	setHealthStats: React.Dispatch<React.SetStateAction<HealthStatsType[]>>
 	healthStats: HealthStatsType[]
@@ -30,7 +22,14 @@ export default function HealthStatsForm({
 	healthStats,
 	setHealthStats,
 }: HealthStatsFormProps) {
+	const user = useUser()
+	const userId = user.userId
 	const [errorText, setErrorText] = useState("")
+
+	async function postHealthStat(data: HealthStatsData) {
+		const res = await postData(`members/${userId}/stats`, data)
+		return res.data
+	}
 
 	const [newStat, setNewStat] = useState({
 		heart_rate: 0,

@@ -1,4 +1,3 @@
-import React from "react"
 import TrainerScheduleCard from "./TrainerScheduleCard"
 import TrainerSearchCard from "./TrainerSearchCard"
 

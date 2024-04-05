@@ -36,3 +36,16 @@ export async function processPayment(paymentId: number) {
 
 	return payment
 }
+
+export async function processPayments(
+	paymentIds: number[]
+): Promise<PaymentsData[]> {
+	const payments = await db
+		.updateTable("payments")
+		.set("processed", true)
+		.where("payment_id", "in", paymentIds)
+		.returningAll()
+		.execute()
+
+	return payments
+}

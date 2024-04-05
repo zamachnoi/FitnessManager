@@ -25,3 +25,13 @@ paymentRoute.post("/:paymentId", async (req, res) => {
 
 	res.status(data.status).json(data)
 })
+
+paymentRoute.post("/", async (req, res) => {
+	const paymentIds = req.body.payment_ids
+
+	const data = await paymentController.generatePaymentsPostResponse(
+		paymentIds
+	)
+
+	res.status(data.status).json(data)
+})

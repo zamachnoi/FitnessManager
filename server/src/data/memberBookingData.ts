@@ -84,7 +84,7 @@ export async function bookTrainer(
 							.where("trainer_id", "=", trainer_id)
 							.executeTakeFirstOrThrow()
 					).rate,
-					date_paid: new Date(),
+					date_paid: new Date().toUTCString(),
 					processed: false,
 				})
 				.returningAll()
@@ -170,7 +170,7 @@ export async function bookClass(
 				member_id: memberId,
 				booking_id: memberBooking.member_booking_id,
 				amount_paid: joiningClass.price,
-				date_paid: new Date(),
+				date_paid: new Date().toUTCString(),
 				processed: false,
 			})
 			.returningAll()

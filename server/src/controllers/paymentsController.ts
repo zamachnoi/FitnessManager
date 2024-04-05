@@ -49,3 +49,19 @@ export async function generatePaymentPostResponse(
 		return { message: "Could not create payment", status: 404, data: null }
 	}
 }
+
+export async function generatePaymentsPostResponse(
+	paymentIds: number[]
+): Promise<PaymentsArrayResponse> {
+	try {
+		const payments = await paymentsData.processPayments(paymentIds)
+		let res: PaymentsArrayResponse = {
+			message: `success`,
+			status: 200,
+			data: payments,
+		}
+		return res
+	} catch (e) {
+		return { message: "Could not create payments", status: 404, data: [] }
+	}
+}

@@ -20,3 +20,7 @@ export type PaymentsArrayResponse = {
 	message: string
 	data: PaymentsData[]
 }
+
+export type PaymentsArrayProcessRequest = {
+	payment_ids: number[]
+}

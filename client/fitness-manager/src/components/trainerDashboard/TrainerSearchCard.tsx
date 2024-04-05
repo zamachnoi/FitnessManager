@@ -4,7 +4,6 @@ import { getData } from "@/utils/getData"
 import DashboardCard from "../util/DashboardCard"
 import TrainerSearchRow from "./TrainerSearchRow"
 import { TrainerSearchRowProps } from "./TrainerSearchRow"
-import { Button } from "../ui/button"
 import { Separator } from "@radix-ui/react-select"
 import { ScrollArea } from "../ui/scroll-area"
 

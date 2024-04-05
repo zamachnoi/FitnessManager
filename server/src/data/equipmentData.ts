@@ -23,6 +23,7 @@ export async function getAllEquipment(): Promise<EquimentData[]> {
 			"equipment.under_maintenance",
 			"equipment.last_maintained",
 		])
+		.orderBy("equipment_id", "asc")
 		.execute()
 
 	return equipment

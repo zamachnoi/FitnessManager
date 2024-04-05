@@ -3,7 +3,8 @@ import {
 	TrainersData,
 	TrainersApiRequest,
 	TrainerDataUpdate,
-	AvailableTrainersData, TrainerBookingData,
+	AvailableTrainersData,
+	TrainerBookingData,
 } from "../models/io/trainersIo"
 import * as util from "./dataUtil"
 
@@ -210,17 +211,23 @@ export async function getAvailableTrainers(
 export async function getTrainerBookings(
 	trainerId: number
 ): Promise<TrainerBookingData> {
-
-
 	// need to get member_trainer_booking that has trainer_id
 	// then get member booking that has member_booking_id from member_trainer_booking
 	// then get user that has user_id from member_booking
 	// then get user first_name, last_name, booking_timestamp, member_booking_id
 	const trainer_bookings = await db
 		.selectFrom("member_trainer_booking")
-		.innerJoin("member_bookings", "member_trainer_booking.member_booking_id", "member_bookings.member_booking_id")
+		.innerJoin(
+			"member_bookings",
+			"member_trainer_booking.member_booking_id",
+			"member_bookings.member_booking_id"
+		)
 		.innerJoin("users", "member_bookings.member_id", "users.user_id")
-		.innerJoin("trainers", "member_trainer_booking.trainer_id", "trainers.trainer_id")
+		.innerJoin(
+			"trainers",
+			"member_trainer_booking.trainer_id",
+			"trainers.trainer_id"
+		)
 		.select([
 			"member_trainer_booking.trainer_id",
 			"users.first_name",
@@ -248,7 +255,6 @@ export async function getTrainerBookings(
 
 	return {
 		trainer_bookings,
-		class_bookings
+		class_bookings,
 	}
 }
-

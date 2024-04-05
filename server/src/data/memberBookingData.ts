@@ -238,6 +238,7 @@ export async function getMemberBookings(
 		])
 		.where("mb.member_id", "=", memberId)
 		.where("mb.type", "=", "Class")
+		.orderBy("mb.booking_timestamp", "asc")
 		.execute()
 
 	const trainerBookings = await db
@@ -260,6 +261,7 @@ export async function getMemberBookings(
 		])
 		.where("mb.member_id", "=", memberId)
 		.where("mb.type", "=", "Trainer")
+		.orderBy("mb.booking_timestamp", "asc")
 		.execute()
 
 	const memberBookings: MemberBookingData = {

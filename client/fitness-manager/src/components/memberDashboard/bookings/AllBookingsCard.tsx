@@ -3,7 +3,7 @@ import TrainerBookingsCard from "./TrainerBookingsCard"
 import ClassBookingsCard from "./ClassBookingsCard"
 import { useEffect, useState } from "react"
 import { getData } from "@/utils/getData"
-import BookingDialog from "./BookingDialog"
+import BookingDialog from "./TrainerBookingDialog"
 
 type ClassBookings = {
 	class_id: number
@@ -18,11 +18,6 @@ type ClassBookings = {
 
 export default function AllBookingsCard() {
 	const memberId = 1
-
-	const [bookings, setBookings] = useState({
-		trainer_bookings: [],
-		class_bookings: [],
-	})
 
 	const [trainerBookings, setTrainerBookings] = useState([])
 	const [classBookings, setClassBookings] = useState<ClassBookings[]>([])

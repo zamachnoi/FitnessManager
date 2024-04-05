@@ -2,17 +2,28 @@ import moment from "moment"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { patchData } from "@/utils/patchData"
+import TrainerRescheduleDialog from "./TrainerRescheduleDialog"
+import { book } from "./TrainerBookingForm"
 
+type Booking = {
+	trainer_id: number
+	first_name: string
+	last_name: string
+	rate: number
+	booking_timestamp: Date
+	member_booking_id: number
+	trainer_booking_id: number
+}
 type TrainerBookingProps = {
 	trainer_id: number
 	first_name: string
 	last_name: string
 	rate: number
 	booking_timestamp: Date
-	bookings: any
+	trainerBookings: Booking[]
 	member_booking_id: number
 	trainer_booking_id: number
-	setBookings: any
+	setTrainerBookings: any
 }
 
 function TrainerBooking(props: TrainerBookingProps) {
@@ -31,6 +42,8 @@ function TrainerBooking(props: TrainerBookingProps) {
 		return res
 	}
 
+	const previous = moment(props.booking_timestamp).isBefore(moment())
+
 	const onCancel = (
 		member_booking_id: number,
 		trainer_booking_id: number
@@ -38,14 +51,19 @@ function TrainerBooking(props: TrainerBookingProps) {
 		deleteBooking(member_booking_id, trainer_booking_id).then((res) => {
 			console.log(res)
 			if (res && res.status === 200) {
-				props.setBookings(
-					props.bookings.filter(
+				props.setTrainerBookings(
+					props.trainerBookings.filter(
 						(b: any) => b.member_booking_id !== member_booking_id
 					)
 				)
 			}
 		})
 	}
+	const {
+		setTrainerBookings: setBookings,
+		trainerBookings: bookings,
+		...booking
+	} = props
 
 	return (
 		<div className="flex flex-col">
@@ -59,20 +77,26 @@ function TrainerBooking(props: TrainerBookingProps) {
 						"MMMM Do YYYY, h:mm:ss a"
 					)}
 				</p>
-				<div className="flex flex-row">
-					<Button variant="link">Reschedule</Button>
-					<Button
-						variant="link"
-						onClick={() => {
-							onCancel(
-								props.member_booking_id,
-								props.trainer_booking_id
-							)
-						}}
-					>
-						Cancel
-					</Button>
-				</div>
+				{!previous ? (
+					<div className="flex flex-row">
+						<TrainerRescheduleDialog
+							booking={booking}
+							setBookings={setBookings}
+							bookings={bookings}
+						/>
+						<Button
+							variant="link"
+							onClick={() => {
+								onCancel(
+									props.member_booking_id,
+									props.trainer_booking_id
+								)
+							}}
+						>
+							Cancel
+						</Button>
+					</div>
+				) : null}
 			</div>
 			<div>
 				<Separator />

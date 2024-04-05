@@ -3,10 +3,13 @@ import {
 	MemberTrainerBookingRequest,
 	MemberBookingData,
 	MemberClassBookingData,
+	MemberAvailableHoursResponse,
+	MemberTrainerBookingDbData,
 } from "../models/io/memberBookingIo"
 import { db } from "../lib/db"
 import { sql } from "kysely"
-import { MemberClassBooking } from "../models/db/types"
+import { MemberBookings, MemberClassBooking } from "../models/db/types"
+import { ChangeMemberBookingRequest } from "../models/io/memberBookingIo"
 import { getAvailableTrainers } from "./trainersData"
 
 export async function bookTrainer(
@@ -98,7 +101,6 @@ export async function bookTrainer(
 export async function getMemberAvailableHours(memberId: number, date: string) {
 	const availableTimes = Array.from({ length: 24 }, (_, i) => i)
 
-	console.log(date)
 	const memberBookings = await db
 		.selectFrom("member_bookings")
 		.select(
@@ -115,7 +117,6 @@ export async function getMemberAvailableHours(memberId: number, date: string) {
 	}
 
 	const bookedTimes = memberBookings.map((booking) => parseInt(booking.hour))
-	console.log(bookedTimes)
 
 	const availableTimesFiltered = availableTimes.filter(
 		(time) => !bookedTimes.includes(time)
@@ -128,6 +129,7 @@ export async function bookClass(
 	memberId: number,
 	classId: number
 ): Promise<MemberClassBookingData> {
+	console.log(memberId, classId)
 	const res = await db.transaction().execute(async (trx) => {
 		const joiningClass = await trx
 			.selectFrom("classes")
@@ -160,6 +162,7 @@ export async function bookClass(
 			.insertInto("member_class_booking")
 			.values({
 				member_class_booking_id: memberBooking.member_booking_id,
+				member_id: memberId,
 				class_id: classId,
 			})
 			.returningAll()
@@ -201,6 +204,7 @@ export async function bookClass(
 			last_name: trainerAndClass.last_name,
 			room_number: trainerAndClass.room_number,
 			name: trainerAndClass.name,
+			member_booking_id: memberClassBooking.member_class_booking_id,
 		}
 
 		return booking
@@ -312,7 +316,95 @@ export async function deleteMemberTrainerBooking(
 				.execute()
 		})
 	} catch (e) {
-		console.log(e)
 		throw new Error("Failed to delete booking")
 	}
+}
+
+export async function getTrainerAvailableHours(
+	trainerId: number,
+	date: string
+): Promise<number[]> {
+	const availableTimes = Array.from({ length: 24 }, (_, i) => i)
+	const trainerBookings = await db
+		.selectFrom("trainer_booking")
+		.select(
+			sql<string>`EXTRACT(HOUR FROM trainer_booking_timestamp AT TIME ZONE \'America/New_York\')`.as(
+				"hour"
+			)
+		)
+		.where("trainer_id", "=", trainerId)
+		.where(db.fn("DATE", ["trainer_booking_timestamp"]), "=", date)
+		.execute()
+
+	if (!trainerBookings) {
+		return availableTimes
+	}
+
+	const bookedTimes = trainerBookings.map((booking) => parseInt(booking.hour))
+
+	const availableTimesFiltered = availableTimes.filter(
+		(time) => !bookedTimes.includes(time)
+	)
+
+	return availableTimesFiltered
+}
+
+export async function changeMemberTrainerBooking(
+	memberBookingRequest: ChangeMemberBookingRequest
+): Promise<MemberTrainerBookingDbData> {
+	const {
+		booking_id,
+		booking_timestamp: booking_timestamp,
+		trainer_booking_id,
+		member_id,
+		trainer_id,
+	} = memberBookingRequest
+
+	const availableTrainers = await getAvailableTrainers(booking_timestamp)
+
+	if (
+		!availableTrainers.some((trainer) => trainer.trainer_id === trainer_id)
+	) {
+		throw new Error("Trainer is not available")
+	}
+
+	const changeBooking = await db.transaction().execute(async (trx) => {
+		const memberBooking = await trx
+			.updateTable("member_bookings")
+			.where("member_booking_id", "=", booking_id)
+			.set("booking_timestamp", booking_timestamp)
+			.returning(["booking_timestamp"])
+			.executeTakeFirstOrThrow()
+
+		const trainerBooking = await trx
+			.updateTable("trainer_booking")
+			.where("trainer_booking_id", "=", trainer_booking_id)
+			.set("trainer_booking_timestamp", memberBooking.booking_timestamp)
+			.returningAll()
+			.executeTakeFirstOrThrow()
+	})
+
+	const bookingResponse = await db
+		.selectFrom("member_bookings as mb")
+		.innerJoin(
+			"member_trainer_booking as mtb",
+			"mb.member_booking_id",
+			"mtb.member_booking_id"
+		)
+		.innerJoin("trainers as t", "mtb.trainer_id", "t.trainer_id")
+		.innerJoin("users as u", "t.trainer_id", "u.user_id")
+		.select([
+			"t.trainer_id",
+			"u.first_name",
+			"u.last_name",
+			"t.rate",
+			"mb.booking_timestamp",
+			"mb.member_booking_id",
+			"mtb.trainer_booking_id",
+		])
+		.where("mb.member_id", "=", member_id)
+		.where("mb.type", "=", "Trainer")
+		.where("mb.member_booking_id", "=", booking_id)
+		.executeTakeFirstOrThrow()
+	return bookingResponse
 }

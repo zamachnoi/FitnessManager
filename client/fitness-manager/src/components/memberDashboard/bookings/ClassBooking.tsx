@@ -49,6 +49,8 @@ export default function ClassBooking(props: ClassBookingProps) {
 		})
 	}
 
+	const previous = moment(props.booking_timestamp).isBefore(moment())
+
 	return (
 		<div>
 			<div>
@@ -70,16 +72,18 @@ export default function ClassBooking(props: ClassBookingProps) {
 									"MMMM Do YYYY h:mm:ss a"
 							  )}
 					</p>
-					<div className="flex flex-row">
-						<Button
-							variant="link"
-							onClick={() => {
-								onCancel()
-							}}
-						>
-							Cancel
-						</Button>
-					</div>
+					{!previous ? (
+						<div className="flex flex-row">
+							<Button
+								variant="link"
+								onClick={() => {
+									onCancel()
+								}}
+							>
+								Cancel
+							</Button>
+						</div>
+					) : null}
 				</div>
 				<Separator />
 			</div>

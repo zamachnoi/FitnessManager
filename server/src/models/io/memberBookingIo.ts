@@ -22,7 +22,15 @@ export type MemberAvailableHoursResponse = {
 	message: string
 	data: number[] // 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
 }
-
+export type MemberTrainerBookingDbData = {
+	trainer_id: number | null
+	first_name: string | null
+	last_name: string | null
+	rate: number | null
+	booking_timestamp: Date | null
+	member_booking_id: number | null
+	trainer_booking_id: number | null
+}
 export type MemberBookingData = {
 	trainer_bookings: {
 		trainer_id: number | null
@@ -61,10 +69,25 @@ export type MemberClassBookingData = {
 	last_name: string | null
 	room_number: number | null
 	name: string | null
+	member_booking_id: number | null
 }
 
 export type MemberClassBookingResponse = {
 	status: number
 	message: string
 	data: MemberClassBookingData | null
+}
+
+export type ChangeMemberBookingRequest = {
+	booking_timestamp: Date
+	booking_id: number
+	member_id: number
+	trainer_booking_id: number
+	trainer_id: number
+}
+
+export type ChangeMemberBookingResponse = {
+	status: number
+	message: string
+	data: MemberTrainerBookingDbData | null
 }

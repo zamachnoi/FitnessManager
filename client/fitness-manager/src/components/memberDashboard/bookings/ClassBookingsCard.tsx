@@ -26,7 +26,12 @@ export default function ClassBookingsCard(props: ClassBookingsProps) {
 			<DashboardCard
 				title="Class"
 				description="View all your class bookings here."
-				footer={<ClassBookingDialog />}
+				footer={
+					<ClassBookingDialog
+						parentClasses={props.classBookings}
+						setParentClasses={props.setClassBookings}
+					/>
+				}
 			>
 				{props.classBookings.map((booking, index) => (
 					<ClassBooking

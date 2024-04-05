@@ -1,6 +1,6 @@
 import DashboardCard from "@/components/util/DashboardCard"
 import TrainerBooking from "./TrainerBooking"
-import BookingDialog from "./BookingDialog"
+import BookingDialog from "./TrainerBookingDialog"
 
 type TrainerBookingsProps = {
 	trainerBookings: {
@@ -33,8 +33,8 @@ export default function TrainerBookingsCard(props: TrainerBookingsProps) {
 						<TrainerBooking
 							{...booking}
 							key={index}
-							bookings={props.trainerBookings}
-							setBookings={props.setTrainerBookings}
+							trainerBookings={props.trainerBookings}
+							setTrainerBookings={props.setTrainerBookings}
 						/>
 					))}
 				</div>

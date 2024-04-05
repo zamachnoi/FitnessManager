@@ -129,17 +129,8 @@ export async function createClass(
 		return classes
 	})
 
-	const roomBookingId = await db
-		.selectFrom("room_bookings")
-		.select("booking_id as room_booking_id")
-		.where("class_id", "=", classe.class_id)
-		.executeTakeFirstOrThrow()
-
-	const data = {
-		...classe,
-		room_booking_id: roomBookingId.room_booking_id,
-	}
-	return data
+	const newClass = await getClassByClassId(classe.class_id)
+	return newClass
 }
 
 export async function getAvailableTrainers(timestamp: Date): Promise<number[]> {

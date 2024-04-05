@@ -51,11 +51,12 @@ export default function ClassBooking(props: ClassBookingProps) {
 	const onCancel = () => {
 		deleteClass().then((res) => {
 			console.log(res)
-			if (res && res.status === 200) {
+			if ((res && res.status === 200) || res.message === "success") {
 				props.setClasses(
 					props.classes.filter(
 						(b: any) =>
-							b.member_booking_id !== props.member_booking_id
+							b.member_booking_id !== props.member_booking_id ||
+							b.class_id !== props.class_id
 					)
 				)
 			}

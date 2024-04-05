@@ -4,18 +4,14 @@ import {
 	ClassesApiResponse,
 	ClassesArrayApiResponse,
 } from "../models/io/classesIo"
-import {
-	DefaultDeleteApiResponse,
-} from "../models/io/defaultIo"
+import { DefaultDeleteApiResponse } from "../models/io/defaultIo"
 
 import * as classesData from "../data/classesData"
 
 // GET
-export async function generateClassesGetResponse(
-): Promise<ClassesArrayApiResponse> {
+export async function generateClassesGetResponse(): Promise<ClassesArrayApiResponse> {
 	try {
-		const classes =
-			await classesData.getAllClasses()
+		const classes = await classesData.getAllClasses()
 		let res: ClassesArrayApiResponse = {
 			message: `success`,
 			status: 200,
@@ -32,13 +28,10 @@ export async function generateClassesGetResponse(
 }
 
 export async function generateClassesGetByIdResponse(
-	class_id: number,
+	class_id: number
 ): Promise<ClassesApiResponse> {
 	try {
-		const classes =
-			await classesData.getClassByClassId(
-				class_id,
-			)
+		const classes = await classesData.getClassByClassId(class_id)
 		let res: ClassesApiResponse = {
 			message: `success`,
 			status: 200,
@@ -58,8 +51,7 @@ export async function generateBookableClassesGetResponse(
 	memberId: number
 ): Promise<BookableClassessApiResponse> {
 	try {
-		const classes =
-			await classesData.getBookableClasses(memberId)
+		const classes = await classesData.getBookableClasses(memberId)
 		let res: BookableClassessApiResponse = {
 			message: `success`,
 			status: 200,
@@ -86,10 +78,7 @@ export async function generateClassesPostResponse(
 
 		createClassData.timeslot = timeslot
 
-		const classes =
-			await classesData.createClass(
-				classRequest
-			)
+		const classes = await classesData.createClass(classRequest)
 		let res: ClassesApiResponse = {
 			message: `success`,
 			status: 200,
@@ -108,38 +97,30 @@ export async function generateClassesPostResponse(
 
 // DELETE
 export async function generateClassesDeleteResponse(
-	class_id: number,
+	class_id: number
 ): Promise<DefaultDeleteApiResponse> {
 	try {
-		const classes =
-			await classesData.deleteClass(
-				class_id,
-			)
+		const classes = await classesData.deleteClass(class_id)
 		let res: DefaultDeleteApiResponse = {
 			message: "Class deleted",
-			status: 'success',
+			status: "success",
 		}
 		return res
 	} catch (e) {
 		return {
 			message: "Error deleting class",
-			status: 'error',
+			status: "error",
 		}
 	}
-
 }
 
 // PATCH
 export async function generateRescheduleClassPatchResponse(
 	timestamp: Date,
-	classId: number,
+	classId: number
 ): Promise<ClassesApiResponse> {
 	try {
-		const classes =
-			await classesData.rescheduleClass(
-				timestamp,
-				classId,
-			)
+		const classes = await classesData.rescheduleClass(timestamp, classId)
 		let res: ClassesApiResponse = {
 			message: `success`,
 			status: 200,
@@ -156,4 +137,29 @@ export async function generateRescheduleClassPatchResponse(
 	}
 }
 
-
+export async function generateMoveClassRoomPatchResponse(
+	classId: number,
+	roomBookingId: number,
+	newRoomId: number
+): Promise<ClassesApiResponse> {
+	try {
+		const classes = await classesData.moveClassRoom(
+			classId,
+			roomBookingId,
+			newRoomId
+		)
+		let res: ClassesApiResponse = {
+			message: `success`,
+			status: 200,
+			data: classes,
+		}
+		return res
+	} catch (e) {
+		console.log(e)
+		return {
+			message: "Could not update class",
+			status: 404,
+			data: null,
+		}
+	}
+}

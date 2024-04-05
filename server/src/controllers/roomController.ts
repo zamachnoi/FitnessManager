@@ -3,7 +3,7 @@ import {
 	RoomAndBookingApiResponse,
 	RoomAndBookingDbData,
 	RoomAndBookingData,
-	RoomsApiResponse
+	RoomsApiResponse,
 } from "../models/io/roomIo"
 import { getRoomsAndBooking, getAvailableRooms } from "../data/roomData"
 
@@ -58,6 +58,7 @@ function transformDbToResponseData(
 				acc[item.room_id] = {
 					room_id: item.room_id,
 					name: item.name,
+					room_number: item.room_number,
 					future_bookings: [],
 				}
 			}

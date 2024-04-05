@@ -13,6 +13,11 @@ export async function getAllClasses(): Promise<BookableClassesData[]> {
 		.selectFrom("classes")
 		.innerJoin("users", "users.user_id", "classes.trainer_id")
 		.innerJoin("rooms", "rooms.room_id", "classes.room_id")
+		.innerJoin(
+			"room_bookings",
+			"room_bookings.class_id",
+			"classes.class_id"
+		)
 		.select([
 			"classes.trainer_id",
 			"classes.class_id",
@@ -24,6 +29,7 @@ export async function getAllClasses(): Promise<BookableClassesData[]> {
 			"rooms.room_number",
 			"rooms.room_id",
 			"classes.trainer_booking_id",
+			"room_bookings.booking_id as room_booking_id",
 		])
 		.execute()
 	return classes
@@ -33,8 +39,27 @@ export async function getClassByClassId(classId: number): Promise<ClassesData> {
 	//classe spelt this way to indicate singular class for semanitics
 	const classe = await db
 		.selectFrom("classes")
-		.where("class_id", "=", classId)
-		.selectAll()
+		.innerJoin("users", "users.user_id", "classes.trainer_id")
+		.innerJoin("rooms", "rooms.room_id", "classes.room_id")
+		.innerJoin(
+			"room_bookings",
+			"room_bookings.class_id",
+			"classes.class_id"
+		)
+		.where("room_bookings.class_id", "=", classId)
+		.select([
+			"classes.trainer_id",
+			"classes.class_id",
+			"classes.name",
+			"classes.price",
+			"classes.class_time",
+			"users.first_name",
+			"users.last_name",
+			"rooms.room_number",
+			"rooms.room_id",
+			"classes.trainer_booking_id",
+			"room_bookings.booking_id as room_booking_id",
+		])
 		.executeTakeFirst()
 
 	if (!classe) {
@@ -103,7 +128,9 @@ export async function createClass(
 			.executeTakeFirstOrThrow()
 		return classes
 	})
-	return classe
+
+	const newClass = await getClassByClassId(classe.class_id)
+	return newClass
 }
 
 export async function getAvailableTrainers(timestamp: Date): Promise<number[]> {
@@ -200,6 +227,11 @@ export async function getBookableClasses(
 		)
 		.innerJoin("users", "users.user_id", "classes.trainer_id")
 		.innerJoin("rooms", "rooms.room_id", "classes.room_id")
+		.innerJoin(
+			"room_bookings",
+			"room_bookings.class_id",
+			"classes.class_id"
+		)
 		.select([
 			"classes.trainer_id",
 			"classes.class_id",
@@ -211,6 +243,7 @@ export async function getBookableClasses(
 			"rooms.room_number",
 			"rooms.room_id",
 			"classes.trainer_booking_id",
+			"room_bookings.booking_id as room_booking_id",
 		])
 		.whereRef("classes.class_time", ">", db.fn("NOW"))
 		.execute()
@@ -277,7 +310,10 @@ export async function getMemberAvailableClasses(memberId: number) {
 
 // PATCH
 
-export async function rescheduleClass(timestamp: Date, classId: number) {
+export async function rescheduleClass(
+	timestamp: Date,
+	classId: number
+): Promise<ClassesData> {
 	// need to check if trainer and room are available
 	try {
 		const availableTrainers = await getAvailableTrainers(timestamp)
@@ -295,11 +331,19 @@ export async function rescheduleClass(timestamp: Date, classId: number) {
 				throw new Error("No such class found")
 			}
 
-			if (classData.trainer_id && !availableTrainers.includes(classData?.trainer_id)) {
+			if (
+				classData.trainer_id &&
+				!availableTrainers.includes(classData?.trainer_id)
+			) {
 				throw new Error("Trainer is not available")
 			}
 
-			if (classData.room_id && !availableRooms.some((room) => room.room_id === classData.room_id)){
+			if (
+				classData.room_id &&
+				!availableRooms.some(
+					(room) => room.room_id === classData.room_id
+				)
+			) {
 				throw new Error("Room is not available")
 			}
 
@@ -336,7 +380,13 @@ export async function rescheduleClass(timestamp: Date, classId: number) {
 				await transaction
 					.updateTable("member_bookings")
 					.set("booking_timestamp", timestamp)
-					.where("member_booking_id", "in", memberClassBookingIds.map((m) => m.member_class_booking_id))
+					.where(
+						"member_booking_id",
+						"in",
+						memberClassBookingIds.map(
+							(m) => m.member_class_booking_id
+						)
+					)
 					.execute()
 			}
 
@@ -347,4 +397,45 @@ export async function rescheduleClass(timestamp: Date, classId: number) {
 		console.log(e)
 		throw new Error("Error rescheduling class")
 	}
+}
+
+export async function moveClassRoom(
+	classId: number,
+	roomBookingId: number,
+	newRoomId: number
+): Promise<ClassesData> {
+	const classTime = await db
+		.selectFrom("classes")
+		.where("classes.class_id", "=", classId)
+		.select("class_time")
+		.executeTakeFirstOrThrow()
+	if (!classTime || classTime.class_time === null) {
+		throw new Error("No such class found")
+	}
+	const availableRooms = await getAvailableRooms(classTime.class_time)
+	console.log(availableRooms)
+	// filter for newRoomId
+	const newRoom = availableRooms.find(
+		(room: any) => room.room_id === newRoomId
+	)
+	if (!newRoom) {
+		throw new Error("Room is not available")
+	}
+
+	const changeRoom = await db.transaction().execute(async (transaction) => {
+		transaction
+			.updateTable("room_bookings")
+			.set("room_id", newRoomId)
+			.where("booking_id", "=", roomBookingId)
+			.execute()
+		transaction
+			.updateTable("classes")
+			.set("room_id", newRoomId)
+			.where("classes.class_id", "=", classId)
+			.execute()
+	})
+
+	const classe = getClassByClassId(classId)
+
+	return classe
 }

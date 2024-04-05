@@ -3,7 +3,18 @@ import TrainerBookingsCard from "./TrainerBookingsCard"
 import ClassBookingsCard from "./ClassBookingsCard"
 import { useEffect, useState } from "react"
 import { getData } from "@/utils/getData"
-import  BookingDialog  from "./BookingDialog"
+import BookingDialog from "./BookingDialog"
+
+type ClassBookings = {
+	class_id: number
+	name: string
+	price: number
+	first_name: string
+	last_name: string
+	room_number: number
+	booking_timestamp: Date
+	member_booking_id: number
+}
 
 export default function AllBookingsCard() {
 	const memberId = 1
@@ -14,7 +25,7 @@ export default function AllBookingsCard() {
 	})
 
 	const [trainerBookings, setTrainerBookings] = useState([])
-	const [classBookings, setClassBookings] = useState([])
+	const [classBookings, setClassBookings] = useState<ClassBookings[]>([])
 
 	useEffect(() => {
 		getData(`members/${memberId}/booking`).then((response) => {
@@ -28,9 +39,7 @@ export default function AllBookingsCard() {
 			<DashboardCard
 				title="Bookings"
 				description="View all your bookings here."
-				footer={
-					null
-				}
+				footer={null}
 			>
 				<div className="flex flex-col justify-around gap-4">
 					<TrainerBookingsCard
@@ -38,6 +47,7 @@ export default function AllBookingsCard() {
 						setTrainerBookings={setTrainerBookings}
 					/>
 					<ClassBookingsCard
+						setClassBookings={setClassBookings}
 						classBookings={classBookings}
 					/>
 				</div>

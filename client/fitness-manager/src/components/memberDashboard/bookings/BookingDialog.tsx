@@ -8,12 +8,14 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 
+import BookingForm from "./TrainerBookingForm"
 
-import BookingForm from "./BookingForm"
+type TrainerBookingDialogProps = {
+	trainerBookings: any
+	setTrainerBookings: any
+}
 
-
-const BookingDialog = () => {
-
+const BookingDialog = (props: TrainerBookingDialogProps) => {
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
@@ -27,7 +29,10 @@ const BookingDialog = () => {
 					</DialogDescription>
 				</DialogHeader>
 				<div className="flex flex-col space-y-4">
-					<BookingForm  />
+					<BookingForm
+						trainerBookings={props.trainerBookings}
+						setTrainerBookings={props.setTrainerBookings}
+					/>
 				</div>
 			</DialogContent>
 		</Dialog>

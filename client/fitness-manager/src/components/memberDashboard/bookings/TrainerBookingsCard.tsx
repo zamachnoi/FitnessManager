@@ -11,23 +11,31 @@ type TrainerBookingsProps = {
 		booking_timestamp: Date
 		member_booking_id: number
 		trainer_booking_id: number
-	}[],
+	}[]
 	setTrainerBookings: any
 }
 
 export default function TrainerBookingsCard(props: TrainerBookingsProps) {
 	return (
-		<div className="w-fit">
+		<div className="w-full">
 			<DashboardCard
 				title="Trainer Bookings"
 				description="View all your trainer bookings here."
 				footer={
-					<BookingDialog />
+					<BookingDialog
+						trainerBookings={props.trainerBookings}
+						setTrainerBookings={props.setTrainerBookings}
+					/>
 				}
 			>
 				<div>
 					{props.trainerBookings.map((booking, index) => (
-						<TrainerBooking {...booking} key={index} bookings={props.trainerBookings} setBookings={props.setTrainerBookings} />
+						<TrainerBooking
+							{...booking}
+							key={index}
+							bookings={props.trainerBookings}
+							setBookings={props.setTrainerBookings}
+						/>
 					))}
 				</div>
 			</DashboardCard>

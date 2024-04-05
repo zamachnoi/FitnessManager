@@ -4,10 +4,11 @@ import GoalCard from "./GoalCard"
 import { getData } from "@/utils/getData"
 import AllBookingsCard from "./bookings/AllBookingsCard"
 import HealthStatsCard from "./healthStats/HealthStatsCard"
+import RoutinesCard from "./routines/RoutinesCard"
 
 export async function getServerSideProps(memberId: number) {
-	const memberHealthStats = await getData(`member/${memberId}/stats`)
-	const memberGoals = await getData(`member/${memberId}/goals`)
+	const memberHealthStats = await getData(`members/${memberId}/stats`)
+	const memberGoals = await getData(`members/${memberId}/goals`)
 
 	return {
 		props: {
@@ -49,11 +50,13 @@ const MemberDashboard = ({ memberId }: { memberId: number }) => {
 			<div>
 				<PersonalInfoCard />
 				<GoalCard />
-
 			</div>
 			<div>
 				<AllBookingsCard />
 				<HealthStatsCard />
+			</div>
+			<div>
+				<RoutinesCard />
 			</div>
 		</div>
 	)

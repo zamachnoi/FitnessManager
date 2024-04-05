@@ -2,8 +2,8 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import moment from "moment"
 
+import { patchData } from "@/utils/patchData"
 import { deleteData } from "@/utils/deleteData"
-
 
 type ClassBookingProps = {
 	class_id: number
@@ -15,23 +15,39 @@ type ClassBookingProps = {
 	booking_timestamp: Date
 	classes: any
 	setClasses: any
+	member_booking_id: number
+	deleteType: "class" | "booking"
+	class_time?: Date
 }
 
 export default function ClassBooking(props: ClassBookingProps) {
+	const memberId = 1
+	const deleteClass = async (): Promise<any> => {
+		if (props.deleteType === "booking") {
+			const res = await patchData(
+				`members/${memberId}/booking/${props.member_booking_id}/classes`,
+				{}
+			)
+			return res
+		} else {
+			const res = await deleteData(`classes/${props.class_id}`, {})
+			return res
+		}
+	}
 
-	const deleteClass = async (class_id: number): Promise<any> => {
-		const res = await deleteData(`classes/${class_id}`, {});
-		return res;
-	};
-
-	const onCancel = (class_id: number) => {
-		deleteClass(class_id).then((res) => {
+	const onCancel = () => {
+		deleteClass().then((res) => {
 			console.log(res)
 			if (res && res.status === 200) {
-				props.setClasses(props.classes.filter((c: any) => c.class_id !== class_id));
+				props.setClasses(
+					props.classes.filter(
+						(b: any) =>
+							b.member_booking_id !== props.member_booking_id
+					)
+				)
 			}
-		});
-	};
+		})
+	}
 
 	return (
 		<div>
@@ -46,14 +62,23 @@ export default function ClassBooking(props: ClassBookingProps) {
 					</p>
 
 					<p className="flex flex-row items-center justify-center text-xs text-center">
-						{moment(props.booking_timestamp).format(
-							"MMMM Do YYYY, h:mm:ss a"
-						)}
+						{props.class_time
+							? moment(props.class_time).format(
+									"MMMM Do YYYY, h:mm:ss a"
+							  )
+							: moment(props.booking_timestamp).format(
+									"MMMM Do YYYY h:mm:ss a"
+							  )}
 					</p>
 					<div className="flex flex-row">
-						<Button variant="link" onClick={() => {
-							onCancel(props.class_id);
-						}}>Cancel</Button>
+						<Button
+							variant="link"
+							onClick={() => {
+								onCancel()
+							}}
+						>
+							Cancel
+						</Button>
 					</div>
 				</div>
 				<Separator />

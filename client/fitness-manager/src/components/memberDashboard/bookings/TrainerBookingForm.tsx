@@ -71,7 +71,12 @@ export async function book(date: Date, time: number, trainerId: number) {
 	return res.data
 }
 
-const BookingForm = ({}: {}) => {
+type BookingFormProps = {
+	setTrainerBookings: any
+	trainerBookings: any
+}
+
+const BookingForm = (props: BookingFormProps) => {
 	const [trainers, setTrainers] = useState<TrainerType[]>([])
 
 	const [times, setTimes] = useState([])
@@ -107,7 +112,16 @@ const BookingForm = ({}: {}) => {
 
 	function onSubmit(values: z.infer<typeof BookingSchema>) {
 		book(values.date, values.time, values.trainer_id).then((res) => {
+			console.log("submitting")
 			console.log(res)
+			console.log("HERE")
+			getData(`trainers/${res.trainer_id}`).then((response) => {
+				console.log(response.data)
+				props.setTrainerBookings([
+					...props.trainerBookings,
+					{ ...response.data, ...res },
+				])
+			})
 		})
 	}
 

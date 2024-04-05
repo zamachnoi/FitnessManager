@@ -16,7 +16,6 @@ export type MemberTrainerBookingResponse = {
 	data: MemberTrainerBookingData | null
 }
 
-
 // MemberAvailableHours
 export type MemberAvailableHoursResponse = {
 	status: number
@@ -42,6 +41,7 @@ export type MemberBookingData = {
 		last_name: string | null
 		room_number: number | null
 		booking_timestamp: Date | null
+		member_booking_id: number | null
 	}[]
 }
 

@@ -229,7 +229,8 @@ export async function getMemberBookings(
 			"u.first_name",
 			"u.last_name",
 			"r.room_number",
-			"mb.booking_timestamp",			
+			"mb.booking_timestamp",
+			"mb.member_booking_id",
 		])
 		.where("mb.member_id", "=", memberId)
 		.where("mb.type", "=", "Class")
@@ -279,8 +280,19 @@ async function getMemberAvailable(timestamp: Date, memberId: number) {
 	return true
 }
 
+export async function deleteMemberClassBooking(
+	memberId: number,
+	bookingId: number
+): Promise<void> {
+	const deletedBooking = await db
+		.deleteFrom("member_bookings")
+		.where("member_id", "=", memberId)
+		.where("member_booking_id", "=", bookingId)
+		.executeTakeFirstOrThrow()
+}
+
 // delete
-export async function deleteMemberBooking(
+export async function deleteMemberTrainerBooking(
 	memberId: number,
 	memberBookingId: number,
 	trainerBookingId: number
@@ -298,13 +310,9 @@ export async function deleteMemberBooking(
 				.deleteFrom("trainer_booking")
 				.where("trainer_booking_id", "=", trainerBookingId)
 				.execute()
-		}
-		)
-	
+		})
 	} catch (e) {
 		console.log(e)
 		throw new Error("Failed to delete booking")
 	}
-
 }
-

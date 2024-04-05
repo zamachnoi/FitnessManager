@@ -5,7 +5,6 @@ import * as memberTrainerBookingController from "../controllers/memberBookingCon
 
 export const memberBookingRoute = Router()
 
-
 memberBookingRoute.post("/:id/booking/trainers", async (req, res) => {
 	const bookingRequest: MemberTrainerBookingRequest = req.body
 	const memberId = parseInt(req.params.id)
@@ -59,19 +58,37 @@ memberBookingRoute.post("/:id/booking/classes/:class_id", async (req, res) => {
 	res.status(data.status).json(data)
 })
 
+memberBookingRoute.patch(
+	"/:memberId/booking/:memberBookingId/classes/",
+	async (req, res) => {
+		const memberId = parseInt(req.params.memberId)
+		const memberBookingId = parseInt(req.params.memberBookingId)
+
+		const data =
+			await memberTrainerBookingController.generateMemberClassBookingPatchResponse(
+				memberId,
+				memberBookingId
+			)
+
+		res.status(data.status).json(data)
+	}
+)
+
 // DELETE
-memberBookingRoute.delete("/:id/booking/", async (req, res) => {
-	const memberId = parseInt(req.params.id)
-	// get the class id from the request body
-	const memberBookingId = req.body.member_booking_id
-	const trainerBookingId = req.body.trainer_booking_id
+memberBookingRoute.patch(
+	"/:memberId/booking/:memberBookingId/trainers/:trainerBookingId",
+	async (req, res) => {
+		const memberId = parseInt(req.params.memberId)
+		const memberBookingId = parseInt(req.params.memberBookingId)
+		const trainerBookingId = parseInt(req.params.trainerBookingId)
 
-	const data =
-		await memberTrainerBookingController.generateMemberBookingDeleteResponse(
-			memberId,
-			memberBookingId,
-			trainerBookingId
-		)
+		const data =
+			await memberTrainerBookingController.generateMemberTrainerBookingPatchResponse(
+				memberId,
+				memberBookingId,
+				trainerBookingId
+			)
 
-	res.status(data.status).json(data)
-})
+		res.status(data.status).json(data)
+	}
+)

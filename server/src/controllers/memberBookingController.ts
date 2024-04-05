@@ -6,7 +6,7 @@ import {
 	MemberClassBookingResponse,
 } from "../models/io/memberBookingIo"
 
-import * as memberTrainerBookingData from "../data/memberBookingData"
+import * as memberBookingData from "../data/memberBookingData"
 
 export async function generateMemberTrainerBookingPostRespoonse(
 	member_id: number,
@@ -18,7 +18,7 @@ export async function generateMemberTrainerBookingPostRespoonse(
 		const bookTrainerData = bookingRequest
 
 		bookTrainerData.booking_timestamp = timestamp
-		const booking = await memberTrainerBookingData.bookTrainer(
+		const booking = await memberBookingData.bookTrainer(
 			member_id,
 			bookTrainerData
 		)
@@ -37,7 +37,6 @@ export async function generateMemberTrainerBookingPostRespoonse(
 	}
 }
 
-
 export async function generateMemberAvailableHoursGetResponse(
 	memberId: number,
 	day: Date
@@ -47,7 +46,7 @@ export async function generateMemberAvailableHoursGetResponse(
 
 	console.log(memberId, dateString)
 	try {
-		const hours = await memberTrainerBookingData.getMemberAvailableHours(
+		const hours = await memberBookingData.getMemberAvailableHours(
 			memberId,
 			dateString
 		)
@@ -71,7 +70,7 @@ export async function generateMemberBookingsGetResponse(
 	memberId: number
 ): Promise<MemberBookingsResponse> {
 	try {
-		const memberBookings = await memberTrainerBookingData.getMemberBookings(
+		const memberBookings = await memberBookingData.getMemberBookings(
 			memberId
 		)
 
@@ -94,7 +93,7 @@ export async function generateMemberClassBookingPostResponse(
 	classId: number
 ): Promise<MemberClassBookingResponse> {
 	try {
-		const classBooking = await memberTrainerBookingData.bookClass(
+		const classBooking = await memberBookingData.bookClass(
 			memberId,
 			classId
 		)
@@ -113,13 +112,41 @@ export async function generateMemberClassBookingPostResponse(
 }
 
 // DELETE
-export async function generateMemberBookingDeleteResponse(
+export async function generateMemberTrainerBookingPatchResponse(
 	memberId: number,
 	memberBookingId: number,
 	trainerBookingId: number
+): Promise<MemberTrainerBookingResponse> {
+	try {
+		await memberBookingData.deleteMemberTrainerBooking(
+			memberId,
+			memberBookingId,
+			trainerBookingId
+		)
+		return {
+			message: `success`,
+			status: 200,
+			data: null,
+		}
+	} catch (e) {
+		console.log(e)
+		return {
+			message: "Could not delete class booking",
+			status: 404,
+			data: null,
+		}
+	}
+}
+
+export async function generateMemberClassBookingPatchResponse(
+	memberId: number,
+	memberBookingId: number
 ): Promise<MemberClassBookingResponse> {
 	try {
-		await memberTrainerBookingData.deleteMemberBooking(memberId, memberBookingId, trainerBookingId)
+		await memberBookingData.deleteMemberClassBooking(
+			memberId,
+			memberBookingId
+		)
 		return {
 			message: `success`,
 			status: 200,

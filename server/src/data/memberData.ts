@@ -158,7 +158,7 @@ export async function SearchMembersProfileFullName(
 		.where((eb) =>
 			eb.and([
 				eb(sql<string>`upper(first_name)`, "like", "%" + fn + "%"),
-				eb(sql<string>`upper(first_name)`, "like", "%" + ln + "%"),
+				eb(sql<string>`upper(last_name)`, "like", "%" + ln + "%"),
 			])
 		)
 		.where("type", "=", "Member")

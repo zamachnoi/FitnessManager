@@ -13,7 +13,7 @@ import {
 	createMember,
 	updateMember,
 	SearchMembersProfileFullName,
-	SearchMembersProfilePartName
+	SearchMembersProfilePartName,
 } from "../data/memberData"
 
 export async function generateMemberByIdGetResponse(
@@ -105,8 +105,9 @@ export async function generateSearchMembersProfileFullNameGetResponse(
 	firstName: string,
 	lastName: string
 ): Promise<MemberArrayApiResponse> {
+	console.log(firstName, lastName)
 	try {
-		const member = await SearchMembersProfileFullName(firstName,lastName)
+		const member = await SearchMembersProfileFullName(firstName, lastName)
 		let res: MemberArrayApiResponse = {
 			message: `success`,
 			status: 200,

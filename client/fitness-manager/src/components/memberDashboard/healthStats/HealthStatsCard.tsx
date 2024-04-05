@@ -2,8 +2,9 @@ import DashboardCard from "@/components/util/DashboardCard"
 import HealthStat from "./HealthStat"
 import { useEffect, useState } from "react"
 import { getData } from "@/utils/getData"
+import HealthStatsForm from "./HealthStatsForm"
 
-type HealthStatsType = {
+export type HealthStatsType = {
 	stat_id: number
 	member_id: number
 	systolic_bp: number
@@ -25,12 +26,19 @@ export default function HealthStatsCard() {
 		<DashboardCard
 			title="Health Stats"
 			description="View all your health stats here."
-			footer={<div>Footer</div>}
+			footer={
+				<HealthStatsForm
+					healthStats={healthStats}
+					setHealthStats={setHealthStats}
+				/>
+			}
 		>
 			<div>
-				{healthStats.map((stat) => (
-					<HealthStat {...stat} key={stat.stat_id} />
-				))}
+				<div>
+					{healthStats.map((stat) => (
+						<HealthStat {...stat} key={stat.stat_id} />
+					))}
+				</div>
 			</div>
 		</DashboardCard>
 	)

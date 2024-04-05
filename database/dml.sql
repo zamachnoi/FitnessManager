@@ -5,22 +5,22 @@ INSERT INTO equipment_type (name) VALUES ('Dumbbell');
 INSERT INTO equipment_type (name) VALUES ('Elliptical');
 INSERT INTO equipment_type (name) VALUES ('Rowing Machine');
 
-INSERT INTO equipment (name, equipment_type_id, under_maintenance) VALUES ('Treadmill 1', 1, FALSE);
-INSERT INTO equipment (name, equipment_type_id, under_maintenance) VALUES ('Treadmill 2', 1, FALSE);
-INSERT INTO equipment (name, equipment_type_id, under_maintenance) VALUES ('Bench Press 1', 2, FALSE);
-INSERT INTO equipment (name, equipment_type_id, under_maintenance) VALUES ('Bench Press 2', 2, FALSE);
-INSERT INTO equipment (name, equipment_type_id, under_maintenance) VALUES ('Squat Rack 1', 3, FALSE);
-INSERT INTO equipment (name, equipment_type_id, under_maintenance) VALUES ('Squat Rack 2', 3, FALSE);
-INSERT INTO equipment (name, equipment_type_id, under_maintenance) VALUES ('Dumbbell 1', 4, FALSE);
-INSERT INTO equipment (name, equipment_type_id, under_maintenance) VALUES ('Dumbbell 2', 4, FALSE);
-INSERT INTO equipment (name, equipment_type_id, under_maintenance) VALUES ('Elliptical 1', 5, FALSE);
-INSERT INTO equipment (name, equipment_type_id, under_maintenance) VALUES ('Elliptical 2', 5, FALSE);
+INSERT INTO equipment (name, equipment_type_id, under_maintenance, last_maintained) VALUES ('Treadmill 1', 1, FALSE, NOW());
+INSERT INTO equipment (name, equipment_type_id, under_maintenance, last_maintained) VALUES ('Treadmill 2', 1, FALSE, NOW());
+INSERT INTO equipment (name, equipment_type_id, under_maintenance, last_maintained) VALUES ('Bench Press 1', 2, FALSE, NOW());
+INSERT INTO equipment (name, equipment_type_id, under_maintenance, last_maintained) VALUES ('Bench Press 2', 2, FALSE, NOW());
+INSERT INTO equipment (name, equipment_type_id, under_maintenance, last_maintained) VALUES ('Squat Rack 1', 3, FALSE, NOW());
+INSERT INTO equipment (name, equipment_type_id, under_maintenance, last_maintained) VALUES ('Squat Rack 2', 3, FALSE, NOW());
+INSERT INTO equipment (name, equipment_type_id, under_maintenance, last_maintained) VALUES ('Dumbbell 1', 4, FALSE, NOW());
+INSERT INTO equipment (name, equipment_type_id, under_maintenance, last_maintained) VALUES ('Dumbbell 2', 4, FALSE, NOW());
+INSERT INTO equipment (name, equipment_type_id, under_maintenance, last_maintained) VALUES ('Elliptical 1', 5, FALSE, NOW());
+INSERT INTO equipment (name, equipment_type_id, under_maintenance, last_maintained) VALUES ('Elliptical 2', 5, FALSE, NOW());
 
-INSERT INTO exercises (name, type, description, equipment_id) VALUES ('Running', 'Cardio', 'Running on a treadmill', 1);
-INSERT INTO exercises (name, type, description, equipment_id) VALUES ('Bench Press', 'Strength', 'Bench Press', 2);
-INSERT INTO exercises (name, type, description, equipment_id) VALUES ('Squat', 'Strength', 'Squat', 3);
-INSERT INTO exercises (name, type, description, equipment_id) VALUES ('Dumbbell Curl', 'Strength', 'Dumbbell Curl', 4);
-INSERT INTO exercises (name, type, description, equipment_id) VALUES ('Elliptical', 'Cardio', 'Elliptical', 5);
+INSERT INTO exercises (name, type, description, equipment_type_id) VALUES ('Running', 'Cardio', 'Running on a treadmill', 1);
+INSERT INTO exercises (name, type, description, equipment_type_id) VALUES ('Bench Press', 'Strength', 'Bench Press', 2);
+INSERT INTO exercises (name, type, description, equipment_type_id) VALUES ('Squat', 'Strength', 'Squat', 3);
+INSERT INTO exercises (name, type, description, equipment_type_id) VALUES ('Dumbbell Curl', 'Strength', 'Dumbbell Curl', 4);
+INSERT INTO exercises (name, type, description, equipment_type_id) VALUES ('Elliptical', 'Cardio', 'Elliptical', 5);
 
 INSERT INTO exercise_routines (name) VALUES ('Cardio');
 INSERT INTO exercise_routines (name) VALUES ('Strength');

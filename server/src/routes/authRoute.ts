@@ -38,3 +38,9 @@ authRoute.post("/logout", async (req, res) => {
 
 	res.status(data.status).json(data)
 })
+
+authRoute.get("/dashboard", async (req, res) => {
+	const data = authController.generateAuthDashboardGetResponse(req)
+
+	res.status(data.status).json(data)
+})

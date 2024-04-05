@@ -1,10 +1,15 @@
 import { db } from "../lib/db"
 import { sql } from "kysely"
-import { ClassesData, ClassesApiRequest, BookableClassesData } from "../models/io/classesIo"
+import {
+	ClassesData,
+	ClassesApiRequest,
+	BookableClassesData,
+} from "../models/io/classesIo"
 import { RoomAndBookingData } from "../models/io/roomIo"
 
 export async function getAllClasses(): Promise<BookableClassesData[]> {
-	const classes = await db.selectFrom("classes")
+	const classes = await db
+		.selectFrom("classes")
 		.innerJoin("users", "users.user_id", "classes.trainer_id")
 		.innerJoin("rooms", "rooms.room_id", "classes.room_id")
 		.select([
@@ -17,7 +22,7 @@ export async function getAllClasses(): Promise<BookableClassesData[]> {
 			"users.last_name",
 			"rooms.room_number",
 			"rooms.room_id",
-			"classes.trainer_booking_id"
+			"classes.trainer_booking_id",
 		])
 		.execute()
 	return classes
@@ -174,78 +179,70 @@ async function getRoomAvailable(timestamp: Date) {
 	return true
 }
 
-
 export async function getBookableClasses(
 	memberId: number
-
 ): Promise<BookableClassesData[]> {
-
 	const classes = await db
-			.selectFrom("classes")
-			.where(({ not, exists, selectFrom }) =>
-					not(
-							exists(
-								selectFrom("member_bookings")
-									.where("member_id", "=", memberId)
-									.whereRef(
-										"booking_timestamp",
-										"=",
-										"classes.class_time"
-									)
-									.whereRef(
-										"classes.class_time",
-										">",
-										db.fn("NOW")
-									)
-							)
-					)
+		.selectFrom("classes")
+		.where(({ not, exists, selectFrom }) =>
+			not(
+				exists(
+					selectFrom("member_bookings")
+						.where("member_id", "=", memberId)
+						.whereRef(
+							"booking_timestamp",
+							"=",
+							"classes.class_time"
+						)
+						.whereRef("classes.class_time", ">", db.fn("NOW"))
+				)
 			)
-			.innerJoin("users", "users.user_id", "classes.trainer_id")
-			.innerJoin("rooms", "rooms.room_id", "classes.room_id")
-			.select([
-					"classes.trainer_id",
-					"classes.class_id",
-					"classes.name",
-					"classes.price",
-					"classes.class_time",
-					"users.first_name",
-					"users.last_name",
-					"rooms.room_number",
-					"rooms.room_id",
-					"classes.trainer_booking_id"
-			])
-			.execute()
-
+		)
+		.innerJoin("users", "users.user_id", "classes.trainer_id")
+		.innerJoin("rooms", "rooms.room_id", "classes.room_id")
+		.select([
+			"classes.trainer_id",
+			"classes.class_id",
+			"classes.name",
+			"classes.price",
+			"classes.class_time",
+			"users.first_name",
+			"users.last_name",
+			"rooms.room_number",
+			"rooms.room_id",
+			"classes.trainer_booking_id",
+		])
+		.execute()
 
 	return classes
 }
 
-
 // DELETE
 export async function deleteClass(classId: number): Promise<void> {
 	console.log(classId)
-	try{
+	try {
 		await db.transaction().execute(async (transaction) => {
-			console.log('here')
+			console.log("here")
 			const trainerBooking = await transaction
 				.selectFrom("classes")
 				.where("class_id", "=", classId)
 				.select("trainer_booking_id")
 				.executeTakeFirst()
-			console.log('here')
+			console.log("here")
 			if (!trainerBooking) {
 				throw new Error("No such class found")
 			}
-			console.log('here2')
+			console.log("here2")
 			// await transaction.deleteFrom("trainer_booking")
 			// 	.where("trainer_booking_id", "=", trainerBooking.trainer_booking_id)
 			// 	.execute()
-			console.log('here3')
-			const classDeleted = await transaction.deleteFrom("classes")
+			console.log("here3")
+			const classDeleted = await transaction
+				.deleteFrom("classes")
 				.where("class_id", "=", classId)
 				.execute()
-			
-			console.log('here')
+
+			console.log("here")
 			console.log(classDeleted)
 		})
 	} catch (e) {
@@ -254,5 +251,25 @@ export async function deleteClass(classId: number): Promise<void> {
 	}
 
 	return
+}
+export async function getMemberAvailableClasses(memberId: number) {
+	const classes = await db
+		.selectFrom("classes")
+		.where(({ not, exists, selectFrom }) =>
+			not(
+				exists(
+					selectFrom("member_bookings")
+						.where("member_id", "=", memberId)
+						.whereRef(
+							"booking_timestamp",
+							"=",
+							"classes.class_time"
+						)
+				)
+			)
+		)
+		.selectAll()
+		.execute()
 
+	return classes
 }

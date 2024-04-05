@@ -17,9 +17,9 @@ import { routineRoute } from "./routes/routineRoute"
 import { memberBookingRoute } from "./routes/memberBookingRoute"
 import { roomRoute } from "./routes/roomRoute"
 import { paymentRoute } from "./routes/paymentsRoute"
-
+import { exerciseRoute } from "./routes/exerciseRoute"
 import { authRoute } from "./routes/authRoute"
-
+import { equipmentRoute } from "./routes/equipmentRoute"
 import {
 	applyMiddlewareToRoutesStartingWith,
 	ensureAuthenticated,
@@ -80,11 +80,13 @@ app.use("/users", userRoute)
 app.use("/members", memberRoute)
 app.use("/members", memberGoalRoute)
 app.use("/members", memberHealthStatsRoute)
-app.use("/classes", classesRoute)
 app.use("/members", memberBookingRoute)
 app.use("/trainers", trainerRoute)
-app.use("/routines", routineRoute)
+app.use("", routineRoute)
+app.use("", equipmentRoute)
 app.use("/rooms", roomRoute)
+app.use("/exercises", exerciseRoute)
+app.use("/classes", classesRoute)
 app.use("/admin/payments", paymentRoute)
 
 const port = process.env.PORT || 3000

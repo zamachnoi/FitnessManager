@@ -4,6 +4,7 @@ import {
 	RegisterApiRequest,
 	RegisterApiResponse,
 	LogoutApiResponse,
+	GetDashboardApiResponse,
 } from "../models/io/authIo"
 
 import { Request, Response } from "express"
@@ -95,5 +96,25 @@ export async function generateAuthLogoutPostResponse(
 	return {
 		message: "Logged out",
 		status: 200,
+	}
+}
+
+export function generateAuthDashboardGetResponse(
+	req: Request
+): GetDashboardApiResponse {
+	const sessionData = req.session.user
+
+	if (sessionData) {
+		return {
+			message: "success",
+			status: 200,
+			data: sessionData,
+		}
+	} else {
+		return {
+			message: "Not authenticated",
+			status: 401,
+			data: null,
+		}
 	}
 }

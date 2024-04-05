@@ -6,6 +6,8 @@ import {
 	TrainerDataUpdate,
 	AvailableTrainersRequest,
 	AvailableTrainersResponse,
+	TrainerBookingsResponse
+
 } from "../models/io/trainersIo"
 import {
 	getTrainerById,
@@ -14,6 +16,7 @@ import {
 	createTrainer,
 	updateTrainer,
 	getAvailableTrainers,
+	getTrainerBookings
 } from "../data/trainersData"
 
 
@@ -142,5 +145,22 @@ export async function generateAvailableTrainersGetResponse(
 			status: 404,
 			data: [],
 		}
+	}
+}
+
+export async function generateTrainerBookingsGetResponse(
+	trainerId: number
+): Promise<TrainerBookingsResponse> {
+	try {
+		const trainerBookings = await getTrainerBookings(trainerId)
+		let res: TrainerBookingsResponse = {
+			message: `success`,
+			status: 200,
+			data: trainerBookings,
+		}
+		return res
+	} catch (e) {
+		console.log(e)
+		return { message: "Could not find trainer bookings", status: 404, data: null }
 	}
 }

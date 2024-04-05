@@ -13,11 +13,13 @@ type ClassBookings = {
 	room_number: number
 	booking_timestamp: Date
 	member_booking_id: number
+	
 }
 
 type ClassBookingsProps = {
 	classBookings: ClassBookings[]
 	setClassBookings: Dispatch<SetStateAction<ClassBookings[]>>
+	readOnly?: boolean
 }
 
 export default function ClassBookingsCard(props: ClassBookingsProps) {
@@ -26,7 +28,7 @@ export default function ClassBookingsCard(props: ClassBookingsProps) {
 			<DashboardCard
 				title="Class"
 				description="View all your class bookings here."
-				footer={<ClassBookingDialog />}
+				footer={props.readOnly ? null : <ClassBookingDialog />}
 			>
 				{props.classBookings.map((booking, index) => (
 					<ClassBooking
@@ -35,6 +37,7 @@ export default function ClassBookingsCard(props: ClassBookingsProps) {
 						{...booking}
 						key={index}
 						deleteType="booking"
+						readOnly={props.readOnly}
 					/>
 				))}
 			</DashboardCard>

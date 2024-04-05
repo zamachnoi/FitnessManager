@@ -8,6 +8,7 @@ import { deleteData } from "@/utils/deleteData"
 import ClassRescheduleDialog from "./ClassRescheduleDialog"
 
 import { useState, useEffect } from "react"
+import MoveClassDialog from "@/components/adminDashboard/classes/MoveClassDialog"
 
 type ClassBookingProps = {
 	class_id: number
@@ -21,13 +22,18 @@ type ClassBookingProps = {
 	setClasses: any
 	member_booking_id: number
 	deleteType: "class" | "booking"
-	class_time?: Date
+	class_time: Date
+	trainer_id: number
+	room_id: number
+	room_booking_id: number
 }
 
 export default function ClassBooking(props: ClassBookingProps) {
+	const [date, setDate] = useState<Date>(
+		props.class_time || props.booking_timestamp
+	)
 
-	const [date, setDate] = useState<Date>(props.class_time || props.booking_timestamp)
-
+	const { deleteType, classes, setClasses, ...rest } = props
 	const memberId = 1
 	const deleteClass = async (): Promise<any> => {
 		if (props.deleteType === "booking") {
@@ -71,13 +77,23 @@ export default function ClassBooking(props: ClassBookingProps) {
 					</p>
 
 					<p className="flex flex-row items-center justify-center text-xs text-center">
-						{moment(date).format(
-									"MMMM Do YYYY h:mm:ss a"
-							  )}
+						{moment(date).format("MMMM Do YYYY h:mm:ss a")}
 					</p>
 					{!previous ? (
 						<div className="flex flex-row">
-						{props.deleteType == "class" && <ClassRescheduleDialog date={date} setDate={setDate} classId={props.class_id} />}
+							{props.deleteType == "class" && (
+								<div className="flex flex-row">
+									<ClassRescheduleDialog
+										date={date}
+										setDate={setDate}
+										classId={props.class_id}
+									/>
+									<MoveClassDialog
+										setClasses={setClasses}
+										class={rest}
+									/>
+								</div>
+							)}
 							<Button
 								variant="link"
 								onClick={() => {

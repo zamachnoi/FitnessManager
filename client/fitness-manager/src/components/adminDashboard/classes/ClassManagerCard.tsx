@@ -17,6 +17,9 @@ type ClassType = {
 	room_number: number
 	booking_timestamp: Date
 	member_booking_id: number
+	trainer_id: number
+	room_id: number
+	room_booking_id: number
 }
 
 async function getClasses() {

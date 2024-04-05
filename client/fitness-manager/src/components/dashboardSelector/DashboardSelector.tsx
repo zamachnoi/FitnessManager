@@ -10,7 +10,7 @@ type DashboardSelectorProps = {
 
 export default function DashboardSelector({ type }: DashboardSelectorProps) {
 	if (type === "none") {
-		type = "Member"
+		type = "Admin"
 	}
 
 	const dashboardComponents = {

@@ -3,6 +3,7 @@ import { Classes, TrainerBooking } from "../db/types"
 export type ClassesData = Omit<Classes, "class_id" | "class_time"> & {
 	class_id: number
 	class_time: Date | null
+	room_booking_id?: number | null
 }
 
 export type BookableClassesData = ClassesData & {
@@ -35,4 +36,8 @@ export type ClassesArrayApiResponse = {
 	message: string
 	status: number
 	data: ClassesData[] | null
+}
+
+export type MoveClassRequest = {
+	new_room_id: number
 }

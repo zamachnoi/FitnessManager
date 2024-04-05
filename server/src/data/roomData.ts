@@ -24,7 +24,7 @@ export async function getRoomsAndBooking(
 		.select([
 			"rooms.room_id",
 			"name",
-			"class_id",
+			"future_bookings.class_id",
 			"class_time",
 			"booking_id",
 			"rooms.room_number",
@@ -39,9 +39,7 @@ export async function getRoomsAndBooking(
 	return roomAndBooking
 }
 
-export async function getAvailableRooms(
-	timestamp: Date
-): Promise<RoomData[]> {
+export async function getAvailableRooms(timestamp: Date): Promise<RoomData[]> {
 	const hourOfInterest = timestamp.getHours()
 
 	const availableRooms = await db
@@ -53,7 +51,11 @@ export async function getAvailableRooms(
 					exists(
 						selectFrom("room_bookings")
 							.where("class_time", "=", timestamp)
-							.whereRef("rooms.room_id", "=", "room_bookings.room_id")
+							.whereRef(
+								"rooms.room_id",
+								"=",
+								"room_bookings.room_id"
+							)
 					)
 				),
 			])

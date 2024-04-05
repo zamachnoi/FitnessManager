@@ -12,11 +12,18 @@ export type RoomAndBookingDbData = Omit<
 export type RoomAndBookingData = {
 	room_id: number | null
 	name: string | null
+	room_number: number | null
 	future_bookings: {
 		booking_id: number | null
 		class_id: number | null
 		class_time: Date | null
 	}[]
+}
+
+export type AvailableRoomsResponse = {
+	message: string
+	status: number
+	data: number[] | null
 }
 
 export type RoomAndBookingApiResponse = {

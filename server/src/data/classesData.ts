@@ -6,6 +6,7 @@ import {
 	BookableClassesData,
 } from "../models/io/classesIo"
 import { RoomAndBookingData } from "../models/io/roomIo"
+import { getAvailableRooms } from "./roomData"
 
 export async function getAllClasses(): Promise<BookableClassesData[]> {
 	const classes = await db
@@ -272,4 +273,77 @@ export async function getMemberAvailableClasses(memberId: number) {
 		.execute()
 
 	return classes
+}
+
+// PATCH
+
+export async function rescheduleClass(timestamp: Date, classId: number) {
+	// need to check if trainer and room are available
+	try {
+		const availableTrainers = await getAvailableTrainers(timestamp)
+		const availableRooms = await getAvailableRooms(timestamp)
+
+		const classe = await db.transaction().execute(async (transaction) => {
+			const classData = await transaction
+				.selectFrom("classes")
+				.where("class_id", "=", classId)
+				.selectAll()
+				.executeTakeFirst()
+
+			if (!classData) {
+				throw new Error("No such class found")
+			}
+
+			if (classData.trainer_id && !availableTrainers.includes(classData?.trainer_id)) {
+				throw new Error("Trainer is not available")
+			}
+
+			if (classData.room_id && !availableRooms.some((room) => room.room_id === classData.room_id)){
+				throw new Error("Room is not available")
+			}
+
+			const updatedClass = await transaction
+				.updateTable("classes")
+				.set("class_time", timestamp)
+				.where("class_id", "=", classId)
+				.returningAll()
+				.executeTakeFirstOrThrow()
+
+			const updatedTrainerBooking = await transaction
+				.updateTable("trainer_booking")
+				.set("trainer_booking_timestamp", timestamp)
+				.where("trainer_booking_id", "=", classData.trainer_booking_id)
+				.returningAll()
+				.executeTakeFirstOrThrow()
+
+			const updatedRoomBooking = await transaction
+				.updateTable("room_bookings")
+				.set("class_time", timestamp)
+				.where("class_id", "=", classId)
+				.returningAll()
+				.executeTakeFirstOrThrow()
+
+			// find member class booking
+			const memberClassBookingIds = await transaction
+				.selectFrom("member_class_booking")
+				.select("member_class_booking_id")
+				.where("class_id", "=", classId)
+				.execute()
+
+			if (memberClassBookingIds.length > 0) {
+				// update member bookings
+				await transaction
+					.updateTable("member_bookings")
+					.set("booking_timestamp", timestamp)
+					.where("member_booking_id", "in", memberClassBookingIds.map((m) => m.member_class_booking_id))
+					.execute()
+			}
+
+			return updatedClass
+		})
+		return classe
+	} catch (e) {
+		console.log(e)
+		throw new Error("Error rescheduling class")
+	}
 }

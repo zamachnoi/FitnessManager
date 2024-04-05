@@ -129,3 +129,31 @@ export async function generateClassesDeleteResponse(
 
 }
 
+// PATCH
+export async function generateRescheduleClassPatchResponse(
+	timestamp: Date,
+	classId: number,
+): Promise<ClassesApiResponse> {
+	try {
+		const classes =
+			await classesData.rescheduleClass(
+				timestamp,
+				classId,
+			)
+		let res: ClassesApiResponse = {
+			message: `success`,
+			status: 200,
+			data: classes,
+		}
+		return res
+	} catch (e) {
+		console.log(e)
+		return {
+			message: "Could not update class",
+			status: 404,
+			data: null,
+		}
+	}
+}
+
+

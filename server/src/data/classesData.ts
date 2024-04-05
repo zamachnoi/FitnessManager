@@ -282,6 +282,7 @@ export async function rescheduleClass(timestamp: Date, classId: number) {
 	try {
 		const availableTrainers = await getAvailableTrainers(timestamp)
 		const availableRooms = await getAvailableRooms(timestamp)
+		console.log(timestamp)
 
 		const classe = await db.transaction().execute(async (transaction) => {
 			const classData = await transaction

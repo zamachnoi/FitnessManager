@@ -5,8 +5,11 @@ import DashboardSelector from "./components/dashboardSelector/DashboardSelector"
 import MainPage from "./components/mainPage/MainPage"
 import { UserProvider } from "./context/userContext"
 import AdminDashboard from "./components/adminDashboard/AdminDashboard"
+import TrainerDashboard from "./components/trainerDashboard/TrainerDashboard"
+import MemberDashboard from "./components/memberDashboard/MemberDashboard"
 import { useEffect, useState } from "react"
 import { getData } from "./utils/getData"
+import { Toaster } from "./components/ui/sonner"
 
 type SessionData = {
 	type: "Member" | "Trainer" | "Admin" | "none"
@@ -44,6 +47,7 @@ function App() {
 	return (
 		<UserProvider>
 			<Router>
+				
 				{loggedIn ? <LoggedInNavbar /> : <LoggedOutNavbar />}
 				<Routes>
 					<Route path="/" element={<MainPage />} />
@@ -52,7 +56,10 @@ function App() {
 						element={<DashboardSelector type={userSession.type} />}
 					/>
 					<Route path="/admin" element={<AdminDashboard />} />
+					<Route path="/trainer" element={<TrainerDashboard />} />
+					<Route path="/member" element={<MemberDashboard memberId={1}/>} />
 				</Routes>
+				<Toaster />
 			</Router>
 		</UserProvider>
 	)

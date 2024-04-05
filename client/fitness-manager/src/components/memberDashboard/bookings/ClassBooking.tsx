@@ -5,6 +5,10 @@ import moment from "moment"
 import { patchData } from "@/utils/patchData"
 import { deleteData } from "@/utils/deleteData"
 
+import ClassRescheduleDialog from "./ClassRescheduleDialog"
+
+import { useState, useEffect } from "react"
+
 type ClassBookingProps = {
 	class_id: number
 	name: string
@@ -21,6 +25,9 @@ type ClassBookingProps = {
 }
 
 export default function ClassBooking(props: ClassBookingProps) {
+
+	const [date, setDate] = useState<Date>(props.class_time || props.booking_timestamp)
+
 	const memberId = 1
 	const deleteClass = async (): Promise<any> => {
 		if (props.deleteType === "booking") {
@@ -49,6 +56,10 @@ export default function ClassBooking(props: ClassBookingProps) {
 		})
 	}
 
+	const reschedule = () => {
+
+	}
+
 	return (
 		<div>
 			<div>
@@ -62,15 +73,12 @@ export default function ClassBooking(props: ClassBookingProps) {
 					</p>
 
 					<p className="flex flex-row items-center justify-center text-xs text-center">
-						{props.class_time
-							? moment(props.class_time).format(
-									"MMMM Do YYYY, h:mm:ss a"
-							  )
-							: moment(props.booking_timestamp).format(
+						{moment(date).format(
 									"MMMM Do YYYY h:mm:ss a"
 							  )}
 					</p>
 					<div className="flex flex-row">
+						<ClassRescheduleDialog date={date} setDate={setDate} classId={props.class_id} />
 						<Button
 							variant="link"
 							onClick={() => {

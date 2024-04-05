@@ -50,7 +50,7 @@ classesRoute.delete("/:classId", async (req, res) => {
 classesRoute.patch("/reschedule/:classId/:timestamp", async (req, res) => {
 	const classId = parseInt(req.params.classId)
 	const timestamp = new Date(parseInt(req.params.timestamp))
-	await classesController.generateRescheduleClassPatchResponse(timestamp, classId)
+	const data = await classesController.generateRescheduleClassPatchResponse(timestamp, classId)
 
-	res.status(200).json({ message: "success" })
+	res.status(data.status).json(data)
 })

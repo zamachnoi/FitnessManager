@@ -98,8 +98,8 @@ export default function MoveClassDialog(props: MoveClassDialogProps) {
 				</DialogHeader>
 				<div className="flex flex-col space-y-4">
 					<Select onValueChange={(value) => setNewRoom(value)}>
-						<SelectTrigger className="w-[180px]">
-							<SelectValue placeholder="Room Number / Name" />
+						<SelectTrigger className="w-full">
+							<SelectValue placeholder="Room Number | Name" />
 						</SelectTrigger>
 						<SelectContent>
 							<SelectItem value="room" disabled>
@@ -111,7 +111,7 @@ export default function MoveClassDialog(props: MoveClassDialogProps) {
 									value={String(room.room_id)}
 								>
 									<p>
-										{room.room_number} / {room.name}
+										{room.room_number} | {room.name}
 									</p>
 								</SelectItem>
 							))}

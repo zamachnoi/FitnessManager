@@ -21,31 +21,45 @@ import {
 import { postData } from "@/utils/postData"
 import { Button } from "@/components/ui/button"
 import { useNavigate } from "react-router"
+import { useUser } from "@/context/userContext"
 
 export const LoginCard = ({}) => {
 	const navigate = useNavigate()
 
+	const user = useUser()
 	const [isLogin, setIsLogin] = useState(true)
+	const [username, setUsername] = useState("")
+	const [password, setPassword] = useState("")
+	const [firstName, setFirstName] = useState("")
+	const [lastName, setLastName] = useState("")
+	const [accountType, setAccountType] = useState("")
 
 	const handleSubmit = async () => {
 		if (isLogin) {
 			const login = await postData("auth/login", {
-				username: "m1",
-				password: "123",
+				username: username,
+				password: password,
 			})
 
 			if (login.status === 200) {
+				user.setUserId(login.data.user_id)
+				user.setUserType(login.data.type)
 				navigate("/dashboard")
 			}
 		}
 		if (!isLogin) {
-			await postData("auth/register", {
-				username: "m4",
-				password: "123",
-				firstName: "John",
-				lastName: "Doe",
-				accountType: "Member",
+			const register = await postData("auth/register", {
+				username: username,
+				password: password,
+				firstName: firstName,
+				lastName: lastName,
+				accountType: accountType,
 			})
+			if (register.status === 200) {
+				user.setUserId(register.data.user_id)
+				user.setUserType(register.data.type)
+				navigate("/dashboard")
+			}
 		}
 	}
 
@@ -61,6 +75,8 @@ export const LoginCard = ({}) => {
 					type="username"
 					placeholder="Username"
 					className="mb-4"
+					value={username}
+					onChange={(e) => setUsername(e.target.value)}
 				/>
 				{!isLogin ? (
 					<>
@@ -68,11 +84,15 @@ export const LoginCard = ({}) => {
 							type="firstName"
 							placeholder="First Name"
 							className="mb-4"
+							value={firstName}
+							onChange={(e) => setFirstName(e.target.value)}
 						/>
 						<Input
 							type="lastName"
 							placeholder="Last Name"
 							className="mb-4"
+							value={lastName}
+							onChange={(e) => setLastName(e.target.value)}
 						/>
 					</>
 				) : null}
@@ -80,19 +100,21 @@ export const LoginCard = ({}) => {
 					type="password"
 					placeholder="Password"
 					className="mb-4"
+					value={password}
+					onChange={(e) => setPassword(e.target.value)}
 				/>
 
 				{!isLogin ? (
-					<Select>
+					<Select onValueChange={(value) => setAccountType(value)}>
 						<SelectTrigger>
 							<SelectValue placeholder="Account Type" />
 						</SelectTrigger>
 						<SelectContent>
 							<SelectGroup>
 								<SelectLabel>Account Type</SelectLabel>
-								<SelectItem value="member">Member</SelectItem>
-								<SelectItem value="trainer">Trainer</SelectItem>
-								<SelectItem value="admin">Admin</SelectItem>
+								<SelectItem value="Member">Member</SelectItem>
+								<SelectItem value="Trainer">Trainer</SelectItem>
+								<SelectItem value="Admin">Admin</SelectItem>
 							</SelectGroup>
 						</SelectContent>
 					</Select>

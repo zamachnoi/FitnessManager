@@ -2,8 +2,7 @@ import moment from "moment"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { patchData } from "@/utils/patchData"
-import TrainerRescheduleDialog from "./TrainerRescheduleDialog"
-import { book } from "./TrainerBookingForm"
+import { useUser } from "@/context/userContext"
 
 type Booking = {
 	trainer_id: number
@@ -28,13 +27,16 @@ type TrainerBookingProps = {
 }
 
 function TrainerBooking(props: TrainerBookingProps) {
+	const user = useUser()
+	const userId = user.userId
+
 	const deleteBooking = async (
 		member_booking_id: number,
 		trainer_booking_id: number
 	): Promise<any> => {
 		console.log(member_booking_id, trainer_booking_id)
 		const res = await patchData(
-			`members/1/booking/${member_booking_id}/trainers/${trainer_booking_id}`,
+			`members/${userId}/booking/${member_booking_id}/trainers/${trainer_booking_id}`,
 			{
 				member_booking_id,
 				trainer_booking_id,
@@ -79,22 +81,21 @@ function TrainerBooking(props: TrainerBookingProps) {
 					)}
 				</p>
 				{!props?.readOnly && !previous && (
-						<div className="flex flex-row">
-							<Button variant="link">Reschedule</Button>
-							<Button
-								variant="link"
-								onClick={() => {
-									onCancel(
-										props.member_booking_id,
-										props.trainer_booking_id
-									)
-								}}
-							>
-								Cancel
-							</Button>
-						</div>
-					)}
-					
+					<div className="flex flex-row">
+						<Button variant="link">Reschedule</Button>
+						<Button
+							variant="link"
+							onClick={() => {
+								onCancel(
+									props.member_booking_id,
+									props.trainer_booking_id
+								)
+							}}
+						>
+							Cancel
+						</Button>
+					</div>
+				)}
 			</div>
 			<div>
 				<Separator />

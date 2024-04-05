@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { patchData } from "@/utils/patchData"
 import { getData } from "@/utils/getData"
 import { useEffect } from "react"
+import { useUser } from "@/context/userContext"
 
 const PersonalInfoSchema = z.object({
 	username: z.string().min(1, "Username is required"),
@@ -25,9 +26,21 @@ type PersonalInfoType = {
 }
 
 const PersonalInfoCard = () => {
+	const user = useUser()
+	const userId = user.userId
 	const { register, handleSubmit, setValue } = useForm({
 		resolver: zodResolver(PersonalInfoSchema),
 	})
+
+	async function updatePersonalInfo(data: PersonalInfoType) {
+		const res = await patchData(`members/${userId}`, data) //GET MEMBER ID
+		return res.data
+	}
+
+	async function getPersonalInfo() {
+		const res = await getData(`members/${userId}`)
+		return res.data
+	}
 
 	useEffect(() => {
 		getPersonalInfo().then((data) => {
@@ -100,13 +113,3 @@ const PersonalInfoCard = () => {
 }
 
 export default PersonalInfoCard
-
-async function updatePersonalInfo(data: PersonalInfoType) {
-	const res = await patchData(`members/1`, data) //GET MEMBER ID
-	return res.data
-}
-
-async function getPersonalInfo() {
-	const res = await getData(`members/1`)
-	return res.data
-}

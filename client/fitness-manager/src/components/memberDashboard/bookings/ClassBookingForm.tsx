@@ -3,6 +3,7 @@ import { postData } from "@/utils/postData"
 import moment from "moment"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
+import { useUser } from "@/context/userContext"
 
 type ClassType = {
 	class_id: number
@@ -24,6 +25,8 @@ type ClassBookingFormProps = {
 }
 
 const ClassBookingForm = (props: ClassBookingFormProps) => {
+	const user = useUser()
+	const userId = user.userId
 	const [classes, setClasses] = useState<ClassType[]>([])
 
 	useEffect(() => {
@@ -34,7 +37,7 @@ const ClassBookingForm = (props: ClassBookingFormProps) => {
 
 	const bookClass = async (classId: number) => {
 		const res = await postData(
-			`members/1/booking/classes/${classId}`,
+			`members/${userId}/booking/classes/${classId}`,
 			{}
 		).then((res) => {
 			if (res.status === 200) {

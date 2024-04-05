@@ -3,7 +3,7 @@ import TrainerBookingsCard from "./TrainerBookingsCard"
 import ClassBookingsCard from "./ClassBookingsCard"
 import { useEffect, useState } from "react"
 import { getData } from "@/utils/getData"
-import BookingDialog from "./TrainerBookingDialog"
+import { useUser } from "@/context/userContext"
 
 type ClassBookings = {
 	class_id: number
@@ -14,16 +14,21 @@ type ClassBookings = {
 	room_number: number
 	booking_timestamp: Date
 	member_booking_id: number
+	class_time: Date
+	trainer_id: number
+	room_id: number
+	room_booking_id: number
 }
 
 export default function AllBookingsCard() {
-	const memberId = 1
+	const user = useUser()
+	const userId = user.userId
 
 	const [trainerBookings, setTrainerBookings] = useState([])
 	const [classBookings, setClassBookings] = useState<ClassBookings[]>([])
 
 	useEffect(() => {
-		getData(`members/${memberId}/booking`).then((response) => {
+		getData(`members/${userId}/booking`).then((response) => {
 			setTrainerBookings(response.data?.trainer_bookings || [])
 			setClassBookings(response.data?.class_bookings || [])
 		})

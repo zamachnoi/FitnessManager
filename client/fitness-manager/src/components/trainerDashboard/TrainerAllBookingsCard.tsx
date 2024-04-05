@@ -3,6 +3,7 @@ import { getData } from "../../utils/getData"
 import { useEffect, useState } from "react"
 import TrainerBookingsCard from "../memberDashboard/bookings/TrainerBookingsCard"
 import ClassBookingsCard from "../memberDashboard/bookings/ClassBookingsCard"
+import { useUser } from "@/context/userContext"
 
 type ClassBookings = {
 	class_id: number
@@ -13,22 +14,28 @@ type ClassBookings = {
 	room_number: number
 	booking_timestamp: Date
 	member_booking_id: number
+	class_time: Date
+	trainer_id: number
+	room_id: number
+	room_booking_id: number
 }
 
 const TrainerAllBookingsCard = () => {
+	const user = useUser()
+	const userId = user.userId
 
-  const [trainerBookings, setTrainerBookings] = useState([])
-  const [classBookings, setClassBookings] = useState<ClassBookings[]>([])
+	const [trainerBookings, setTrainerBookings] = useState([])
+	const [classBookings, setClassBookings] = useState<ClassBookings[]>([])
 
-  useEffect(() => {
-    getData(`trainers/bookings/4`).then((response) => {
-      setTrainerBookings(response.data?.trainer_bookings || [])
-      setClassBookings(response.data?.class_bookings || [])
-    })
-  }, [])
+	useEffect(() => {
+		getData(`trainers/bookings/${userId}`).then((response) => {
+			setTrainerBookings(response.data?.trainer_bookings || [])
+			setClassBookings(response.data?.class_bookings || [])
+		})
+	}, [])
 
-  return (
-    <div className="w-fit">
+	return (
+		<div className="w-fit">
 			<DashboardCard
 				title="Bookings"
 				description="View all your bookings here."
@@ -38,17 +45,17 @@ const TrainerAllBookingsCard = () => {
 					<TrainerBookingsCard
 						trainerBookings={trainerBookings}
 						setTrainerBookings={setTrainerBookings}
-            readOnly={true}
+						readOnly={true}
 					/>
 					<ClassBookingsCard
 						setClassBookings={setClassBookings}
 						classBookings={classBookings}
-            readOnly={true}
+						readOnly={true}
 					/>
 				</div>
 			</DashboardCard>
 		</div>
-  )
+	)
 }
 
 export default TrainerAllBookingsCard

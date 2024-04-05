@@ -9,6 +9,7 @@ import ClassRescheduleDialog from "./ClassRescheduleDialog"
 
 import { useState, useEffect } from "react"
 import MoveClassDialog from "@/components/adminDashboard/classes/MoveClassDialog"
+import { useUser } from "@/context/userContext"
 
 type ClassBookingProps = {
 	class_id: number
@@ -35,11 +36,12 @@ export default function ClassBooking(props: ClassBookingProps) {
 	)
 
 	const { deleteType, classes, setClasses, ...rest } = props
-	const memberId = 1
+	const user = useUser()
+	const userId = user.userId
 	const deleteClass = async (): Promise<any> => {
 		if (props.deleteType === "booking") {
 			const res = await patchData(
-				`members/${memberId}/booking/${props.member_booking_id}/classes`,
+				`members/${userId}/booking/${props.member_booking_id}/classes`,
 				{}
 			)
 			return res

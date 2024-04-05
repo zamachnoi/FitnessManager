@@ -2,6 +2,7 @@ import { Separator } from "@/components/ui/separator"
 import RoutineExercisesDialog from "./RoutineExercisesDialog"
 import { Button } from "@/components/ui/button"
 import { patchData } from "@/utils/patchData"
+import { useUser } from "@/context/userContext"
 
 export type ExerciseType = {
 	exercise_id: number
@@ -27,10 +28,11 @@ type RoutineProps = {
 }
 
 export function RoutineInfo(props: RoutineProps) {
-	const memberId = 1
+	const user = useUser()
+	const userId = user.userId
 	const onAddRoutine = () => {
 		patchData(
-			`members/${memberId}/routines/${props.routine.routine_id}/assign`,
+			`members/${userId}/routines/${props.routine.routine_id}/assign`,
 			{}
 		).then((response) => {
 			console.log(`add routine response`)
@@ -45,7 +47,7 @@ export function RoutineInfo(props: RoutineProps) {
 
 	const onRemoveRoutine = () => {
 		patchData(
-			`members/${memberId}/routines/${props.routine.routine_id}/unassign`,
+			`members/${userId}/routines/${props.routine.routine_id}/unassign`,
 			{}
 		).then((response) => {
 			console.log(`remove routine response`)

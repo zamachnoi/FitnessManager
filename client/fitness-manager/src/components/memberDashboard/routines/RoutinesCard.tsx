@@ -3,13 +3,14 @@ import { getData } from "@/utils/getData"
 import { useEffect, useState } from "react"
 import { RoutineInfo, RoutineType } from "./Routines"
 import RoutinesFooter from "./RoutinesFooter"
+import { useUser } from "@/context/userContext"
 export default function RoutinesCard() {
-	const memberId = 1
-
+	const user = useUser()
+	const userId = user.userId
 	const [routines, setRoutines] = useState<RoutineType[]>([])
 
 	useEffect(() => {
-		getData(`members/${memberId}/routines`).then((response) => {
+		getData(`members/${userId}/routines`).then((response) => {
 			console.log(response)
 			setRoutines(response.data || [])
 			console.log(routines)

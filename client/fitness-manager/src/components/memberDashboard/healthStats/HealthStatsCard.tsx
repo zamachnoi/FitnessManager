@@ -3,6 +3,7 @@ import HealthStat from "./HealthStat"
 import { useEffect, useState } from "react"
 import { getData } from "@/utils/getData"
 import HealthStatsForm from "./HealthStatsForm"
+import { useUser } from "@/context/userContext"
 
 export type HealthStatsType = {
 	stat_id: number
@@ -14,11 +15,12 @@ export type HealthStatsType = {
 }
 
 export default function HealthStatsCard() {
-	const memberId = 1
+	const user = useUser()
+	const userId = user.userId
 	const [healthStats, setHealthStats] = useState([] as HealthStatsType[])
 
 	useEffect(() => {
-		getData(`members/${memberId}/stats`).then((response) => {
+		getData(`members/${userId}/stats`).then((response) => {
 			setHealthStats(response.data)
 		})
 	}, [])

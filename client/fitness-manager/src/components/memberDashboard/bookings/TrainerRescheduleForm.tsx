@@ -24,6 +24,7 @@ import { patchData } from "@/utils/patchData"
 import { useState, useEffect } from "react"
 import { time } from "console"
 import { watch } from "fs"
+import { useUser } from "@/context/userContext"
 
 const RescheduleSchema = z.object({
 	date: z.date(),
@@ -48,6 +49,8 @@ type TrainerRescheduleFormProps = {
 export default function TrainerRescheduleForm(
 	props: TrainerRescheduleFormProps
 ) {
+	const user = useUser()
+	const userId = user.userId
 	const [memberAvailableHours, setMemberAvailableHours] = useState<number[]>(
 		[]
 	)
@@ -58,8 +61,6 @@ export default function TrainerRescheduleForm(
 
 	const [totalAvailableHours, setTotalAvailableHours] = useState<number[]>([])
 
-	const memberId = 1
-
 	const form = useForm<z.infer<typeof RescheduleSchema>>({
 		defaultValues: {
 			date: undefined,
@@ -69,7 +70,7 @@ export default function TrainerRescheduleForm(
 
 	const getTrainerAvailableHours = async (date: Date) => {
 		const res = await getData(
-			`members/${memberId}/booking/trainers/${
+			`members/${userId}/booking/trainers/${
 				props.booking.trainer_id
 			}/hours/${date.getTime()}`
 		)
@@ -78,7 +79,7 @@ export default function TrainerRescheduleForm(
 
 	const getMemberAvailableHours = async (date: Date) => {
 		const res = await getData(
-			`members/${memberId}/booking/hours/${date.getTime()}`
+			`members/${userId}/booking/hours/${date.getTime()}`
 		)
 		return res
 	}
@@ -88,7 +89,7 @@ export default function TrainerRescheduleForm(
 		dt.setHours(values.time, 0, 0, 0)
 		console.log(dt.getTime())
 		patchData(
-			`members/${memberId}/booking/${props.booking.member_booking_id}/trainers/${props.booking.trainer_id}/booking/${props.booking.trainer_booking_id}/reschedule`,
+			`members/${userId}/booking/${props.booking.member_booking_id}/trainers/${props.booking.trainer_id}/booking/${props.booking.trainer_booking_id}/reschedule`,
 			{
 				new_booking_timestamp: dt.getTime(),
 			}

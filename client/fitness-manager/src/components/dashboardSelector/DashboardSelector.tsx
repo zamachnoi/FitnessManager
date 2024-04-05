@@ -1,23 +1,18 @@
 import MemberDashboard from "../memberDashboard/MemberDashboard"
 import TrainerDashboard from "../trainerDashboard/TrainerDashboard"
 import AdminDashboard from "../adminDashboard/AdminDashboard"
+import { useUser } from "@/context/userContext"
+type UserType = "Trainer" | "Member" | "Admin" | null | undefined
 
-type UserType = "Trainer" | "Member" | "Admin" | "none" | undefined
-
-type DashboardSelectorProps = {
-	type: UserType
-}
-
-export default function DashboardSelector({ type }: DashboardSelectorProps) {
-	if (type === "none") {
-		type = "Member"
-	}
+export default function DashboardSelector() {
+	const user = useUser()
+	let type: UserType = user.userType
 
 	const dashboardComponents = {
 		Trainer: <TrainerDashboard />,
-		Member: <MemberDashboard memberId={1} />,
+		Member: <MemberDashboard />,
 		Admin: <AdminDashboard />,
-		undefined: <div>No valid user type provided</div>,
+		null: <div>No valid user type provided</div>,
 	}
 
 	const selectedDashboard = type ? (

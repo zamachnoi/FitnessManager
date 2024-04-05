@@ -3,6 +3,7 @@ import Goal from "./Goal"
 import GoalForm from "./GoalForm"
 import { useState, useEffect } from "react"
 import { getData } from "@/utils/getData"
+import { useUser } from "@/context/userContext"
 
 type GoalType = {
 	goal_id: number
@@ -13,13 +14,15 @@ type GoalType = {
 	deleted: boolean
 }
 
-export async function getGoals() {
-	const res = await getData(`members/1/goals`)
-	console.log(res)
-	return res.data
-}
-
 const GoalCard = ({}: {}) => {
+	const user = useUser()
+	const userId = user.userId
+
+	async function getGoals() {
+		const res = await getData(`members/${userId}/goals`)
+		console.log(res)
+		return res.data
+	}
 	const [goalsState, setGoalsState] = useState([])
 
 	useEffect(() => {

@@ -2,20 +2,11 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { Check, X } from "lucide-react"
 import { useState } from "react"
+import { useUser } from "@/context/userContext"
 
 import { patchData } from "@/utils/patchData"
 
 import moment from "moment"
-
-export async function achieveGoal(goalId: string) {
-	const res = await patchData(`members/1/goals/${goalId}/achieve`, {})
-	return res.data
-}
-
-export async function deleteGoal(goalId: string) {
-	const res = await patchData(`members/1/goals/${goalId}/delete`, {})
-	return res.data
-}
 
 const GoalForm = ({
 	goalId,
@@ -30,6 +21,24 @@ const GoalForm = ({
 	achievedDate: Date | null
 	deleted: boolean
 }) => {
+	const user = useUser()
+	const userId = user.userId
+
+	async function achieveGoal(goalId: string) {
+		const res = await patchData(
+			`members/${userId}/goals/${goalId}/achieve`,
+			{}
+		)
+		return res.data
+	}
+
+	async function deleteGoal(goalId: string) {
+		const res = await patchData(
+			`members/${userId}/goals/${goalId}/delete`,
+			{}
+		)
+		return res.data
+	}
 	const [isDeleted, setIsDeleted] = useState(deleted)
 	const [isCompleted, setIsCompleted] = useState(achievedDate !== null)
 	const [achievedDateState, setAchievedDateState] = useState(achievedDate)

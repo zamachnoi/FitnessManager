@@ -13,7 +13,10 @@ type ClassBookings = {
 	room_number: number
 	booking_timestamp: Date
 	member_booking_id: number
-	
+	class_time: Date
+	trainer_id: number
+	room_id: number
+	room_booking_id: number
 }
 
 type ClassBookingsProps = {
@@ -29,10 +32,12 @@ export default function ClassBookingsCard(props: ClassBookingsProps) {
 				title="Class"
 				description="View all your class bookings here."
 				footer={
-					props.readOnly ? null : <ClassBookingDialog
-						parentClasses={props.classBookings}
-						setParentClasses={props.setClassBookings}
-					/>
+					props.readOnly ? null : (
+						<ClassBookingDialog
+							parentClasses={props.classBookings}
+							setParentClasses={props.setClassBookings}
+						/>
+					)
 				}
 			>
 				{props.classBookings.map((booking, index) => (

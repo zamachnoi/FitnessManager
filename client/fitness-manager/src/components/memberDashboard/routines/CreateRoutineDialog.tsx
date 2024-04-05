@@ -17,6 +17,7 @@ import { Separator } from "@/components/ui/separator"
 import CreateExercises from "./CreateExercises"
 import { postData } from "@/utils/postData"
 import { patchData } from "@/utils/patchData"
+import { useUser } from "@/context/userContext"
 
 type CreateRoutineDialogProps = {
 	parentRoutines: RoutineType[]
@@ -24,7 +25,8 @@ type CreateRoutineDialogProps = {
 }
 
 export default function CreateRoutineDialog(props: CreateRoutineDialogProps) {
-	const memberId = 1
+	const user = useUser()
+	const userId = user.userId
 	const [allExercises, setAllExercises] = useState<ExerciseType[]>([])
 	const [selectableExercises, setSelectableExercises] = useState<
 		ExerciseType[]
@@ -91,7 +93,7 @@ export default function CreateRoutineDialog(props: CreateRoutineDialogProps) {
 	}
 
 	const assignRoutine = (routineId: number) => {
-		patchData(`members/${memberId}/routines/${routineId}/assign`, {}).then(
+		patchData(`members/${userId}/routines/${routineId}/assign`, {}).then(
 			(response) => {
 				console.log(`add routine response`)
 				if (response.status === 200) {

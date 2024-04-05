@@ -22,6 +22,7 @@ import { getData } from "@/utils/getData"
 import { postData } from "@/utils/postData"
 
 import { useState, useEffect } from "react"
+import { useUser } from "@/context/userContext"
 
 const BookingSchema = z.object({
 	date: z.date(),
@@ -38,45 +39,48 @@ type TrainerType = {
 	last_name: string
 }
 
-// get serverside props
-export async function getAvailableTrainers(date: Date, time: number) {
-	// add time to date
-	const dt = new Date(date)
-	dt.setHours(time, 0, 0, 0)
-	// convert to unix
-	const unix = dt.getTime() / 1000
-	console.log(unix)
-
-	const res = await getData(`trainers/booking/${unix}000`)
-	console.log(res)
-	return res.data
-}
-
-export async function getAvailableHours(date: Date) {
-	const dt = new Date(date)
-	dt.setHours(0, 0, 0, 0)
-	const unix = dt.getTime() / 1000
-	const res = await getData(`members/1/booking/hours/${unix}000`)
-	return res.data
-}
-
-export async function book(date: Date, time: number, trainerId: number) {
-	const dt = new Date(date)
-	dt.setHours(time, 0, 0, 0)
-	const unix = dt.getTime() / 1000
-	const res = await postData(`members/1/booking/trainers`, {
-		trainer_id: trainerId,
-		booking_timestamp: unix * 1000,
-	})
-	return res.data
-}
-
 type BookingFormProps = {
 	setTrainerBookings: any
 	trainerBookings: any
 }
 
 const BookingForm = (props: BookingFormProps) => {
+	const user = useUser()
+	const userId = user.userId
+
+	// get serverside props
+	async function getAvailableTrainers(date: Date, time: number) {
+		// add time to date
+		const dt = new Date(date)
+		dt.setHours(time, 0, 0, 0)
+		// convert to unix
+		const unix = dt.getTime() / 1000
+		console.log(unix)
+
+		const res = await getData(`trainers/booking/${unix}000`)
+		console.log(res)
+		return res.data
+	}
+
+	async function getAvailableHours(date: Date) {
+		const dt = new Date(date)
+		dt.setHours(0, 0, 0, 0)
+		const unix = dt.getTime() / 1000
+		const res = await getData(`members/${userId}/booking/hours/${unix}000`)
+		return res.data
+	}
+
+	async function book(date: Date, time: number, trainerId: number) {
+		const dt = new Date(date)
+		dt.setHours(time, 0, 0, 0)
+		const unix = dt.getTime() / 1000
+		const res = await postData(`members/${userId}/booking/trainers`, {
+			trainer_id: trainerId,
+			booking_timestamp: unix * 1000,
+		})
+		return res.data
+	}
+
 	const [trainers, setTrainers] = useState<TrainerType[]>([])
 
 	const [times, setTimes] = useState([])

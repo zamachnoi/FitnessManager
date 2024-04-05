@@ -5,9 +5,13 @@ import { useEffect, useState } from "react"
 
 import { postData } from "@/utils/postData"
 import HealthStat from "./HealthStat"
+import { useUser } from "@/context/userContext"
 
 export async function postHealthStat(data: HealthStatsData) {
-	const res = await postData(`members/1/stats`, data)
+	const user = useUser()
+	const userId = user.userId
+
+	const res = await postData(`members/${userId}/stats`, data)
 	return res.data
 }
 

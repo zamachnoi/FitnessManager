@@ -22,6 +22,7 @@ type ClassBookingProps = {
 	member_booking_id: number
 	deleteType: "class" | "booking"
 	class_time?: Date
+	readOnly?: boolean
 }
 
 export default function ClassBooking(props: ClassBookingProps) {
@@ -75,19 +76,17 @@ export default function ClassBooking(props: ClassBookingProps) {
 									"MMMM Do YYYY h:mm:ss a"
 							  )}
 					</p>
-					{!previous ? (
-						<div className="flex flex-row">
+					{!props?.readOnly && !previous && (<div className="flex flex-row">
 						{props.deleteType == "class" && <ClassRescheduleDialog date={date} setDate={setDate} classId={props.class_id} />}
-							<Button
-								variant="link"
-								onClick={() => {
-									onCancel()
-								}}
-							>
-								Cancel
-							</Button>
-						</div>
-					) : null}
+						<Button
+							variant="link"
+							onClick={() => {
+								onCancel()
+							}}
+						>
+							Cancel
+						</Button>
+					</div>)}
 				</div>
 				<Separator />
 			</div>

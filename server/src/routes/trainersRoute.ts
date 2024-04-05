@@ -43,6 +43,14 @@ trainerRoute.get(
 	}
 )
 
+trainerRoute.get("/bookings/:id", async (req, res) => {
+	const id = parseInt(req.params.id)
+	const data = await trainersController.generateTrainerBookingsGetResponse(id)
+
+	res.status(data.status).json(data)
+}
+)
+
 // POST
 trainerRoute.post("/", async (req, res) => {
 	const data = await trainersController.generateTrainerPostResponse(req.body)
@@ -60,3 +68,5 @@ trainerRoute.patch("/:id", async (req, res) => {
 
 	res.status(data.status).json(data)
 })
+
+

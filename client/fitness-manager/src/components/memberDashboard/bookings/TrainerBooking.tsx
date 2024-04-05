@@ -24,6 +24,7 @@ type TrainerBookingProps = {
 	member_booking_id: number
 	trainer_booking_id: number
 	setTrainerBookings: any
+	readOnly?: boolean
 }
 
 function TrainerBooking(props: TrainerBookingProps) {
@@ -77,26 +78,23 @@ function TrainerBooking(props: TrainerBookingProps) {
 						"MMMM Do YYYY, h:mm:ss a"
 					)}
 				</p>
-				{!previous ? (
-					<div className="flex flex-row">
-						<TrainerRescheduleDialog
-							booking={booking}
-							setBookings={setBookings}
-							bookings={bookings}
-						/>
-						<Button
-							variant="link"
-							onClick={() => {
-								onCancel(
-									props.member_booking_id,
-									props.trainer_booking_id
-								)
-							}}
-						>
-							Cancel
-						</Button>
-					</div>
-				) : null}
+				{!props?.readOnly && !previous && (
+						<div className="flex flex-row">
+							<Button variant="link">Reschedule</Button>
+							<Button
+								variant="link"
+								onClick={() => {
+									onCancel(
+										props.member_booking_id,
+										props.trainer_booking_id
+									)
+								}}
+							>
+								Cancel
+							</Button>
+						</div>
+					)}
+					
 			</div>
 			<div>
 				<Separator />

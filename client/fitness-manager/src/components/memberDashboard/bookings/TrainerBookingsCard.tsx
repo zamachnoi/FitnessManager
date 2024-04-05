@@ -13,6 +13,7 @@ type TrainerBookingsProps = {
 		trainer_booking_id: number
 	}[]
 	setTrainerBookings: any
+	readOnly?: boolean
 }
 
 export default function TrainerBookingsCard(props: TrainerBookingsProps) {
@@ -21,7 +22,7 @@ export default function TrainerBookingsCard(props: TrainerBookingsProps) {
 			<DashboardCard
 				title="Trainer Bookings"
 				description="View all your trainer bookings here."
-				footer={
+				footer={ props.readOnly ? null :
 					<BookingDialog
 						trainerBookings={props.trainerBookings}
 						setTrainerBookings={props.setTrainerBookings}
@@ -35,6 +36,7 @@ export default function TrainerBookingsCard(props: TrainerBookingsProps) {
 							key={index}
 							trainerBookings={props.trainerBookings}
 							setTrainerBookings={props.setTrainerBookings}
+							readOnly={props?.readOnly}
 						/>
 					))}
 				</div>

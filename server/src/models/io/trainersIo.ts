@@ -59,3 +59,29 @@ export type AvailableTrainersResponse = {
 	message: string
 	data: AvailableTrainersData[]
 }
+
+export type TrainerBookingData = {
+	trainer_bookings: {
+		trainer_id: number | null
+		first_name: string | null
+		last_name: string | null
+		rate: number | null
+		booking_timestamp: Date | null
+		member_booking_id: number | null
+		trainer_booking_id: number | null
+	}[]
+	class_bookings: {
+		trainer_id: number | null
+		name: string | null
+		price: number | null
+		room_number: number | null
+		class_time: Date | null
+	}[]
+	
+}
+
+export type TrainerBookingsResponse = {
+	status: number
+	message: string
+	data: TrainerBookingData | null
+}

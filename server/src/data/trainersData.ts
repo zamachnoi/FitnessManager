@@ -3,7 +3,7 @@ import {
 	TrainersData,
 	TrainersApiRequest,
 	TrainerDataUpdate,
-	AvailableTrainersData,
+	AvailableTrainersData, TrainerBookingData,
 } from "../models/io/trainersIo"
 import * as util from "./dataUtil"
 
@@ -206,3 +206,49 @@ export async function getAvailableTrainers(
 
 	return availableTrainers
 }
+
+export async function getTrainerBookings(
+	trainerId: number
+): Promise<TrainerBookingData> {
+
+
+	// need to get member_trainer_booking that has trainer_id
+	// then get member booking that has member_booking_id from member_trainer_booking
+	// then get user that has user_id from member_booking
+	// then get user first_name, last_name, booking_timestamp, member_booking_id
+	const trainer_bookings = await db
+		.selectFrom("member_trainer_booking")
+		.innerJoin("member_bookings", "member_trainer_booking.member_booking_id", "member_bookings.member_booking_id")
+		.innerJoin("users", "member_bookings.member_id", "users.user_id")
+		.innerJoin("trainers", "member_trainer_booking.trainer_id", "trainers.trainer_id")
+		.select([
+			"member_trainer_booking.trainer_id",
+			"users.first_name",
+			"users.last_name",
+			"trainers.rate",
+			"member_bookings.booking_timestamp",
+			"member_bookings.member_booking_id",
+			"member_trainer_booking.trainer_booking_id",
+		])
+		.where("member_trainer_booking.trainer_id", "=", trainerId)
+		.execute()
+
+	const class_bookings = await db
+		.selectFrom("classes")
+		.innerJoin("rooms", "classes.room_id", "rooms.room_id")
+		.select([
+			"classes.trainer_id",
+			"classes.name",
+			"classes.price",
+			"rooms.room_number",
+			"classes.class_time",
+		])
+		.where("classes.trainer_id", "=", trainerId)
+		.execute()
+
+	return {
+		trainer_bookings,
+		class_bookings
+	}
+}
+

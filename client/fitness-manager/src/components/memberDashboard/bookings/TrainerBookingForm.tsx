@@ -100,6 +100,13 @@ const BookingForm = (props: BookingFormProps) => {
 
 	useEffect(() => {
 		if (!watchedDate) return
+		if (watchedDate < new Date()) {
+			form.setError("date", { message: "Date cannot be in the past" })
+			form.resetField("date")
+			form.resetField("time")
+			return
+		}
+		form.clearErrors("date")
 		getAvailableHours(watchedDate).then((res) => {
 			setTimes(res)
 		})
@@ -108,6 +115,11 @@ const BookingForm = (props: BookingFormProps) => {
 
 	useEffect(() => {
 		if (!watchedTime || !watchedDate) return
+		if (watchedDate === new Date() && watchedTime < new Date().getHours()) {
+			form.setError("time", { message: "Time cannot be in the past" })
+			form.resetField("time")
+			return
+		}
 		getAvailableTrainers(watchedDate, watchedTime).then((res) => {
 			setTrainers(res)
 			//form.resetField("trainer_id", { defaultValue: undefined })

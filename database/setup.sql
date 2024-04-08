@@ -31,10 +31,10 @@ CREATE TYPE USER_BOOKING_TYPE AS ENUM ('Class', 'Trainer');
 -- Creating Users table
 CREATE TABLE users (
     user_id SERIAL PRIMARY KEY,
-    last_name TEXT,
-    first_name TEXT,
-    username TEXT UNIQUE,
-    password TEXT,
+    last_name TEXT NOT NULL,
+    first_name TEXT NOT NULL,
+    username TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL,
     type USER_TYPE CHECK (type IN ('Member', 'Trainer', 'Admin')) NOT NULL
 );
 
@@ -60,8 +60,8 @@ CREATE TABLE admins (
 -- Creating Room table
 CREATE TABLE rooms (
     room_id SERIAL PRIMARY KEY,
-    name TEXT,
-    room_number INT
+    name TEXT NOT NULL,
+    room_number INT NOT NULL
 );
 
 -- Creating Trainer Availability table
@@ -69,23 +69,23 @@ CREATE TABLE rooms (
 CREATE TABLE trainer_booking (
     trainer_booking_id SERIAL PRIMARY KEY,
     trainer_id INT REFERENCES trainers(trainer_id),
-    trainer_booking_timestamp TIMESTAMPTZ
+    trainer_booking_timestamp TIMESTAMPTZ NOT NULL
 );
 
 -- Creating Equipment Type table
 CREATE TABLE equipment_type (
     equipment_type_id SERIAL PRIMARY KEY,
-    name TEXT
+    name TEXT NOT NULL
 );
 
 
 -- Creating Equipment table
 CREATE TABLE equipment (
     equipment_id SERIAL PRIMARY KEY,
-    name TEXT,
+    name TEXT NOT NULL,
     equipment_type_id INT REFERENCES equipment_type(equipment_type_id),
-    under_maintenance BOOLEAN,
-    last_maintained TIMESTAMPTZ
+    under_maintenance BOOLEAN NOT NULL,
+    last_maintained TIMESTAMPTZ NOT NULL
 );
 
 
@@ -93,19 +93,19 @@ CREATE TABLE equipment (
 -- Creating Classes table
 CREATE TABLE classes (
     class_id SERIAL PRIMARY KEY,
-    name TEXT,
+    name TEXT NOT NULL,
     trainer_id INT REFERENCES trainers(trainer_id),
     room_id INT REFERENCES rooms(room_id),
     trainer_booking_id INT REFERENCES trainer_booking(trainer_booking_id) ON DELETE CASCADE,
-    price FLOAT,
-    class_time TIMESTAMPTZ
+    price FLOAT NOT NULL,
+    class_time TIMESTAMPTZ NOT NULL
 );
 
 -- Create Bookings Table
 CREATE TABLE member_bookings (
     member_booking_id SERIAL PRIMARY KEY,
     member_id INT REFERENCES members(member_id),
-    booking_timestamp TIMESTAMPTZ,
+    booking_timestamp TIMESTAMPTZ NOT NULL,
     type USER_BOOKING_TYPE CHECK (type IN ('Trainer', 'Class')) NOT NULL
 );
 
@@ -113,7 +113,7 @@ CREATE TABLE member_bookings (
 CREATE TABLE room_bookings (
     booking_id SERIAL PRIMARY KEY,
     room_id INT REFERENCES rooms(room_id) NOT NULL,
-    class_time TIMESTAMPTZ,
+    class_time TIMESTAMPTZ NOT NULL,
     class_id INT REFERENCES classes(class_id) ON DELETE CASCADE
 );
 
@@ -127,15 +127,15 @@ CREATE TABLE member_class_booking (
 -- Creating exercise_routines table
 CREATE TABLE exercise_routines (
     routine_id SERIAL PRIMARY KEY,
-    name TEXT
+    name TEXT NOT NULL
 );
 
 -- Creating Exercises table
 CREATE TABLE exercises (
     exercise_id SERIAL PRIMARY KEY,
-    name TEXT,
-    type TEXT,
-    description TEXT,
+    name TEXT NOT NULL,
+    type TEXT NOT NULL,
+    description TEXT NOT NULL,
     equipment_type_id INT REFERENCES equipment_type(equipment_type_id)
 );
 
@@ -157,28 +157,29 @@ CREATE TABLE member_exercise_routines (
 CREATE TABLE member_goals (
     goal_id SERIAL PRIMARY KEY,
     member_id INT REFERENCES members(member_id),
-    weight_goal FLOAT,
-    goal_start DATE,
+    weight_goal FLOAT NOT NULL,
+    goal_start DATE NOT NULL,
     achieved_date DATE,
-    deleted BOOLEAN DEFAULT FALSE
+    deleted BOOLEAN DEFAULT FALSE NOT NULL
 );
 
 -- Creating Member Health Statistics table
 CREATE TABLE member_health_statistics (
     stat_id SERIAL PRIMARY KEY,
     member_id INT REFERENCES members(member_id),
-    systolic_bp FLOAT,
-    diastolic_bp FLOAT,
-    heart_rate FLOAT,    
-    recorded TIMESTAMPTZ
+    systolic_bp FLOAT NOT NULL,
+    diastolic_bp FLOAT NOT NULL,
+    heart_rate FLOAT NOT NULL,    
+    recorded TIMESTAMPTZ NOT NULL
 );
 
 -- Creating Member Trainer BOOKING
 CREATE TABLE member_trainer_booking (
-    member_booking_id INT PRIMARY KEY REFERENCES member_bookings(member_booking_id) ON DELETE CASCADE,
+    member_booking_id INT REFERENCES member_bookings(member_booking_id) ON DELETE CASCADE,
     trainer_booking_id INT REFERENCES trainer_booking(trainer_booking_id) ON DELETE CASCADE,
     member_id INT REFERENCES members(member_id),
-    trainer_id INT REFERENCES trainers(trainer_id)
+    trainer_id INT REFERENCES trainers(trainer_id),
+    PRIMARY KEY (member_booking_id, trainer_booking_id) 
 );
 
 
@@ -187,7 +188,7 @@ CREATE TABLE payments (
     payment_id SERIAL PRIMARY KEY,
     member_id INT REFERENCES members(member_id),
     booking_id INT REFERENCES member_bookings(member_booking_id) ON DELETE CASCADE,
-    date_paid DATE,
-    amount_paid FLOAT,
-    processed BOOLEAN DEFAULT FALSE
+    date_paid DATE NOT NULL,
+    amount_paid FLOAT NOT NULL,
+    processed BOOLEAN DEFAULT FALSE NOT NULL
 );

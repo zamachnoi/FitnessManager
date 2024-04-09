@@ -38,6 +38,8 @@ CREATE TABLE users (
     type USER_TYPE CHECK (type IN ('Member', 'Trainer', 'Admin')) NOT NULL
 );
 
+CREATE INDEX usernameIndex ON users (username);
+
 -- Creating Trainers table
 CREATE TABLE trainers (
     trainer_id INT PRIMARY KEY REFERENCES users(user_id) ON DELETE CASCADE,
@@ -61,7 +63,7 @@ CREATE TABLE admins (
 CREATE TABLE rooms (
     room_id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
-    room_number INT NOT NULL
+    room_number INT UNIQUE NOT NULL
 );
 
 -- Creating Trainer Availability table
@@ -88,8 +90,6 @@ CREATE TABLE equipment (
     last_maintained TIMESTAMPTZ NOT NULL
 );
 
-
-
 -- Creating Classes table
 CREATE TABLE classes (
     class_id SERIAL PRIMARY KEY,
@@ -101,6 +101,9 @@ CREATE TABLE classes (
     class_time TIMESTAMPTZ NOT NULL
 );
 
+CREATE INDEX classTimeIndex ON classes (class_time);
+CREATE INDEX roomIdIndex ON classes (room_id);
+
 -- Create Bookings Table
 CREATE TABLE member_bookings (
     member_booking_id SERIAL PRIMARY KEY,
@@ -108,6 +111,8 @@ CREATE TABLE member_bookings (
     booking_timestamp TIMESTAMPTZ NOT NULL,
     type USER_BOOKING_TYPE CHECK (type IN ('Trainer', 'Class')) NOT NULL
 );
+
+CREATE INDEX memberBookingMemberIdIndex ON member_bookings (member_id);
 
 -- Creating Room Bookings table
 CREATE TABLE room_bookings (
@@ -117,12 +122,16 @@ CREATE TABLE room_bookings (
     class_id INT REFERENCES classes(class_id) ON DELETE CASCADE
 );
 
+CREATE INDEX roomBookingClassIdIndex ON room_bookings (class_id);
+
 -- Creating Member Class Booking table
 CREATE TABLE member_class_booking (
     member_class_booking_id INT PRIMARY KEY REFERENCES member_bookings(member_booking_id) ON DELETE CASCADE,
     member_id INT REFERENCES members(member_id),
     class_id INT REFERENCES classes(class_id) ON DELETE CASCADE
 );
+
+CREATE INDEX memberBookingClassIdIndex ON member_class_booking (class_id);
 
 -- Creating exercise_routines table
 CREATE TABLE exercise_routines (
@@ -133,7 +142,7 @@ CREATE TABLE exercise_routines (
 -- Creating Exercises table
 CREATE TABLE exercises (
     exercise_id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL,
+    name TEXT UNIQUE NOT NULL,
     type TEXT NOT NULL,
     description TEXT NOT NULL,
     equipment_type_id INT REFERENCES equipment_type(equipment_type_id)

@@ -32,13 +32,13 @@ INSERT INTO routine_exercises (routine_id, exercise_id) VALUES (2, 3);
 INSERT INTO routine_exercises (routine_id, exercise_id) VALUES (2, 4);
 
 
-INSERT INTO users (user_id, last_name, first_name, username, password, type) VALUES (1, 'Member', '1', 'm1', '123', 'Member');
+INSERT INTO users (user_id, last_name, first_name, username, password, type) VALUES (1, '1', 'Member', 'm1', '123', 'Member');
 INSERT INTO members (member_id, weight) VALUES (1, 300);
 
-INSERT INTO users (user_id, last_name, first_name, username, password, type) VALUES (2, 'Member', '2', 'm2', '123', 'Member');
+INSERT INTO users (user_id, last_name, first_name, username, password, type) VALUES (2, '2', 'Member', 'm2', '123', 'Member');
 INSERT INTO members (member_id, weight) VALUES (2, 200);
 
-INSERT INTO users (user_id, last_name, first_name, username, password, type) VALUES (3, 'Member', '3', 'm3', '123', 'Member');
+INSERT INTO users (user_id, last_name, first_name, username, password, type) VALUES (3, '3', 'Member', 'm3', '123', 'Member');
 INSERT INTO members (member_id, weight) VALUES (3, 175);
 
 INSERT INTO users (user_id, last_name, first_name, username, password, type) VALUES (4, 'Trainer', '1', 't1', '123', 'Trainer');
@@ -75,3 +75,5 @@ INSERT INTO member_health_statistics (member_id, systolic_bp, diastolic_bp, hear
 INSERT INTO rooms (name, room_number) VALUES ('test', 101);
 
 INSERT INTO rooms (name, room_number) VALUES ('test2', 102);
+
+INSERT INTO classes(class_id, name, trainer_id, room_id, trainer_booking_id, price, class_time) VALUES (1, 'class1', 5, 1, 1, 50, '2024-04-16T12:12:00Z')

@@ -27,7 +27,7 @@ export const UserProvider: FunctionComponent<UserProviderProps> = ({
 	children,
 }) => {
 	const authEnabled = true
-
+	ß
 	const [userId, setUserId] = useState<number | null>(null)
 	const [userType, setUserType] = useState<
 		"Member" | "Trainer" | "Admin" | null

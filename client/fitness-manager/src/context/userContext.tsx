@@ -11,6 +11,8 @@ import React, {
 type UserContextType = {
 	userId: string | null
 	setUserId: (userId: string | null) => void
+	userType: "Member" | "Trainer" | "Admin" | null
+	setUserType: (userType: "Member" | "Trainer" | "Admin" | null) => void
 }
 
 // Define the context with an initial undefined value

@@ -2,8 +2,8 @@ import { Users, Trainers } from "../db/types"
 
 export type TrainersData = Omit<Users, "user_id" | "password"> & Trainers
 
-export type TrainersApiRequest =    Omit<Users, "user_id" | "type"> &
-                                    Trainers & { type: "Trainer" }
+export type TrainersApiRequest = Omit<Users, "user_id" | "type"> &
+	Trainers & { type: "Trainer" }
 
 export type TrainersApiResponse = {
 	message: string
@@ -41,7 +41,6 @@ export type TrainerDataUpdateRequest = {
 	password?: string | null
 }
 
-
 // AvailableTrainers
 export type AvailableTrainersData = {
 	trainer_id: number
@@ -77,7 +76,6 @@ export type TrainerBookingData = {
 		room_number: number | null
 		class_time: Date | null
 	}[]
-	
 }
 
 export type TrainerBookingsResponse = {

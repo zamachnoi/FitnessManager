@@ -75,18 +75,21 @@ export async function bookTrainer(
 				booking_timestamp,
 			}
 
+			const trainerRate = await db
+				.selectFrom("trainers")
+				.select("rate")
+				.where("trainer_id", "=", trainer_id)
+				.executeTakeFirstOrThrow()
+			if (trainerRate.rate === null || trainerRate.rate === undefined) {
+				// end the transaction and don't commit
+				throw new Error("Trainer rate is not set")
+			}
 			const payment = await transaction
 				.insertInto("payments")
 				.values({
 					member_id: memberId,
 					booking_id: bookingData.member_booking_id,
-					amount_paid: (
-						await db
-							.selectFrom("trainers")
-							.select("rate")
-							.where("trainer_id", "=", trainer_id)
-							.executeTakeFirstOrThrow()
-					).rate,
+					amount_paid: trainerRate.rate,
 					date_paid: new Date().toUTCString(),
 					processed: false,
 				})

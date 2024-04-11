@@ -1,12 +1,13 @@
 import { Rooms, RoomBookings } from "../db/types"
 
 export type RoomAndBookingDbData = Omit<
-	Rooms & RoomBookings,
+	Rooms,
 	"room_id" | "booking_id" | "class_time"
 > & {
 	room_id: number
 	booking_id: number | null
 	class_time: Date | null
+	class_id: number | null
 }
 
 export type RoomAndBookingData = {

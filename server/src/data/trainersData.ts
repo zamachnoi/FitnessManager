@@ -133,19 +133,31 @@ export async function updateTrainer(
 		let updatedUser
 		let updatedTrainer
 
-		if (Object.values(userData).some((value) => value !== undefined)) {
+		const cleanedUserData = Object.fromEntries(
+			Object.entries(userData).filter(
+				([key, value]) => value !== undefined
+			)
+		)
+
+		const cleanedTrainerData = Object.fromEntries(
+			Object.entries(trainerData).filter(
+				([key, value]) => value !== undefined
+			)
+		)
+
+		if (Object.values(cleanedUserData).length > 0) {
 			updatedUser = await trx
 				.updateTable("users")
-				.set(userData)
+				.set(cleanedUserData)
 				.where("user_id", "=", trainerId)
 				.returningAll()
 				.executeTakeFirstOrThrow()
 		}
 
-		if (Object.values(trainerData).some((value) => value !== undefined)) {
+		if (Object.values(cleanedTrainerData).length > 0) {
 			updatedTrainer = await trx
 				.updateTable("trainers")
-				.set(trainerData)
+				.set(cleanedTrainerData)
 				.where("trainer_id", "=", trainerId)
 				.returningAll()
 				.executeTakeFirstOrThrow()

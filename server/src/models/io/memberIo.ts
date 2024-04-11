@@ -1,7 +1,9 @@
 import { Users, Members } from "../db/types"
 import { ApiResponse } from "./util"
 
-export type MemberDataResponse = Omit<Users, "user_id" | "password"> & Members
+export type MemberDataResponse = Omit<Users, "user_id" | "password"> & {
+	weight?: number | null
+}
 
 export type MemberApiResponse = {
 	message: string

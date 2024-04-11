@@ -20,12 +20,12 @@ export type EquipmentArrayResponse = {
 }
 
 export type CreateNewEquipmentRequest = {
-	equipment_name: string | null
-	equipment_type_id: number | null
+	equipment_name: string
+	equipment_type_id: number
 }
 
 export type CreateNewEquipmentAndTypeRequest = {
-	equipment_name: string | null
+	equipment_name: string
 	equipment_type_name: string
 }
 

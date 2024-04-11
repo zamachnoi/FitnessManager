@@ -82,6 +82,8 @@ async function createEquipmentAndType(
 			.returningAll()
 			.executeTakeFirstOrThrow()
 
+		// if any of the equipment type stuff is undefined or null throw
+
 		const newEquipmentData = await trx
 			.insertInto("equipment")
 			.values({

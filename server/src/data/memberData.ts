@@ -94,55 +94,53 @@ export async function createMember(
 export async function updateMember(
 	memberId: number,
 	newData: MemberDataUpdate
-) {
+): Promise<MemberDataResponse> {
 	const { memberData, userData } = newData
 
 	const updatedData = await db.transaction().execute(async (trx) => {
 		let updatedUser
 		let updatedMember
 
-		if (Object.values(userData).some((value) => value !== undefined)) {
+		const cleanedUserData = Object.fromEntries(
+			Object.entries(userData).filter(
+				([key, value]) => value !== undefined && value !== null
+			)
+		)
+
+		const cleanedMemberData = Object.fromEntries(
+			Object.entries(memberData).filter(
+				([key, value]) => value !== undefined
+			)
+		)
+
+		if (Object.values(cleanedUserData).length > 0) {
 			updatedUser = await trx
 				.updateTable("users")
-				.set(userData)
+				.set(cleanedUserData)
 				.where("user_id", "=", memberId)
 				.returningAll()
 				.executeTakeFirstOrThrow()
 		}
 
-		if (Object.values(memberData).some((value) => value !== undefined)) {
+		if (Object.values(cleanedMemberData).length > 0) {
 			updatedMember = await trx
 				.updateTable("members")
-				.set(memberData)
+				.set(cleanedMemberData)
 				.where("member_id", "=", memberId)
 				.returningAll()
 				.executeTakeFirstOrThrow()
 		}
-
-		if (!updatedUser) {
-			updatedUser = await trx
-				.selectFrom("users")
-				.where("user_id", "=", memberId)
-				.selectAll()
-				.executeTakeFirstOrThrow()
-		}
-
-		if (!updatedMember) {
-			updatedMember = await trx
-				.selectFrom("members")
-				.where("member_id", "=", memberId)
-				.selectAll()
-				.executeTakeFirstOrThrow()
-		}
-
-		const updatedMemberData = {
-			...updatedUser,
-			...updatedMember,
-		}
-		return updatedMemberData
+		return
 	})
 
-	return util.removePassword(updatedData)
+	const updated = await db
+		.selectFrom("members")
+		.innerJoin("users", "members.member_id", "users.user_id")
+		.where("members.member_id", "=", memberId)
+		.selectAll()
+		.executeTakeFirstOrThrow()
+
+	return util.removePassword(updated)
 }
 
 export async function SearchMembersProfileFullName(

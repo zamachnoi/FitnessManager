@@ -41,13 +41,13 @@ INSERT INTO members (member_id, weight) VALUES (2, 200);
 INSERT INTO users (user_id, last_name, first_name, username, password, type) VALUES (3, '3', 'Member', 'm3', '123', 'Member');
 INSERT INTO members (member_id, weight) VALUES (3, 175);
 
-INSERT INTO users (user_id, last_name, first_name, username, password, type) VALUES (4, 'Trainer', '1', 't1', '123', 'Trainer');
+INSERT INTO users (user_id, last_name, first_name, username, password, type) VALUES (4, '1', 'Trainer', 't1', '123', 'Trainer');
 INSERT INTO trainers (trainer_id, start_availability, end_availability ,rate) VALUES (4, '00:00:00', '23:59:59', 50);
 
-INSERT INTO users (user_id, last_name, first_name, username, password, type) VALUES (5, 'Trainer', '2', 't2', '123', 'Trainer');
+INSERT INTO users (user_id, last_name, first_name, username, password, type) VALUES (5, '2', 'Trainer', 't2', '123', 'Trainer');
 INSERT INTO trainers (trainer_id, start_availability, end_availability ,rate) VALUES (5, '00:00:00', '23:59:59', 60);
 
-INSERT INTO users (user_id, last_name, first_name, username, password, type) VALUES (6, 'Trainer', '3', 't3', '123', 'Trainer');
+INSERT INTO users (user_id, last_name, first_name, username, password, type) VALUES (6, '3', 'Trainer', 't3', '123', 'Trainer');
 INSERT INTO trainers (trainer_id, start_availability, end_availability, rate) VALUES (6, '12:00:00', '13:00:00', 70);
 
 INSERT INTO users (user_id, last_name, first_name, username, password, type) VALUES (7, 'Admin', '1', 'a1', '123', 'Admin');
@@ -76,4 +76,6 @@ INSERT INTO rooms (name, room_number) VALUES ('test', 101);
 
 INSERT INTO rooms (name, room_number) VALUES ('test2', 102);
 
-INSERT INTO classes(class_id, name, trainer_id, room_id, trainer_booking_id, price, class_time) VALUES (1, 'class1', 5, 1, 3, 50, '2024-04-16T12:12:00Z')
+INSERT INTO trainer_booking(trainer_booking_id,trainer_id, trainer_booking_timestamp) VALUES (2, 5, '2024-04-16T12:12:00Z');
+INSERT INTO classes(class_id, name, trainer_id, room_id, trainer_booking_id, price, class_time) VALUES (1, 'class1', 5, 1, 2, 50, '2024-04-16T12:12:00Z');
+INSERT INTO room_bookings(booking_id, room_id, class_time, class_id) VALUES (1, 1, '2024-04-16T12:12:00Z', 1);

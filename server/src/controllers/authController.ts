@@ -66,8 +66,6 @@ export async function generateAuthLoginPostResponse(
 
 		req.session.user = sessionData
 
-		console.log(req.session.user)
-
 		return res
 	} catch (e) {
 		return {
@@ -90,8 +88,6 @@ export async function generateAuthLogoutPostResponse(
 			}
 		}
 	})
-
-	console.log(req.session)
 
 	return {
 		message: "Logged out",

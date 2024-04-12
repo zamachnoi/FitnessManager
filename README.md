@@ -17,38 +17,57 @@ Ensure Docker and Node.js are installed on your system. Docker will be used to c
 
 1. **Launch PostgreSQL Container**
 
-    Use Docker to run a PostgreSQL container:
+    There are 2 choices, running the database in docker, or in the system...
 
-    ```bash
-    docker run -d --name fitnessManager -e POSTGRES_PASSWORD=test -p 5432:5432 postgres
+    - Docker
+      Use Docker to run a PostgreSQL container:
+
+        ```bash
+        docker run -d --name fitnessManager -e POSTGRES_PASSWORD=test -p 5432:5432 postgres
+        ```
+
+        If it does not work, you probably have something on port 5432, you can change the port by modifying the command like so:
+
+        ```bash
+        docker run -d --name fitnessManager -e POSTGRES_PASSWORD=test -p <port>:5432 postgres
+        ```
+
+        Replace port with the port you want to use, 15432 is a good one. Then change DB_PORT in the .env file in `/server`
+
+    - System
+      If you have postgres installed, it should already be setup.
+
+2. **Create .env file in server**
+   Create a .env file in the `server` directory with these contents
+
+    _Change the `DB_PORT` variable to what your db port is_
+
+    _Change the `PGPASSWORD` variable to what your db password is_
+
+    ```.env
+     PORT=3000
+     DB_PORT=15432
+     DATABASE_URL=postgres://postgres:test@localhost:${DB_PORT}/postgres
+     SESSION_SECRET=secretkey123
+     AUTH=true
+     PGPASSWORD=test
     ```
 
-    If it does not work, you probably have something on port 5432, you can change the port by modifying the command like so:
+3. **Run the appropriate script for your system type**
+
+    - Linux/Mac:
 
     ```bash
-    docker run -d --name fitnessManager -e POSTGRES_PASSWORD=test -p <port>:5432 postgres
+    cd database
+    bash database.sh
     ```
 
-    Replace port with the port you want to use, 15432 is a good one. Then change DB_PORT in the .env file in `/server`
+    - Windows
 
-2. **Set Database Password in Environment Variables**
-
-    To ease the connection process, set the database password as an environment variable:
-
-    ```bash
-    export PGPASSWORD=test
     ```
+    cd database
+    database.bat
 
-    For persistence across sessions, add this line to `~/.bashrc` or `~/.zshrc`.
-
-3. **Run the DDL Script**
-
-    Initialize the database schema:
-
-    Change the port if necessary.
-
-    ```bash
-    psql -h localhost -p 5432 -U postgres -d postgres -f setup.sql
     ```
 
 ## Server
@@ -85,6 +104,21 @@ Ensure Docker and Node.js are installed on your system. Docker will be used to c
 
     ```bash
     npm run start
+    ```
+
+## Client
+
+1. **Navigate to the client directory**
+    ```bash
+    cd client/fitness-manager
+    ```
+2. **Install all packages**
+    ```bash
+    npm i
+    ```
+3. **Start the server**
+    ```bash
+    npm run dev
     ```
 
 ## Development

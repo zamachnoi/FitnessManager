@@ -1,6 +1,9 @@
 @echo off
-set PGPASSWORD=test
-psql -h localhost -p 15432 -U postgres -d postgres -f ddl.sql
-psql -h localhost -p 15432 -U postgres -d postgres -f dml.sql
-cd ../server
-npx kysely-codegen --out-file ../server/src/models/db/types.d.ts
+FOR /F "tokens=* delims=" %%G IN (../server/.env) DO (
+    SET "line=%%G"
+    IF "!line:~0,7!"=="DB_PORT=" SET "DB_PORT=!line:~7!"
+    IF "!line:~0,11!"=="PG_PASSWORD=" SET "PG_PASSWORD=!line:~11!"
+)
+
+psql -h localhost -p %DB_PORT% -U postgres -d postgres -f ddl.sql
+psql -h localhost -p %DB_PORT% -U postgres -d postgres -f dml.sql

@@ -76,9 +76,9 @@ INSERT INTO rooms (name, room_number) VALUES ('test', 101);
 
 INSERT INTO rooms (name, room_number) VALUES ('test2', 102);
 
-INSERT INTO trainer_booking(trainer_booking_id,trainer_id, trainer_booking_timestamp) VALUES (2, 4, '2024-04-16T12:12:00Z');
-INSERT INTO classes(class_id, name, trainer_id, room_id, trainer_booking_id, price, class_time) VALUES (1, 'class1', 4, 1, 2, 50, '2024-04-16T12:12:00Z');
-INSERT INTO room_bookings(booking_id, room_id, class_time, class_id) VALUES (1, 1, '2024-04-16T12:12:00Z', 1);
+INSERT INTO trainer_booking(trainer_booking_id,trainer_id, trainer_booking_timestamp) VALUES (2, 4, '2024-04-16T12:00:00Z');
+INSERT INTO classes(class_id, name, trainer_id, room_id, trainer_booking_id, price, class_time) VALUES (1, 'class1', 4, 1, 2, 50, '2024-04-16T12:00:00Z');
+INSERT INTO room_bookings(booking_id, room_id, class_time, class_id) VALUES (1, 1, '2024-04-16T12:00:00Z', 1);
 
 SELECT setval('users_user_id_seq', (SELECT MAX(user_id) FROM users));
 

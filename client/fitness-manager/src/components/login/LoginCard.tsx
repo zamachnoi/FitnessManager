@@ -43,9 +43,9 @@ export const LoginCard = ({}) => {
 		const registerDetails = {
 			username: username,
 			password: password,
-			firstName: firstName,
-			lastName: lastName,
-			accountType: accountType,
+			first_name: firstName,
+			last_name: lastName,
+			type: accountType,
 		}
 		// if any of them is empty, set error text
 		if (Object.values(registerDetails).includes("")) {
@@ -71,9 +71,12 @@ export const LoginCard = ({}) => {
 			})
 
 			if (login.status === 200) {
+				setError("")
 				user.setUserId(login.data.user_id)
 				user.setUserType(login.data.type)
 				navigate("/dashboard")
+			} else {
+				setError("Invalid username or password")
 			}
 		}
 		if (!isLogin) {
@@ -152,7 +155,7 @@ export const LoginCard = ({}) => {
 								signup
 							</a>
 						</p>
-						<p className="text-red">{error}</p>
+						<p className="text-red-500">{error}</p>
 					</div>
 				) : (
 					<p>

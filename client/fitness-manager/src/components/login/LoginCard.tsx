@@ -23,6 +23,8 @@ import { Button } from "@/components/ui/button"
 import { useNavigate } from "react-router"
 import { useUser } from "@/context/userContext"
 
+type MemberType = "Member" | "Trainer" | "Admin" | ""
+
 export const LoginCard = ({}) => {
 	const navigate = useNavigate()
 
@@ -32,7 +34,34 @@ export const LoginCard = ({}) => {
 	const [password, setPassword] = useState("")
 	const [firstName, setFirstName] = useState("")
 	const [lastName, setLastName] = useState("")
-	const [accountType, setAccountType] = useState("")
+	const [accountType, setAccountType] = useState<
+		"Member" | "Trainer" | "Admin" | ""
+	>("")
+	const [error, setError] = useState("")
+
+	const register = async () => {
+		const registerDetails = {
+			username: username,
+			password: password,
+			firstName: firstName,
+			lastName: lastName,
+			accountType: accountType,
+		}
+		// if any of them is empty, set error text
+		if (Object.values(registerDetails).includes("")) {
+			setError("Please fill in all fields")
+			return
+		} else {
+			setError("")
+		}
+
+		const register = await postData("auth/register", registerDetails)
+		if (register.status === 200) {
+			user.setUserId(register.data.user_id)
+			user.setUserType(register.data.type)
+			navigate("/dashboard")
+		}
+	}
 
 	const handleSubmit = async () => {
 		if (isLogin) {
@@ -48,18 +77,7 @@ export const LoginCard = ({}) => {
 			}
 		}
 		if (!isLogin) {
-			const register = await postData("auth/register", {
-				username: username,
-				password: password,
-				firstName: firstName,
-				lastName: lastName,
-				accountType: accountType,
-			})
-			if (register.status === 200) {
-				user.setUserId(register.data.user_id)
-				user.setUserType(register.data.type)
-				navigate("/dashboard")
-			}
+			register()
 		}
 	}
 
@@ -105,7 +123,11 @@ export const LoginCard = ({}) => {
 				/>
 
 				{!isLogin ? (
-					<Select onValueChange={(value) => setAccountType(value)}>
+					<Select
+						onValueChange={(value: MemberType) =>
+							setAccountType(value)
+						}
+					>
 						<SelectTrigger>
 							<SelectValue placeholder="Account Type" />
 						</SelectTrigger>
@@ -123,12 +145,15 @@ export const LoginCard = ({}) => {
 			</CardContent>
 			<CardFooter>
 				{isLogin ? (
-					<p>
-						Don't have an account?{" "}
-						<a href="#" onClick={() => setIsLogin(false)}>
-							signup
-						</a>
-					</p>
+					<div>
+						<p>
+							Don't have an account?{" "}
+							<a href="#" onClick={() => setIsLogin(false)}>
+								signup
+							</a>
+						</p>
+						<p className="text-red">{error}</p>
+					</div>
 				) : (
 					<p>
 						Already have an account?{" "}

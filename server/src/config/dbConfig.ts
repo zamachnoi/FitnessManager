@@ -1,11 +1,14 @@
 const port = process.env.DB_PORT || 5432
-
+const pgPassword = process.env.DB_PASSWORD || "test"
 const config: { [key: string]: { connectionString: string } } = {
 	development: {
 		connectionString: `postgres://postgres:test@localhost:${port}/postgres`,
 	},
 	production: {
-		connectionString: process.env.DATABASE_URL || "", // Assuming this is set in your production environment
+		connectionString:
+			`postgres://postgres:${pgPassword}@localhost:${port}/postgres` ||
+			process.env.DATABASE_URL ||
+			"",
 	},
 }
 

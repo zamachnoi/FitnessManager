@@ -4,7 +4,7 @@ This guide provides a step-by-step walkthrough for setting up the development en
 
 ## Prerequisites
 
--   Docker
+-   Docker / Postgres Database running
 -   Node.js and npm
 -   PostgreSQL client tools (e.g., psql)
 -   Familiarity with bash or similar shell environments
@@ -50,10 +50,10 @@ Ensure Docker and Node.js are installed on your system. Docker will be used to c
     ```.env
     PORT=3000
     DB_PORT=15432
-    DATABASE_URL=postgres://postgres:test@localhost:${DB_PORT}/postgres
+    PGPASSWORD=test
+    DATABASE_URL=postgres://postgres:${PGPASSWORD}@localhost:${DB_PORT}/postgres
     SESSION_SECRET=secretkey123
     AUTH=true
-    PGPASSWORD=test
     ```
 
 3.  **Run the appropriate script for your system type**
@@ -61,15 +61,15 @@ Ensure Docker and Node.js are installed on your system. Docker will be used to c
     -   Linux/Mac:
 
         ```bash
-        cd database
-        bash database.sh
+        cd sql
+        bash setup.sh
         ```
 
     -   Windows
 
         ```
-        cd database
-        database.bat
+        cd sql
+        setup.bat
         ```
 
 ## Server
@@ -110,18 +110,61 @@ Ensure Docker and Node.js are installed on your system. Docker will be used to c
 
 ## Client
 
-1. **Navigate to the client directory**
+1. **Open a new terminal window**
+
+2. **Navigate to the client directory**
+
     ```bash
     cd client/fitness-manager
     ```
-2. **Install all packages**
+
+3. **Install all packages**
+
     ```bash
     npm i
     ```
-3. **Start the server**
+
+4. **Start the server**
+
     ```bash
     npm run dev
     ```
+
+## Using the applcation:
+
+1. **Visit site**
+
+    [localhost:5173](http://localhost:5173)
+
+2. **Register, or login to pre-made account**
+
+    - Register:
+
+        1. Click the login button in the top right
+
+        2. Click the sign-up button at the bottom of the form
+
+        3. Enter credentials, first name, last name, and account type.
+
+    - Login:
+
+        _Premade account credentials format: <username>:<password>_
+
+        1. Click the login button
+
+        2. Select the user type you would like to login as from this list
+
+            `Member`: `m1:123`
+            `Trainer`: `t1:123`
+            `Admin`: `a1:123`
+
+        3. Enter the credentials.
+
+3. **View the dasboard**
+
+    1. Click the dashboard button in the top right;
+
+    _If for some reason the dashboard isn't showing anything you may need to login again_
 
 ## Development
 

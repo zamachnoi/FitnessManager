@@ -56,9 +56,9 @@ INSERT INTO admins (admin_id) VALUES (7);
 
 
 INSERT INTO member_bookings (member_id, booking_timestamp, type) VALUES (1, '2024-04-30T16:00:00Z', 'Trainer');
-INSERT INTO trainer_booking (trainer_id, trainer_booking_timestamp) VALUES (6, '2024-04-30T16:00:00Z');
+INSERT INTO trainer_booking (trainer_id, trainer_booking_timestamp) VALUES (4, '2024-04-30T16:00:00Z');
 
-INSERT INTO member_trainer_booking (member_booking_id, trainer_booking_id, member_id, trainer_id) VALUES (1, 1, 1, 6);
+INSERT INTO member_trainer_booking (member_booking_id, trainer_booking_id, member_id, trainer_id) VALUES (1, 1, 1, 4);
 
 INSERT INTO payments (member_id, booking_id, date_paid, amount_paid, processed) VALUES (1, 1, '2024-04-01', 70, FALSE);
 
@@ -76,6 +76,6 @@ INSERT INTO rooms (name, room_number) VALUES ('test', 101);
 
 INSERT INTO rooms (name, room_number) VALUES ('test2', 102);
 
-INSERT INTO trainer_booking(trainer_booking_id,trainer_id, trainer_booking_timestamp) VALUES (2, 5, '2024-04-16T12:12:00Z');
-INSERT INTO classes(class_id, name, trainer_id, room_id, trainer_booking_id, price, class_time) VALUES (1, 'class1', 5, 1, 2, 50, '2024-04-16T12:12:00Z');
+INSERT INTO trainer_booking(trainer_booking_id,trainer_id, trainer_booking_timestamp) VALUES (2, 4, '2024-04-16T12:12:00Z');
+INSERT INTO classes(class_id, name, trainer_id, room_id, trainer_booking_id, price, class_time) VALUES (1, 'class1', 4, 1, 2, 50, '2024-04-16T12:12:00Z');
 INSERT INTO room_bookings(booking_id, room_id, class_time, class_id) VALUES (1, 1, '2024-04-16T12:12:00Z', 1);

@@ -73,6 +73,7 @@ const GoalForm = ({
 							size="icon"
 							onClick={() => {
 								setIsDeleted(true)
+								deleteGoal(goalId.toString())
 							}}
 						>
 							<X />

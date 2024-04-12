@@ -45,3 +45,9 @@ equipmentRoute.patch(
 		res.status(response.status).send(response)
 	}
 )
+
+equipmentRoute.get("/equipmenttypes", async (req, res) => {
+	const response =
+		await equipmentController.generateGetAllEquipmentTypesResponse()
+	res.status(response.status).send(response)
+})

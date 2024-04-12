@@ -1,3 +1,9 @@
+import { EquipmentType } from "../db/types"
+
+export type EquimentTypeData = Omit<EquipmentType, "equipment_type_id"> & {
+	equipment_type_id: number
+}
+
 export type EquimentData = {
 	equipment_id: number
 	name: string | null
@@ -32,3 +38,9 @@ export type CreateNewEquipmentAndTypeRequest = {
 export type CreateEquipmentRequest =
 	| CreateNewEquipmentAndTypeRequest
 	| CreateNewEquipmentRequest
+
+export type EquipmentTypeArrayResponse = {
+	status: number
+	message: string
+	data: EquimentTypeData[] | null
+}

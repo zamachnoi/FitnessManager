@@ -22,9 +22,12 @@ const GoalForm = ({
 		return res.data
 	}
 
-	const [goal, setGoal] = useState("")
+	const [goal, setGoal] = useState<string>("")
 
 	const onAdd = async () => {
+		if (!goal) {
+			return
+		}
 		const newGoal = await postGoal(parseInt(goal))
 		setGoalsState([...goals, newGoal])
 	}

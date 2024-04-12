@@ -21,7 +21,7 @@ type CreateExercisesProps = {
 
 type EquipmentType = {
 	equipment_type_id: number
-	equipment_type_name: string
+	name: string
 }
 
 type ExerciseRequest = {
@@ -44,25 +44,9 @@ export default function CreateExercises(props: CreateExercisesProps) {
 	const [equipmentTypes, setEquipmentTypes] = useState([])
 
 	const getEquipmentTypes = async () => {
-		getData("equipment").then((response) => {
-			const allEquipment = response.data
-			const reducedEquipment = allEquipment
-				.map((equipment: any) => ({
-					equipment_type_id: equipment.equipment_type_id,
-					equipment_type_name: equipment.equipment_type_name,
-				}))
-				.reduce((acc: any, equipment: any) => {
-					const existingEquipment = acc.find(
-						(item: any) =>
-							item.equipment_type_id ===
-							equipment.equipment_type_id
-					)
-					if (!existingEquipment) {
-						return acc.concat([equipment])
-					}
-					return acc
-				}, [])
-			setEquipmentTypes(reducedEquipment)
+		getData("equipmentTypes").then((response) => {
+			console.log(response.data)
+			setEquipmentTypes(response.data)
 		})
 		console.log(equipmentTypes)
 	}
@@ -171,7 +155,7 @@ export default function CreateExercises(props: CreateExercisesProps) {
 								value={equipment.equipment_type_id.toString()}
 								key={equipment.equipment_type_id}
 							>
-								{equipment.equipment_type_name}
+								{equipment.name}
 							</SelectItem>
 						))}
 					</SelectContent>

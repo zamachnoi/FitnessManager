@@ -4,12 +4,14 @@ import {
 	createEquipment,
 	startMaintenance,
 	endMaintenance,
+	getAllEquipmentTypes,
 } from "../data/equipmentData"
 
 import {
 	EquipmentResponse,
 	EquipmentArrayResponse,
 	CreateEquipmentRequest,
+	EquipmentTypeArrayResponse,
 } from "../models/io/equipmentIo"
 
 export async function generateGetAllEquipmentGetResponse(): Promise<EquipmentArrayResponse> {
@@ -103,6 +105,25 @@ export async function generateEndMaintenancePatchResponse(
 	} catch (e) {
 		return {
 			message: "Could not end maintenance",
+			status: 404,
+			data: null,
+		}
+	}
+}
+
+export async function generateGetAllEquipmentTypesResponse(): Promise<EquipmentTypeArrayResponse> {
+	const equipmentTypes = await getAllEquipmentTypes()
+
+	try {
+		return {
+			message: "success",
+			status: 200,
+			data: equipmentTypes,
+		}
+	} catch (e) {
+		console.log(e)
+		return {
+			message: "Could not find equipment types",
 			status: 404,
 			data: null,
 		}

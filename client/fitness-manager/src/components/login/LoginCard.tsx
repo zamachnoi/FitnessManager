@@ -147,24 +147,24 @@ export const LoginCard = ({}) => {
 				<Button onClick={handleSubmit}>{buttonText}</Button>
 			</CardContent>
 			<CardFooter>
-				{isLogin ? (
-					<div>
+				<div className="flex flex-col">
+					{isLogin ? (
 						<p>
 							Don't have an account?{" "}
 							<a href="#" onClick={() => setIsLogin(false)}>
 								signup
 							</a>
 						</p>
-						<p className="text-red-500">{error}</p>
-					</div>
-				) : (
-					<p>
-						Already have an account?{" "}
-						<a href="#" onClick={() => setIsLogin(true)}>
-							login
-						</a>
-					</p>
-				)}
+					) : (
+						<p>
+							Already have an account?{" "}
+							<a href="#" onClick={() => setIsLogin(true)}>
+								login
+							</a>
+						</p>
+					)}
+					<p className="text-red-500">{error}</p>
+				</div>
 			</CardFooter>
 		</Card>
 	)

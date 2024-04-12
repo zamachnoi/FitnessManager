@@ -4,7 +4,7 @@ INSERT INTO equipment_type (name) VALUES ('Squat Rack');
 INSERT INTO equipment_type (name) VALUES ('Dumbbell');
 INSERT INTO equipment_type (name) VALUES ('Elliptical');
 INSERT INTO equipment_type (name) VALUES ('Rowing Machine');
-INSERT INTO equipment_type (name) VALUES ('None')
+INSERT INTO equipment_type (name) VALUES ('None');
 
 INSERT INTO equipment (name, equipment_type_id, under_maintenance, last_maintained) VALUES ('Treadmill 1', 1, FALSE, NOW());
 INSERT INTO equipment (name, equipment_type_id, under_maintenance, last_maintained) VALUES ('Treadmill 2', 1, FALSE, NOW());

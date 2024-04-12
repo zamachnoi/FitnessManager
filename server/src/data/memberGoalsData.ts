@@ -30,6 +30,7 @@ export async function getMemberGoals(
 		.selectFrom("member_goals")
 		.where("member_id", "=", member_id)
 		.selectAll()
+		.orderBy("goal_start", "asc")
 		.execute()
 
 	return memberGoals

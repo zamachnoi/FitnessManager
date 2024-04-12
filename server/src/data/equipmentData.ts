@@ -5,6 +5,7 @@ import {
 	CreateEquipmentRequest,
 	CreateNewEquipmentRequest,
 	CreateNewEquipmentAndTypeRequest,
+	EquimentTypeData,
 } from "../models/io/equipmentIo"
 
 export async function getAllEquipment(): Promise<EquimentData[]> {
@@ -161,4 +162,13 @@ export async function endMaintenance(
 	equipmentData.last_maintained = equipment.last_maintained
 
 	return equipmentData
+}
+
+export async function getAllEquipmentTypes(): Promise<EquimentTypeData[]> {
+	const equipmentTypes = await db
+		.selectFrom("equipment_type")
+		.selectAll()
+		.execute()
+
+	return equipmentTypes
 }

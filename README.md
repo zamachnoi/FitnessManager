@@ -15,12 +15,13 @@ Ensure Docker and Node.js are installed on your system. Docker will be used to c
 
 ### Setup
 
-1. **Launch PostgreSQL Container**
+1.  **Launch PostgreSQL Container**
 
     There are 2 choices, running the database in docker, or in the system...
 
-    - Docker
-      Use Docker to run a PostgreSQL container:
+    -   Docker:
+
+        Use Docker to run a PostgreSQL container:
 
         ```bash
         docker run -d --name fitnessManager -e POSTGRES_PASSWORD=test -p 5432:5432 postgres
@@ -34,41 +35,42 @@ Ensure Docker and Node.js are installed on your system. Docker will be used to c
 
         Replace port with the port you want to use, 15432 is a good one. Then change DB_PORT in the .env file in `/server`
 
-    - System
-      If you have postgres installed, it should already be setup.
+    -   System:
 
-2. **Create .env file in server**
-   Create a .env file in the `server` directory with these contents
+        If you have postgres installed, it should already be setup.
+
+2.  **Create .env file in server**
+
+    Create a .env file in the `server` directory with these contents
 
     _Change the `DB_PORT` variable to what your db port is_
 
     _Change the `PGPASSWORD` variable to what your db password is_
 
     ```.env
-     PORT=3000
-     DB_PORT=15432
-     DATABASE_URL=postgres://postgres:test@localhost:${DB_PORT}/postgres
-     SESSION_SECRET=secretkey123
-     AUTH=true
-     PGPASSWORD=test
+    PORT=3000
+    DB_PORT=15432
+    DATABASE_URL=postgres://postgres:test@localhost:${DB_PORT}/postgres
+    SESSION_SECRET=secretkey123
+    AUTH=true
+    PGPASSWORD=test
     ```
 
-3. **Run the appropriate script for your system type**
+3.  **Run the appropriate script for your system type**
 
-    - Linux/Mac:
+    -   Linux/Mac:
 
-    ```bash
-    cd database
-    bash database.sh
-    ```
+        ```bash
+        cd database
+        bash database.sh
+        ```
 
-    - Windows
+    -   Windows
 
-    ```
-    cd database
-    database.bat
-
-    ```
+        ```
+        cd database
+        database.bat
+        ```
 
 ## Server
 

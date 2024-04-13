@@ -55,7 +55,7 @@ export default function TrainerRescheduleForm(
 		[]
 	)
 
-	const [setTrainerrAvailableHours, setTrainerAvailableHours] = useState<
+	const [trainerAvailableHours, setTrainerAvailableHours] = useState<
 		number[]
 	>([])
 
@@ -116,19 +116,23 @@ export default function TrainerRescheduleForm(
 
 	useEffect(() => {
 		if (!watchedDate) return
+		console.log("watchedDate", watchedDate)
 		getTrainerAvailableHours(watchedDate).then((res) => {
 			setTrainerAvailableHours(res.data)
 		})
+		console.log(trainerAvailableHours)
 		getMemberAvailableHours(watchedDate).then((res) => {
 			setMemberAvailableHours(res.data)
 		})
+		console.log(memberAvailableHours)
 
 		setTotalAvailableHours(
 			memberAvailableHours.filter((hour) =>
-				totalAvailableHours.includes(hour)
+				trainerAvailableHours.includes(hour)
 			)
 		)
-	})
+		console.log(totalAvailableHours)
+	}, [watchedDate])
 
 	return (
 		<Form {...form}>

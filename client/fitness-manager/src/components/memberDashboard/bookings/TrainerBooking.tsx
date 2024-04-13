@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { patchData } from "@/utils/patchData"
 import { useUser } from "@/context/userContext"
+import TrainerRescheduleDialog from "./TrainerRescheduleDialog"
 
 type Booking = {
 	trainer_id: number
@@ -82,7 +83,11 @@ function TrainerBooking(props: TrainerBookingProps) {
 				</p>
 				{!props?.readOnly && !previous && (
 					<div className="flex flex-row">
-						<Button variant="link">Reschedule</Button>
+						<TrainerRescheduleDialog
+							booking={booking}
+							setBookings={setBookings}
+							bookings={bookings}
+						/>
 						<Button
 							variant="link"
 							onClick={() => {

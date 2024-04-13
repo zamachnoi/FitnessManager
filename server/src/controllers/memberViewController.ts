@@ -13,7 +13,6 @@ export async function generateMemberViewGetResponse(
 		}
 		return res
 	} catch (e) {
-		console.log(e)
 		return {
 			message: "Could not find member view data",
 			status: 404,

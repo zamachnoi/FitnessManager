@@ -109,7 +109,6 @@ export async function getMemberViewData(
 				.execute(),
 		},
 	}
-	console.log(viewData)
 	return viewData
 }
 function transformMemberRoutines(

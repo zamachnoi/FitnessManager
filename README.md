@@ -1,6 +1,6 @@
 # Developer's Guide for Fitness Manager Application
 
-This guide provides a step-by-step walkthrough for setting up the development environment, creating, and running the Fitness Manager application, including database setup, server configuration, and client application development. Specifically, we'll cover how to effectively create and manage routes within the server component.
+This guide tells you how to setup the fitness manager application.
 
 ## Prerequisites
 

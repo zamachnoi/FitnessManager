@@ -65,11 +65,11 @@ INSERT INTO member_trainer_booking (member_booking_id, trainer_booking_id, membe
 INSERT INTO payments (member_id, booking_id, date_paid, amount_paid, processed, payment_type) VALUES (1, 1, '2024-04-30', 70, FALSE, 'Trainer');
 
 
-INSERT INTO member_goals (member_id, weight_goal, goal_start, achieved_date, deleted) VALUES (1, 300, '2024-02-01', '2024-02-29', FALSE);
+INSERT INTO member_goals (member_id, weight_goal, goal_start, achieved_date, deleted, goal_end) VALUES (1, 300, '2024-02-01', '2024-02-29', FALSE, '2024-03-01');
 
-INSERT INTO member_goals (member_id, weight_goal, goal_start, achieved_date, deleted) VALUES (1, 250, '2024-03-01', NULL, TRUE);
+INSERT INTO member_goals (member_id, weight_goal, goal_start, achieved_date, deleted, goal_end) VALUES (1, 250, '2024-03-01', NULL, TRUE , '2024-04-01');
 
-INSERT INTO member_goals (member_id, weight_goal, goal_start, achieved_date, deleted) VALUES (1, 275, '2024-04-01', NULL, FALSE);
+INSERT INTO member_goals (member_id, weight_goal, goal_start, achieved_date, deleted, goal_end) VALUES (1, 275, '2024-04-01', NULL, FALSE, '2024-05-01');
 
 INSERT INTO member_health_statistics (member_id, systolic_bp, diastolic_bp, heart_rate, recorded) VALUES (1, 150, 120, 110, '2024-04-01T23:51:23Z');
 INSERT INTO member_health_statistics (member_id, systolic_bp, diastolic_bp, heart_rate, recorded) VALUES (1, 145, 110, 90, '2024-04-01T22:12:00Z');

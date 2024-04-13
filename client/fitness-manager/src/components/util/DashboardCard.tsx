@@ -22,7 +22,7 @@ const DashboardCard = ({
 }) => {
 	if (maxW !== undefined) {
 		return (
-			<Card className="max-w-fit">
+			<Card className={`${maxW}`}>
 				<CardHeader>
 					<CardTitle>{title}</CardTitle>
 					<CardDescription>{description}</CardDescription>

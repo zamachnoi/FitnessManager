@@ -92,6 +92,7 @@ export async function bookTrainer(
 					amount_paid: trainerRate.rate,
 					date_paid: new Date().toUTCString(),
 					processed: false,
+					payment_type: "Trainer",
 				})
 				.returningAll()
 				.executeTakeFirstOrThrow()
@@ -178,6 +179,7 @@ export async function bookClass(
 				amount_paid: joiningClass.price,
 				date_paid: new Date().toUTCString(),
 				processed: false,
+				payment_type: "Class",
 			})
 			.returningAll()
 			.executeTakeFirstOrThrow()

@@ -23,11 +23,11 @@ DROP TABLE IF EXISTS member_booking CASCADE;
 DROP TABLE IF EXISTS room CASCADE;
 DROP TYPE IF EXISTS USER_TYPE;
 DROP TYPE IF EXISTS USER_BOOKING_TYPE;
+DROP TYPE IF EXISTS PAYMENT_TYPE;
 
 CREATE TYPE USER_TYPE AS ENUM ('Member', 'Trainer', 'Admin');
-
 CREATE TYPE USER_BOOKING_TYPE AS ENUM ('Class', 'Trainer');
-
+CREATE TYPE PAYMENT_TYPE AS ENUM ('Registration', 'Class', 'Trainer');
 -- Creating Users table
 CREATE TABLE users (
     user_id SERIAL PRIMARY KEY,
@@ -168,6 +168,7 @@ CREATE TABLE member_goals (
     member_id INT REFERENCES members(member_id) NOT NULL,
     weight_goal FLOAT NOT NULL,
     goal_start DATE NOT NULL,
+    goal_end DATE NOT NULL,
     achieved_date DATE,
     deleted BOOLEAN DEFAULT FALSE NOT NULL
 );
@@ -196,8 +197,9 @@ CREATE TABLE member_trainer_booking (
 CREATE TABLE payments (
     payment_id SERIAL PRIMARY KEY,
     member_id INT REFERENCES members(member_id),
-    booking_id INT REFERENCES member_bookings(member_booking_id) ON DELETE CASCADE NOT NULL,
+    booking_id INT REFERENCES member_bookings(member_booking_id) ON DELETE CASCADE,
     date_paid DATE NOT NULL,
     amount_paid FLOAT NOT NULL,
+    payment_type PAYMENT_TYPE CHECK (payment_type IN ('Registration', 'Class', 'Trainer')) NOT NULL,
     processed BOOLEAN DEFAULT FALSE NOT NULL
 );

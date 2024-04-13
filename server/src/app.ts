@@ -25,7 +25,7 @@ import {
 	ensureAuthenticated,
 	excludeGetRequests,
 } from "./middleware/auth"
-
+import { memberViewRoute } from "./routes/memberViewRoute"
 export const authEnabled = process.env.AUTH === "true"
 export const app: Application = express()
 
@@ -88,6 +88,7 @@ app.use("/rooms", roomRoute)
 app.use("/exercises", exerciseRoute)
 app.use("/classes", classesRoute)
 app.use("/admin/payments", paymentRoute)
+app.use("/trainers", memberViewRoute)
 
 const port = process.env.PORT || 3000
 

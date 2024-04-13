@@ -16,8 +16,7 @@ INSERT INTO equipment (name, equipment_type_id, under_maintenance, last_maintain
 INSERT INTO equipment (name, equipment_type_id, under_maintenance, last_maintained) VALUES ('Dumbbell 2', 4, FALSE, NOW());
 INSERT INTO equipment (name, equipment_type_id, under_maintenance, last_maintained) VALUES ('Elliptical 1', 5, FALSE, NOW());
 INSERT INTO equipment (name, equipment_type_id, under_maintenance, last_maintained) VALUES ('Elliptical 2', 5, FALSE, NOW());
-
-INSERT INTO equipment (name, equipment_type_id, under_maintenance, last_maintained) VALUES ('None', 6, FALSE, "1970-01-01T00:00:00Z");
+INSERT INTO equipment (name, equipment_type_id, under_maintenance, last_maintained) VALUES ('Rowing Machine 1', 6, FALSE, '1970-01-01T00:00:00Z');
 
 INSERT INTO exercises (name, type, description, equipment_type_id) VALUES ('Running', 'Cardio', 'Running on a treadmill', 1);
 INSERT INTO exercises (name, type, description, equipment_type_id) VALUES ('Bench Press', 'Strength', 'Bench Press', 2);
@@ -37,13 +36,13 @@ INSERT INTO routine_exercises (routine_id, exercise_id) VALUES (2, 4);
 
 INSERT INTO users (user_id, last_name, first_name, username, password, type) VALUES (1, '1', 'Member', 'm1', '123', 'Member');
 INSERT INTO members (member_id, weight) VALUES (1, 300);
-
+INSERT INTO payments (member_id, booking_id, date_paid, amount_paid, processed, payment_type) VALUES (1, null, '2024-01-31', 200, FALSE, 'Registration');
 INSERT INTO users (user_id, last_name, first_name, username, password, type) VALUES (2, '2', 'Member', 'm2', '123', 'Member');
 INSERT INTO members (member_id, weight) VALUES (2, 200);
-
+INSERT INTO payments (member_id, booking_id, date_paid, amount_paid, processed, payment_type) VALUES (2, null, '2024-01-31', 200, FALSE, 'Registration');
 INSERT INTO users (user_id, last_name, first_name, username, password, type) VALUES (3, '3', 'Member', 'm3', '123', 'Member');
 INSERT INTO members (member_id, weight) VALUES (3, 175);
-
+INSERT INTO payments (member_id, booking_id, date_paid, amount_paid, processed, payment_type) VALUES (3, null, '2024-01-31', 200, FALSE, 'Registration');
 INSERT INTO users (user_id, last_name, first_name, username, password, type) VALUES (4, '1', 'Trainer', 't1', '123', 'Trainer');
 INSERT INTO trainers (trainer_id, start_availability, end_availability ,rate) VALUES (4, '00:00:00', '23:59:59', 50);
 
@@ -63,7 +62,7 @@ INSERT INTO trainer_booking (trainer_id, trainer_booking_timestamp) VALUES (4, '
 
 INSERT INTO member_trainer_booking (member_booking_id, trainer_booking_id, member_id, trainer_id) VALUES (1, 1, 1, 4);
 
-INSERT INTO payments (member_id, booking_id, date_paid, amount_paid, processed) VALUES (1, 1, '2024-04-01', 70, FALSE);
+INSERT INTO payments (member_id, booking_id, date_paid, amount_paid, processed, payment_type) VALUES (1, 1, '2024-04-30', 70, FALSE, 'Trainer');
 
 
 INSERT INTO member_goals (member_id, weight_goal, goal_start, achieved_date, deleted) VALUES (1, 300, '2024-02-01', '2024-02-29', FALSE);
@@ -82,6 +81,7 @@ INSERT INTO rooms (name, room_number) VALUES ('test2', 102);
 INSERT INTO trainer_booking(trainer_booking_id,trainer_id, trainer_booking_timestamp) VALUES (2, 4, '2024-04-16T12:00:00Z');
 INSERT INTO classes(class_id, name, trainer_id, room_id, trainer_booking_id, price, class_time) VALUES (1, 'class1', 4, 1, 2, 50, '2024-04-16T12:00:00Z');
 INSERT INTO room_bookings(booking_id, room_id, class_time, class_id) VALUES (1, 1, '2024-04-16T12:00:00Z', 1);
+
 
 SELECT setval('users_user_id_seq', (SELECT MAX(user_id) FROM users));
 

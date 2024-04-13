@@ -126,23 +126,33 @@ export const LoginCard = ({}) => {
 				/>
 
 				{!isLogin ? (
-					<Select
-						onValueChange={(value: MemberType) =>
-							setAccountType(value)
-						}
-					>
-						<SelectTrigger>
-							<SelectValue placeholder="Account Type" />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectGroup>
-								<SelectLabel>Account Type</SelectLabel>
-								<SelectItem value="Member">Member</SelectItem>
-								<SelectItem value="Trainer">Trainer</SelectItem>
-								<SelectItem value="Admin">Admin</SelectItem>
-							</SelectGroup>
-						</SelectContent>
-					</Select>
+					<div className="flex flex-col items-center gap-2">
+						<Select
+							onValueChange={(value: MemberType) =>
+								setAccountType(value)
+							}
+						>
+							<SelectTrigger>
+								<SelectValue placeholder="Account Type" />
+							</SelectTrigger>
+							<SelectContent>
+								<SelectGroup>
+									<SelectLabel>Account Type</SelectLabel>
+									<SelectItem value="Member">
+										Member
+									</SelectItem>
+									<SelectItem value="Trainer">
+										Trainer
+									</SelectItem>
+									<SelectItem value="Admin">Admin</SelectItem>
+								</SelectGroup>
+							</SelectContent>
+						</Select>
+						<div className="flex flex-row gap-4">
+							<p className="font-bold">Registration Fee: </p>
+							<p>$200</p>
+						</div>
+					</div>
 				) : null}
 				<Button onClick={handleSubmit}>{buttonText}</Button>
 			</CardContent>

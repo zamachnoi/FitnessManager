@@ -12,6 +12,7 @@ type GoalType = {
 	goal_start: Date
 	achieved_date: Date
 	deleted: boolean
+	goal_end: Date
 }
 
 const GoalCard = ({}: {}) => {
@@ -39,18 +40,28 @@ const GoalCard = ({}: {}) => {
 			description="Update your goal"
 			footer={null}
 		>
-			<div className="flex flex-col space-y-4">
-				{goalsState.map((goal: GoalType, index: number) => (
-					<Goal
-						key={index}
-						goalId={goal.goal_id}
-						goalVal={goal.weight_goal}
-						goalStart={goal.goal_start}
-						achievedDate={goal.achieved_date}
-						deleted={goal.deleted}
-					/>
-				))}
+			<div className="flex flex-col gap-4">
 				<GoalForm goals={goalsState} setGoalsState={setGoalsState} />
+
+				<div className="flex flex-col space-y-4">
+					<div className="grid grid-cols-4">
+						<p className="font-bold">Weight</p>
+						<p className="font-bold">Start</p>
+						<p className="font-bold">End</p>
+						<p className="font-bold">Completion</p>
+					</div>
+					{goalsState.map((goal: GoalType, index: number) => (
+						<Goal
+							key={index}
+							goalId={goal.goal_id}
+							goalVal={goal.weight_goal}
+							goalStart={goal.goal_start}
+							achievedDate={goal.achieved_date}
+							deleted={goal.deleted}
+							goalEnd={goal.goal_end}
+						/>
+					))}
+				</div>
 			</div>
 		</DashboardCard>
 	)

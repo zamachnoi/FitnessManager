@@ -8,7 +8,6 @@ export type ExerciseType = {
 	exercise_id: number
 	exercise_name: string
 	exercise_description: string
-	equipment_type_id: number
 	equipment_name: string
 	exercise_type: string
 }

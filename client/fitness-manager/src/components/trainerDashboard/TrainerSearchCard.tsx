@@ -2,14 +2,18 @@ import { useEffect, useState } from "react"
 import { Input } from "../ui/input"
 import { getData } from "@/utils/getData"
 import DashboardCard from "../util/DashboardCard"
-import TrainerSearchRow from "./TrainerSearchRow"
-import { TrainerSearchRowProps } from "./TrainerSearchRow"
+import TrainerSearchRow, { TrainerSearchRowData } from "./TrainerSearchRow"
 import { Separator } from "@radix-ui/react-select"
 import { ScrollArea } from "../ui/scroll-area"
 
-export default function TrainerSearchCard() {
+type TrainerSearchCardProps = {
+	setSelected: (memberId: number) => void
+	selected: number | null
+}
+
+export default function TrainerSearchCard(props: TrainerSearchCardProps) {
 	const [search, setSearch] = useState("")
-	const [memberData, setMemberData] = useState<TrainerSearchRowProps[]>([])
+	const [memberData, setMemberData] = useState<TrainerSearchRowData[]>([])
 	const [error, setError] = useState("")
 
 	const handleSearch = async () => {
@@ -52,6 +56,7 @@ export default function TrainerSearchCard() {
 			title="Member Search"
 			description="Search for members"
 			footer={<p></p>}
+			maxW="max-w-[800px]"
 		>
 			<div className="flex flex-col gap-4 h-fit">
 				<Input
@@ -60,7 +65,7 @@ export default function TrainerSearchCard() {
 				/>
 				<Separator />
 			</div>
-			<div className="flex-col gap-4">
+			<div className="flex-col gap-4 w-[500px]">
 				<div className="grid items-center grid-cols-5 grid-rows-1 text-center">
 					<p className="font-bold">Member ID</p>
 					<p className="font-bold">First Name</p>
@@ -71,8 +76,13 @@ export default function TrainerSearchCard() {
 
 				<ScrollArea className="h-40">
 					<div>
-						{memberData.map((member, index) => (
-							<TrainerSearchRow {...member} key={index} />
+						{memberData.map((member) => (
+							<TrainerSearchRow
+								member={member}
+								selected={props.selected}
+								setSelected={props.setSelected}
+								key={member.member_id}
+							/>
 						))}
 					</div>
 				</ScrollArea>

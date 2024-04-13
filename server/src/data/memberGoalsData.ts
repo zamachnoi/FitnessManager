@@ -8,11 +8,11 @@ export async function createMemberGoal(
 	member_id: number,
 	goal: memberGoalApiRequest
 ): Promise<memberGoalData> {
-	const { weight_goal } = goal
+	const { weight_goal, goal_end } = goal
 	const goal_start = new Date().toISOString()
 	const memberGoal = await db
 		.insertInto("member_goals")
-		.values({ member_id, weight_goal, goal_start })
+		.values({ member_id, weight_goal, goal_start, goal_end })
 		.returningAll()
 		.executeTakeFirst()
 
@@ -49,27 +49,6 @@ export async function getMemberGoalById(
 
 	if (!memberGoal) {
 		throw new Error("No member goal found")
-	}
-
-	return memberGoal
-}
-
-export async function updateMemberGoal(
-	member_id: number,
-	goal_id: number,
-	goal: memberGoalApiRequest
-): Promise<memberGoalData> {
-	const { weight_goal } = goal
-	const memberGoal = await db
-		.updateTable("member_goals")
-		.set({ weight_goal })
-		.where("member_id", "=", member_id)
-		.where("goal_id", "=", goal_id)
-		.returningAll()
-		.executeTakeFirst()
-
-	if (!memberGoal) {
-		throw new Error("Failed to update member goal")
 	}
 
 	return memberGoal

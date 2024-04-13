@@ -4,6 +4,8 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
   ? ColumnType<S, I | undefined, U>
   : ColumnType<T, T | undefined, T>;
 
+export type PaymentType = "Class" | "Registration" | "Trainer";
+
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
 export type UserBookingType = "Class" | "Trainer";
@@ -71,6 +73,7 @@ export interface MemberExerciseRoutines {
 export interface MemberGoals {
   achieved_date: Timestamp | null;
   deleted: Generated<boolean>;
+  goal_end: Timestamp;
   goal_id: Generated<number>;
   goal_start: Timestamp;
   member_id: number;
@@ -100,10 +103,11 @@ export interface MemberTrainerBooking {
 
 export interface Payments {
   amount_paid: number;
-  booking_id: number;
+  booking_id: number | null;
   date_paid: Timestamp;
   member_id: number | null;
   payment_id: Generated<number>;
+  payment_type: PaymentType;
   processed: Generated<boolean>;
 }
 

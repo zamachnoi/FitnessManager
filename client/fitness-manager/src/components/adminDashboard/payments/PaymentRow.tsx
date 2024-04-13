@@ -32,13 +32,14 @@ export default function PaymentRow(props: PaymentRowProps) {
 		)
 	}
 	return (
-		<div className="flex flex-row w-[650px]">
+		<div className="flex flex-row w-[675px]">
 			<div className="flex flex-col gap-2">
-				<div className="grid items-center grid-cols-6 grid-rows-1 gap-8 text-center">
+				<div className="grid items-center grid-cols-7 grid-rows-1 gap-8 text-center">
 					<p>{props.payment.payment_id}</p>
-					<p>{props.payment.booking_id}</p>
 					<p>{props.payment.member_id}</p>
+					<p>{props.payment.payment_type}</p>
 					<p>{props.payment.amount_paid}</p>
+					<p>{props.payment.booking_id}</p>
 					<p>
 						{moment(props.payment.date_paid).format("MM/DD/YYYY")}
 					</p>

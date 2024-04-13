@@ -7,6 +7,7 @@ import { useUser } from "@/context/userContext"
 import { patchData } from "@/utils/patchData"
 
 import moment from "moment"
+import { start } from "repl"
 
 const GoalForm = ({
 	goalId,
@@ -14,12 +15,14 @@ const GoalForm = ({
 	goalStart,
 	achievedDate,
 	deleted,
+	goalEnd,
 }: {
 	goalId: number
 	goalVal: number
 	goalStart: Date
 	achievedDate: Date | null
 	deleted: boolean
+	goalEnd: Date
 }) => {
 	const user = useUser()
 	const userId = user.userId
@@ -52,13 +55,64 @@ const GoalForm = ({
 		setAchievedDateState(new Date())
 	}
 
+	const startFormatted = moment(goalStart).format("MM/DD/YYYY")
+	const endFormatted = moment(goalEnd).format("MM/DD/YYYY")
+
+	const completedGoal = achievedDateState !== null
+	const cancelledGoal = isDeleted
+
 	return (
-		<div className="padding-4 ">
-			<div className="flex items-center justify-between space-x-2">
-				<h2 className="text-m">
-					{String(goalVal)}lbs {}
-				</h2>
+		<div className="padding-4">
+			<div className="grid items-center grid-cols-4 grid-rows 1">
+				<h2 className="">{String(goalVal)}lbs</h2>
+				<div>
+					<h3 className="self-center h-full text-xs text-gray-500">
+						{String(startFormatted)}
+					</h3>
+				</div>
+				<div>
+					<h3 className="self-center h-full text-xs text-gray-500">
+						{String(endFormatted)}
+					</h3>
+				</div>
+
 				{!isCompleted && !isDeleted && (
+					<div className="flex flex-row gap-2">
+						<Button
+							variant="outline"
+							size="icon"
+							onClick={onComplete}
+						>
+							<Check />
+						</Button>
+						<Button
+							variant="outline"
+							size="icon"
+							onClick={() => {
+								setIsDeleted(true)
+								deleteGoal(goalId.toString())
+							}}
+						>
+							<X />
+						</Button>
+					</div>
+				)}
+
+				{isCompleted && !isDeleted && (
+					<div className="flex flex-row gap-2">
+						<h3 className="self-center h-full text-sm text-green-500">
+							{moment(achievedDateState).format("MM/DD/YYYY")}
+						</h3>
+					</div>
+				)}
+
+				{!isCompleted && isDeleted && (
+					<div className="flex flex-row gap-2">
+						<h3 className="text-sm text-red-500 ">Cancelled</h3>
+					</div>
+				)}
+
+				{/* {!isCompleted && !isDeleted && (
 					<div className="flex items-center space-x-2">
 						{moment(goalStart).format("MM/DD/YYYY")}
 						<Button
@@ -90,7 +144,7 @@ const GoalForm = ({
 					<div>
 						{moment(goalStart).format("MM/DD/YYYY")} - unfinished.
 					</div>
-				)}
+				)} */}
 			</div>
 			<Separator className="mt-2" />
 		</div>

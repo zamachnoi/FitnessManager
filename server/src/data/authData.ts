@@ -28,6 +28,17 @@ export async function createAccount(
 				member_id: user.user_id,
 			})
 			.execute()
+
+		await db
+			.insertInto("payments")
+			.values({
+				member_id: user.user_id,
+				amount_paid: 200,
+				date_paid: new Date(),
+				processed: false,
+				payment_type: "Registration",
+			})
+			.execute()
 	} else if (type === "Trainer") {
 		await db
 			.insertInto("trainers")

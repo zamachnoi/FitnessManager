@@ -11,6 +11,7 @@ export type Payment = {
 	member_id: number
 	amount_paid: number
 	date_paid: Date
+	payment_type: "Registration" | "Class" | "Trainer"
 	processed: boolean
 }
 
@@ -66,11 +67,12 @@ export default function PaymentsCard() {
 			>
 				<div className="flex flex-row justify-between max-w-2xl gap-8">
 					<div className="flex flex-col items-center justify-around gap-4">
-						<div className="grid items-center grid-cols-6 grid-rows-1 gap-8 text-center">
+						<div className="grid items-center grid-cols-7 grid-rows-1 gap-8 text-center">
 							<p className="font-bold">Payment ID</p>
-							<p className="font-bold">Booking ID</p>
 							<p className="font-bold">Member ID</p>
+							<p className="font-bold">Payment Type</p>
 							<p className="font-bold">Amount Paid</p>
+							<p className="font-bold">Booking ID</p>
 							<p className="font-bold">Date Paid</p>
 							<p className="font-bold">Processed</p>
 						</div>
@@ -103,11 +105,12 @@ export default function PaymentsCard() {
 			>
 				<div className="flex flex-row justify-between max-w-2xl gap-8">
 					<div className="flex flex-col items-center justify-around gap-4">
-						<div className="grid items-center grid-cols-6 grid-rows-1 gap-8 text-center">
+						<div className="grid items-center grid-cols-7 grid-rows-1 gap-8 text-center">
 							<p className="font-bold">Payment ID</p>
-							<p className="font-bold">Booking ID</p>
 							<p className="font-bold">Member ID</p>
+							<p className="font-bold">Payment Type</p>
 							<p className="font-bold">Amount Paid</p>
+							<p className="font-bold">Booking ID</p>
 							<p className="font-bold">Date Paid</p>
 							<p className="font-bold">Processed</p>
 						</div>
